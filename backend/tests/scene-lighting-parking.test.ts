@@ -118,7 +118,7 @@ test('validator rejects missing lighting/parking policy, wrong time color and op
   const choices=resolveSelections(selections);
   const prompt=fallbackGenerator({selections,variation:1});
   assert.equal(validatePrompt(prompt,choices),true);
-  assert.equal(validatePrompt(prompt.replace('parked','driving'),choices),false);
+  assert.equal(validatePrompt(prompt.replace(/\bparked\b/i,'driving'),choices),false);
   assert.equal(validatePrompt(prompt.replace('Lighting:','Light:'),choices),false);
   assert.equal(validatePrompt(prompt.replace('sole primary subject','secondary subject'),choices),false);
   assert.equal(validatePrompt(prompt+' The vehicle has a right-hand drive cabin.',choices),false);
