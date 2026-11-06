@@ -6,6 +6,8 @@ import { promptRouter } from './routes/prompt.routes.js';
 import { errorHandler, notFound } from './middleware/error-handler.js';
 import { promptLimiter } from './middleware/rate-limiter.js';
 
+const publicPagesOrigin = 'https://emadaden77.github.io';
+
 function isOwnPrivateCodespaceOrigin(origin:string):boolean{
   if(process.env.CODESPACES!=='true'||!process.env.CODESPACE_NAME)return false;
   // Exact Codespaces creator URL: reject other codespaces and non-HTTPS origins.
@@ -16,7 +18,7 @@ app.disable('x-powered-by');
 app.use(helmet());
 app.use(cors({
   origin(origin,callback){
-    if(!origin||env.corsOrigins.includes(origin)||isOwnPrivateCodespaceOrigin(origin))
+    if(!origin||origin===publicPagesOrigin||env.corsOrigins.includes(origin)||isOwnPrivateCodespaceOrigin(origin))
       return callback(null,true);
     return callback(new Error('Origin is not allowed'));
   },
