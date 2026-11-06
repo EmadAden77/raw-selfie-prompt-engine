@@ -37,7 +37,7 @@ export function buildLocalPrompt(request:PromptRequest):string {
     'A parked pearl-white 2022 Range Rover Sport with black rims, '+option(request,'carConditions')+', '+parking:
     'The pearl-white 2022 Range Rover Sport remains parked outside the selfie frame unless naturally visible.';
   const cabin=inside?
-    'Saudi left-hand drive (LHD): wheel physically left, driver front-left, passenger front-right, center console to the driver’s right; selfie mirroring never swaps vehicle sides. Visible cabin has beige leather, dark glossy wood, chrome, piano-black trim, black leather steering wheel and factory 2022 Touch Pro Duo dual landscape screens, upper infotainment and lower climate controls; never force them into view.':
+    'Saudi left-hand drive (LHD): wheel physically left, driver front-left, passenger front-right, center console to the driver’s right; selfie mirroring never swaps vehicle sides. Visible cabin has beige leather seats, beige dashboard panels, panoramic glass roof, dark glossy wood, chrome, piano-black trim, black leather steering wheel and factory 2022 Touch Pro Duo dual landscape screens, upper infotainment and lower climate controls; never force them into view.':
     'Retain Saudi LHD vehicle geometry if any interior becomes visible.';
   const scene='Scene: '+option(request,'locations')+' in everyday unnamed Saudi surroundings. Clothing: '+
     option(request,'clothing')+'; expression: '+option(request,'expressions')+
