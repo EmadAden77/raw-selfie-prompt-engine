@@ -65,7 +65,7 @@ function framingProse(inside: boolean, close: boolean, steeringHand: boolean): s
   if (inside)
     return steeringHand
       ? 'Framing: face and shoulders dominate 9:16, cropped near chest; wheel hand at edge only, never full lap or console.'
-      : 'Framing: face and shoulders dominate 9:16, cropped near chest; hands appear only if the angle includes them, never a full lap or dashboard.';
+      : 'Framing: face and shoulders dominate 9:16; hands appear only if the angle includes them, never full dashboard.';
   return 'Framing: face and upper torso dominate 9:16; no pullback.';
 }
 
