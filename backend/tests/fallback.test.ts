@@ -11,8 +11,7 @@ test('different variations preserve rules while changing background details',()=
   assert.notEqual(first,second);
   for(const output of [first,second])assert.match(output,/2022 Range Rover Sport/);
 });
-test('backend produces local fallback when no NVIDIA key is configured',async()=>{
-  if(process.env.NVIDIA_API_KEY)return;
+test('backend produces local fallback when request has no NVIDIA key',async()=>{
   const result=await generatePrompt({selections,variation:1});
   assert.equal(result.source,'local');
   assert.match(result.prompt,/ChatGPT, using the reference image/);

@@ -2,8 +2,8 @@ import { nvidiaConfig } from '../config/nvidia.config.js';
 import { nvidiaSystemPrompt } from '../prompts/nvidia-system-prompt.js';
 
 interface NvidiaResponse { choices?:Array<{message?:{content?:string|null}}> }
-export async function expandWithNvidia(basePrompt:string,creativeExpansion:string):Promise<string>{
-  const {url,model,timeoutMs,apiKey}=nvidiaConfig();
+export async function expandWithNvidia(basePrompt:string,creativeExpansion:string,apiKey:string):Promise<string>{
+  const {url,model,timeoutMs}=nvidiaConfig();
   if(!apiKey)throw new Error('NVIDIA_API_KEY not configured');
   const response=await fetch(url,{
     method:'POST',

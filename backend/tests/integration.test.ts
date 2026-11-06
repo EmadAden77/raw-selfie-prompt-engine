@@ -41,3 +41,19 @@ test('API rejects unknown option IDs',async()=>{
     assert.equal(response.status,400);
   }finally {await new Promise<void>(resolve=>server.close(()=>resolve()));}
 });
+
+test('API rejects malformed NVIDIA keys without exposing their text',async()=>{
+  const server=app.listen(0,'127.0.0.1');
+  try {
+    await new Promise<void>(resolve=>server.once('listening',resolve));
+    const addr=server.address();
+    assert.ok(addr&&typeof addr!=='string');
+    const response=await fetch('http://127.0.0.1:'+addr.port+'/api/prompt',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({selections,variation:1,nvidiaApiKey:'invalid-private-value'})
+    });
+    assert.equal(response.status,400);
+    const body=await response.text();
+    assert.doesNotMatch(body,/invalid-private-value/);
+  } finally {await new Promise<void>(resolve=>server.close(()=>resolve()));}
+});

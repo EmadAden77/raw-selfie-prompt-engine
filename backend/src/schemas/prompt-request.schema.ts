@@ -9,7 +9,8 @@ const shape=Object.fromEntries(categoryKeys.map(key=>[
 
 export const promptRequestSchema=z.object({
   selections:z.object(shape).strict(),
-  variation:z.number().int().min(0).max(1000000)
+  variation:z.number().int().min(0).max(1000000),
+  nvidiaApiKey:z.string().regex(/^nvapi-[a-zA-Z0-9_-]{10,512}$/).optional()
 }).strict();
 
 export function parsePromptRequest(value:unknown):PromptRequest{

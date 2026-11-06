@@ -35,7 +35,7 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
     try {
       const response=await fetch(endpoint,{
         method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(request),signal:controller.signal
+        body:JSON.stringify(request),signal:controller.signal,cache:'no-store',referrerPolicy:'no-referrer'
       });
       if(!response.ok) return fallback;
       const data:unknown=await response.json();

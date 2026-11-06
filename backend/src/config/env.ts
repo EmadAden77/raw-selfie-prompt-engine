@@ -13,7 +13,6 @@ function boundedNumber(input:string|undefined,fallback:number,min:number,max:num
 export const env={
   nodeEnv:process.env.NODE_ENV==='production'?'production':'development',
   port:boundedNumber(process.env.PORT,3001,1,65535),
-  nvidiaApiKey:process.env.NVIDIA_API_KEY?.trim()??'',
   nvidiaBaseUrl:process.env.NVIDIA_BASE_URL?.trim()||'https://integrate.api.nvidia.com/v1/chat/completions',
   nvidiaModel:process.env.NVIDIA_MODEL?.trim()||'deepseek-ai/deepseek-v4.1-flash',
   nvidiaTimeoutMs:boundedNumber(process.env.NVIDIA_TIMEOUT_MS,12000,1000,30000),

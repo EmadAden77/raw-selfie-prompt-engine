@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowLeft, ArrowRight, LockKeyhole, WandSparkles } from 'lucide-react';
 import Header from '../components/layout/Header';
+import { NvidiaKeyField, readKey } from '../components/layout/NvidiaKeyField';
 import StepNavigation from '../components/layout/StepNavigation';
 import UploadPage from '../pages/UploadPage';
 import OptionsPage from '../pages/OptionsPage';
@@ -12,11 +13,13 @@ import { usePromptGenerator } from '../hooks/usePromptGenerator';
 export default function App(){
   const [step,setStep]=useState(0);
   const [image,setImage]=useState<File|null>(null);
+  const [nvidiaKey,setNvidiaKey]=useState<string>(readKey);
   const {selections,select}=useSelections();
   const {result,loading,error,generate}=usePromptGenerator();
-  async function submit(){await generate(selections);setStep(2);}
+  async function submit(){await generate(selections,nvidiaKey);setStep(2);}
   return <div className="app-shell"><Header/><main className="main">
     <section className="hero"><div className="hero-icon"><WandSparkles size={25}/></div><span className="eyebrow">واقعية الصورة تبدأ بتفاصيل صحيحة</span><h1>سيلفي يشبهك، لا يشبه الفلاتر</h1><p>اصنع تعليمات صورة عفوية تحفظ ملامحك وسيارتك كما هي، ثم انسخ البرومبت إلى محادثة توليد الصور.</p></section>
+    <NvidiaKeyField value={nvidiaKey} onChange={setNvidiaKey}/>
     <StepNavigation step={step}/>
     {step===0&&<UploadPage file={image} onChange={setImage}/>}
     {step===1&&<OptionsPage selections={selections} onSelect={select}/>}

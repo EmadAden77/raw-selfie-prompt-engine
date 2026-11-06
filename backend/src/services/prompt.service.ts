@@ -5,7 +5,6 @@ import { expandCreativeDetails } from '../engine/creative-expander.js';
 import { fallbackGenerator } from '../engine/fallback-generator.js';
 import { validatePrompt } from '../engine/prompt-validator.js';
 import { expandWithNvidia } from './nvidia.service.js';
-import { env } from '../config/env.js';
 
 export async function generatePrompt(request:PromptRequest):Promise<PromptResponse>{
   const resolved=resolveSelections(request.selections);
@@ -14,9 +13,9 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
   const fallback=fallbackGenerator(request);
   // The deterministic fallback must remain available even with an invalid/absent API key.
   if(!validatePrompt(fallback,resolved))throw new Error('Internal prompt rules failed validation');
-  if(!env.nvidiaApiKey)return {prompt:fallback,source:'local'};
+  if(!request.nvidiaApiKey)return {prompt:fallback,source:'local'};
   try{
-    const generated=await expandWithNvidia(base,expansion);
+    const generated=await expandWithNvidia(base,expansion,request.nvidiaApiKey);
     // The model may append, but cannot alter any immutable rule or chosen option.
     if(!generated.startsWith(base))return {prompt:fallback,source:'local'};
     if(!validatePrompt(generated,resolved))return {prompt:fallback,source:'local'};
