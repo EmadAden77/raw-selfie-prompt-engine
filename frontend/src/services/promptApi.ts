@@ -15,8 +15,6 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
   const fallback=(reason:PromptResponse['reason']):PromptResponse => ({
     prompt:buildLocalPrompt(request),source:'local',reason,audit:buildLocalAudit(request)
   });
-  if (!request.nvidiaApiKey) return fallback('no_key');
-  if (!/^nvapi-[a-zA-Z0-9_-]{10,512}$/.test(request.nvidiaApiKey)) return fallback('invalid_key');
   const base=(import.meta.env.VITE_API_BASE_URL as string|undefined)?.trim()??'';
   const endpoint=base?base.replace(/\/$/,'')+'/api/prompt':'/api/prompt';
   const controller=new AbortController();
