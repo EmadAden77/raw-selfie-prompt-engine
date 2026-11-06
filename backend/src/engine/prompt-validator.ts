@@ -88,6 +88,12 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(/\b(?:steering wheel is\s+(?:beige|tan|cream)|beige leather steering wheel)\b/i.test(prompt))return false;
   if(/\b(?:he|person|subject)\s+weighs\s+(?!88\b)\d+\s*kg\b/i.test(prompt))return false;
   if(/\b(?:cinematic lighting illuminates|opposing shadows fall|two dominant light sources)\b/i.test(prompt))return false;
+  if(/\b(?:a|the)\s+(?:driving|moving|speeding)\s+(?:pearl-white\s+)?(?:2022\s+)?Range Rover Sport\b/i.test(prompt))return false;
+  if(/\b(?:red|blue|green|gray|grey)\s+(?:leather\s+)?(?:front\s+)?seats\b/i.test(prompt))return false;
+  if(/\b(?:portrait|vertical)\s+infotainment\s+(?:screen|display)\s+replaces\b/i.test(prompt))return false;
+  if(/\b(?:replaces?|redesigns?|swaps?)\s+(?:the\s+)?(?:original|factory)\s+(?:dashboard|screen|steering wheel)\b/i.test(prompt))return false;
+  if(/\b(?:new|hidden|studio)\s+fill\s+(?:illuminates|lights|brightens)\b/i.test(prompt))return false;
+
   if(!prompt.includes(BODY_RULE))return validateConcise(prompt,choices);
   if(!prompt.includes(BODY_RULE)||!prompt.includes(COMPOSITION_RULE)) return false;
   if(!prompt.includes(PARKING_RULE)||!prompt.includes(STREET_RULE)||!prompt.includes(LIGHTING_POLICY)) return false;
