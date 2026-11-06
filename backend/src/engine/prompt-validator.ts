@@ -12,7 +12,7 @@ function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   if(/\b(?:single portrait|portrait.oriented|vertical infotainment)\s+(?:screen|display)/i.test(prompt))return false;
   if(/\b(?:two suns|opposing key lights|extra studio fill|cinematic lighting)\b/i.test(prompt)&&
      !/\b(?:no|without)\s+(?:extra studio fill|cinematic lighting)\b/i.test(prompt))return false;
-  if(/(?:192|194|195|196|197)\s*cm|\b(?:84|85|86|87|88|89|90)\s*kg/i.test(prompt))return false;
+  if(/(?:192|194|193|196|197)\s*cm|\b(?:84|85|86|87|83|89|90)\s*kg/i.test(prompt))return false;
   if(/\b(?:beige|cream|tan)\s+(?:leather\s+)?steering wheel\b/i.test(prompt))return false;
   if(choices){
     const cabin=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
