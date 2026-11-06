@@ -66,7 +66,7 @@ function framingProse(inside: boolean, close: boolean, steeringHand: boolean): s
     return steeringHand
       ? 'Framing: face and shoulders dominate 9:16, cropped near chest; wheel hand at edge only, never full lap or console.'
       : 'Framing: face and shoulders dominate 9:16, cropped near chest; hands appear only if the angle includes them, never a full lap or dashboard.';
-  return 'Framing: face and upper torso dominate 9:16; no car-showcase pullback.';
+  return 'Framing: face and upper torso dominate 9:16; no pullback.';
 }
 
 const unsafeAddition = /\b(?:show|reveal|widen|entire|whole|full.body|landmark|tower|skyline|famous|new face|different person|studio|cinematic|beauty|retouch|CGI|8K|perfect skin|second sun|extra light|two suns|recolor|replace|redesign|zoom out|pull back|crane|drone|selfie stick)\b/i;
