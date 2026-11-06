@@ -1,3 +1,35 @@
+import { promptWordCount, LHD_GEOMETRY, FACTORY_DASHBOARD, IDENTITY_CORE, BODY_CORE, SUBJECT_CORE } from './concise-prompt.js';
+function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
+  const count=promptWordCount(prompt);
+  if(count<105||count>360) return false;
+  if(!prompt.includes(IDENTITY_CORE)||!prompt.includes(BODY_CORE)||!prompt.includes(SUBJECT_CORE))return false;
+  if(!/\b195 cm\b/.test(prompt)||!/\b88 kg\b/.test(prompt)||!/lean athletic/.test(prompt))return false;
+  if(!prompt.includes('Scene:')||!prompt.includes('Camera:')||!prompt.includes('Lighting:')||
+     !prompt.includes('Photographic realism:'))return false;
+  if(!/\b2022\b[\s\S]{0,85}\bRange Rover Sport\b|\b2022\b[\s\S]{0,85}\bRange Rover Sport\b/i.test(prompt))return false;
+  if(!/pearl.white/i.test(prompt)||!/\bparked\b/i.test(prompt))return false;
+  if(/\b(?:right.hand drive|RHD|steering wheel on the right|driver front.right|driver seated on the right)\b/i.test(prompt))return false;
+  if(/\b(?:single portrait|portrait.oriented|vertical infotainment)\s+(?:screen|display)/i.test(prompt))return false;
+  if(/\b(?:two suns|opposing key lights|extra studio fill|cinematic lighting)\b/i.test(prompt)&&
+     !/\b(?:no|without)\s+(?:extra studio fill|cinematic lighting)\b/i.test(prompt))return false;
+  if(/(?:192|193|194|196|197)\s*cm|\b(?:83|84|85|86|87|89|90)\s*kg/i.test(prompt))return false;
+  if(/\b(?:beige|cream|tan)\s+(?:leather\s+)?steering wheel\b/i.test(prompt))return false;
+  if(choices){
+    const cabin=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
+    if(cabin&&(!prompt.includes(LHD_GEOMETRY)||!prompt.includes(FACTORY_DASHBOARD)))return false;
+    if(cabin&&!/black leather three.spoke wheel/i.test(prompt))return false;
+    if(!prompt.includes(choices.locations.text)||!prompt.includes(choices.clothing.text)||
+       !prompt.includes(choices.expressions.text)||!prompt.includes(choices.poses.text)||
+       !prompt.includes(choices.selfieAngles.text))return false;
+    // A close interior selfie should not invent outdoor road surfaces or full dashboard framing.
+    const angle=Number(choices.selfieAngles.id.split('-').at(-1));
+    if([2,3,9,10,11].includes(angle)&&/\bfull.body view|entire dashboard visible\b/i.test(prompt))return false;
+  }
+  // New output must never echo complete sentences as a substitute for scene awareness.
+  const clauses=prompt.split(/[.!?]\s+/).map(s=>s.trim().toLowerCase()).filter(s=>s.length>25);
+  if(new Set(clauses).size!==clauses.length)return false;
+  return true;
+}
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 import { BODY_RULE } from '../rules/body.rules.js';
 import { COMPOSITION_RULE } from '../rules/composition.rules.js';
@@ -49,6 +81,7 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(typeof prompt!=='string'||prompt.length<450||prompt.length>16000) return false;
   if(!prompt.startsWith(REQUIRED_PREFIX)) return false;
   if(/[\u0600-\u06ff]/.test(prompt)||/[`<>]/.test(prompt)) return false;
+  if(!prompt.includes(BODY_RULE))return validateConcise(prompt,choices);
   if(!prompt.includes(BODY_RULE)||!prompt.includes(COMPOSITION_RULE)) return false;
   if(!prompt.includes(PARKING_RULE)||!prompt.includes(STREET_RULE)||!prompt.includes(LIGHTING_POLICY)) return false;
   if(!prompt.includes('Scene-specific parking and road surface:')||!prompt.includes('Scene-specific lighting:'))return false;
