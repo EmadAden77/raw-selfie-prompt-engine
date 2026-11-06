@@ -1,31 +1,48 @@
 import test from 'node:test';
+import assert from 'node:assert/strict';
 import { optionCatalogue,resolveSelections } from '../src/data/option-mappings.js';
-import { buildConcisePrompt,promptWordCount,IDENTITY_CORE,BODY_CORE,SUBJECT_CORE,LHD_GEOMETRY,FACTORY_DASHBOARD } from '../src/engine/concise-prompt.js';
+import { buildConcisePrompt,promptWordCount,LHD_GEOMETRY,FACTORY_DASHBOARD } from '../src/engine/concise-prompt.js';
+import { fallbackGenerator } from '../src/engine/fallback-generator.js';
 import { validatePrompt } from '../src/engine/prompt-validator.js';
-import { cabinMayBeVisible } from '../src/rules/cabin.rules.js';
 import type { Selections } from '../src/types/engine.types.js';
-test('diagnose compact prompt acceptance',()=>{
-  const first=Object.fromEntries(Object.entries(optionCatalogue).map(([key,v])=>[key,v[0]!.id])) as Selections;
-  for(const id of ['angle-1','angle-9','angle-19']){
-    const selections={...first,selfieAngles:id};
-    const choices=resolveSelections(selections);
-    const p=buildConcisePrompt(choices);
-    console.log('COMPACT_CHECK',JSON.stringify({id,words:promptWordCount(p),chars:p.length,valid:validatePrompt(p,choices),inside:cabinMayBeVisible(id,first.poses),
-      checks:{identity:p.includes(IDENTITY_CORE),body:p.includes(BODY_CORE),subject:p.includes(SUBJECT_CORE),lhd:p.includes(LHD_GEOMETRY),dash:p.includes(FACTORY_DASHBOARD),
-      hasScene:p.includes('Scene:'),hasCamera:p.includes('Camera:'),hasLighting:p.includes('Lighting:'),hasRealism:p.includes('Photographic realism:'),car:/2022[\s\S]{0,85}Range Rover Sport/.test(p)},
-      excerpt:p.slice(-480)}));
-  const categories=Object.keys(optionCatalogue) as Array<keyof typeof optionCatalogue>;
-  for(const category of categories){
-    for(const entry of optionCatalogue[category]){
-      const choices=resolveSelections({...first,[category]:entry.id});
-      const p=buildConcisePrompt(choices);
-      if(!validatePrompt(p,choices))console.log('INVALID_COMPACT',category,entry.id,promptWordCount(p),p.slice(0,450));
+
+const first=Object.fromEntries(Object.entries(optionCatalogue).map(([key,v])=>[key,v[0]!.id])) as Selections;
+
+test('standard exterior is concise and complex cabin preserves factory details without overlength',()=>{
+  const outside={...first,selfieAngles:'angle-19',poses:'pose-17'};
+  const inside={...first,selfieAngles:'angle-1',poses:'pose-1'};
+  const standard=buildConcisePrompt(resolveSelections(outside));
+  const complex=buildConcisePrompt(resolveSelections(inside));
+  assert.ok(promptWordCount(standard)>=120&&promptWordCount(standard)<=225,
+    'exterior words: '+promptWordCount(standard));
+  assert.ok(promptWordCount(complex)<=300,'interior words: '+promptWordCount(complex));
+  assert.ok(!standard.includes(FACTORY_DASHBOARD));
+  assert.ok(complex.includes(LHD_GEOMETRY)&&complex.includes(FACTORY_DASHBOARD));
+  assert.equal(validatePrompt(standard,resolveSelections(outside)),true);
+  assert.equal(validatePrompt(complex,resolveSelections(inside)),true);
+});
+test('every existing option returns a structurally safe concise fallback',()=>{
+  for(const category of Object.keys(optionCatalogue) as Array<keyof typeof optionCatalogue>){
+    for(const option of optionCatalogue[category]){
+      const selected={...first,[category]:option.id};
+      const choices=resolveSelections(selected);
+      const output=fallbackGenerator({selections:selected,variation:3});
+      assert.equal(validatePrompt(output,choices),true,category+': '+option.id);
+      assert.ok(promptWordCount(output)<=340,category+': '+option.id+' '+promptWordCount(output));
+      assert.match(output,/195 cm/);
+      assert.match(output,/88 kg/);
     }
   }
-  for(const location of optionCatalogue.locations)for(const lighting of optionCatalogue.lighting){
-    const choices=resolveSelections({...first,locations:location.id,lighting:lighting.id});
-    const p=buildConcisePrompt(choices);
-    if(!validatePrompt(p,choices))console.log('INVALID_PAIR',location.id,lighting.id,promptWordCount(p));
-  }
+});
+test('all 58 locations and 10 lighting options produce safe concise results',()=>{
+  for(const location of optionCatalogue.locations){
+    for(const lighting of optionCatalogue.lighting){
+      const selections={...first,locations:location.id,lighting:lighting.id};
+      const choices=resolveSelections(selections);
+      const output=fallbackGenerator({selections,variation:1});
+      assert.equal(validatePrompt(output,choices),true,location.id+' / '+lighting.id);
+      assert.ok(output.includes('Lighting:'));
+      assert.ok(output.includes(location.text));
+    }
   }
 });
