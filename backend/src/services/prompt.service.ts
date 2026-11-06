@@ -7,6 +7,7 @@ import { planWithNvidia, NvidiaFailure } from './nvidia.service.js';
 import { createScenePlan, scenePlanInput } from '../engine/scene-planner.js';
 import { reviewScenePlan } from '../engine/consistency-critic.js';
 import { evaluateQuality } from '../engine/quality-evaluator.js';
+import { auditPhotographicScene } from '../engine/photographic-auditor-v8.js';
 
 export function validateCreativeAddition(value:string):boolean{
   const text=value.trim();
@@ -33,23 +34,25 @@ export function validateCreativeAddition(value:string):boolean{
 }
 export async function generatePrompt(request:PromptRequest):Promise<PromptResponse>{
   const resolved=resolveSelections(request.selections);
+  const {repairNotes,sceneCameraSurface}=auditPhotographicScene(resolved);
+  const audit={repairNotes,sceneCameraSurface};
   const baseline=createScenePlan(resolved);
   const fallback=fallbackGenerator(request);
   if(!validatePrompt(fallback,resolved))throw new Error('Internal prompt rules failed validation');
-  if(!request.nvidiaApiKey)return {prompt:fallback,source:'local',reason:'no_key'};
+  if(!request.nvidiaApiKey)return {prompt:fallback,source:'local',reason:'no_key',audit};
   try {
     // One structured response. Only validated selections and a textual baseline
     // are sent; the reference image is never sent to NVIDIA.
     const proposal=await planWithNvidia(scenePlanInput(resolved,baseline),request.nvidiaApiKey);
     const reviewed=reviewScenePlan(proposal,baseline);
-    if(!reviewed)return {prompt:fallback,source:'local',reason:'unsafe_output'};
+    if(!reviewed)return {prompt:fallback,source:'local',reason:'unsafe_output',audit};
     const generated=assembleConcisePrompt(resolved,reviewed.plan);
     const quality=evaluateQuality(reviewed.plan,generated,resolved);
     if(quality.some(result=>!result.passed))
-      return {prompt:fallback,source:'local',reason:'unsafe_output'};
-    return {prompt:generated,source:'server'};
+      return {prompt:fallback,source:'local',reason:'unsafe_output',audit};
+    return {prompt:generated,source:'server',audit};
   }catch(error){
     return {prompt:fallback,source:'local',
-      reason:error instanceof NvidiaFailure?error.reason:'nvidia_unavailable'};
+      reason:error instanceof NvidiaFailure?error.reason:'nvidia_unavailable',audit};
   }
 }
