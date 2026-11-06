@@ -1,0 +1,42 @@
+# Raw Selfie Prompt Engine
+# Shared editor formatting
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+
+[*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}]
+indent_style = space
+indent_size = 2
+
+[*.{css,scss,html,svg}]
+indent_style = space
+indent_size = 2
+
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+
+[*.{sh,bash}]
+indent_style = space
+indent_size = 2
+
+[Makefile]
+indent_style = tab
+
+[*.bat]
+end_of_line = crlf
+
+[*.ps1]
+end_of_line = crlf
