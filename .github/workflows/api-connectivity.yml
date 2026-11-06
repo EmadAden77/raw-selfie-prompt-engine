@@ -33,3 +33,24 @@ jobs:
           assert 'access-control-allow-origin: https://emadaden77.github.io' in headers
           assert any(line.startswith('access-control-allow-methods:') and 'post' in line for line in headers)
           PY
+      - name: Probe NVIDIA connectivity without a real API key
+        run: |
+          node --input-type=module <<'JS'
+          const ids = {locations:'location-1',clothing:'clothing-1',
+            expressions:'expression-1',hairstyles:'hair-1',selfieAngles:'angle-1',
+            poses:'pose-1',carConditions:'clean-1',lighting:'light-1'};
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 37000);
+          try {
+            const response = await fetch('https://raw-selfie-nvidia-api-emadaden77s-projects.vercel.app/api/prompt', {
+              method:'POST',
+              headers:{'Content-Type':'application/json','Origin':'https://emadaden77.github.io'},
+              body:JSON.stringify({selections:ids,variation:1,nvidiaApiKey:'nvapi-'+'not-a-real-key-000000000000'}),
+              signal:controller.signal,
+            });
+            const body = await response.json();
+            console.log(JSON.stringify({status:response.status,source:body.source,reason:body.reason}));
+            if (response.status !== 200 || body.reason !== 'unauthorized') process.exitCode=1;
+          } catch (e) { console.error('NVIDIA connectivity probe failed:',e.name); process.exitCode=1; }
+          finally { clearTimeout(timer); }
+          JS
