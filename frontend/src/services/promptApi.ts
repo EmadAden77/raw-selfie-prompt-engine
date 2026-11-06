@@ -1,6 +1,7 @@
 import type { PromptRequest, PromptResponse } from '../types/prompt';
 import { cabinMayBeVisible } from '../data/fixedRules';
 import { buildLocalPrompt } from './localConcisePrompt';
+import { buildLocalAudit } from './localAudit';
 export { buildLocalPrompt } from './localConcisePrompt';
 const PREFIX = 'ChatGPT, using the reference image I uploaded, generate an image of the exact same person';
 
@@ -12,7 +13,7 @@ const validReasons = new Set([
 
 export async function generatePrompt(request:PromptRequest):Promise<PromptResponse> {
   const fallback=(reason:PromptResponse['reason']):PromptResponse => ({
-    prompt:buildLocalPrompt(request),source:'local',reason
+    prompt:buildLocalPrompt(request),source:'local',reason,audit:buildLocalAudit(request)
   });
   if (!request.nvidiaApiKey) return fallback('no_key');
   if (!/^nvapi-[a-zA-Z0-9_-]{10,512}$/.test(request.nvidiaApiKey)) return fallback('invalid_key');
@@ -46,7 +47,13 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
     const source='source' in data && data.source==='server'?'server':'local';
     const reason='reason' in data&&typeof data.reason==='string'&&validReasons.has(data.reason)
       ?data.reason as PromptResponse['reason']:undefined;
-    return {prompt:data.prompt,source,reason:source==='local'?(reason??'invalid_response'):undefined};
+    const auditValue='audit' in data?data.audit:undefined;
+    const audit=auditValue&&typeof auditValue==='object'&&
+      'repairNotes' in auditValue&&Array.isArray(auditValue.repairNotes)&&
+      auditValue.repairNotes.length<=5&&auditValue.repairNotes.every((note:unknown)=>typeof note==='string'&&note.length<=500)&&
+      'sceneCameraSurface' in auditValue&&typeof auditValue.sceneCameraSurface==='string'&&auditValue.sceneCameraSurface.length<=650
+        ?auditValue as NonNullable<PromptResponse['audit']>:buildLocalAudit(request);
+    return {prompt:data.prompt,source,reason:source==='local'?(reason??'invalid_response'):undefined,audit};
   } catch(error) {
     return fallback(error instanceof Error&&error.name==='AbortError'?'nvidia_timeout':'backend_unreachable');
   } finally {
