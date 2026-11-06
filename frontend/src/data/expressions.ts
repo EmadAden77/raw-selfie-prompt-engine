@@ -1,6 +1,4 @@
-import type { Option } from '../types/options';
-const rows:[string,string][]=[
-['محايد','neutral relaxed expression'],['ابتسامة خفيفة','subtle natural smile'],['ابتسامة عريضة','wide natural smile'],['ضحك','genuine laughter'],['جدي','serious relaxed expression'],['متفاجئ','natural surprised expression'],['حاجب مرفوع','one eyebrow raised'],['غمزة','natural one-eye wink'],['نظرة جانبية','eyes looking casually to one side'],['تعب','slightly tired natural gaze'],['نعسان','sleepy half-closed eyelids'],['واثق','calm confident gaze'],['تفكير','thoughtful natural expression'],['غضب خفيف','slightly annoyed expression'],['حزن خفيف','subtly sad expression'],['خجل','shy downward gaze'],['ملل','bored relaxed expression'],['تركيز','focused natural gaze'],['نظرة مباشرة','direct calm eye contact'],['فم مفتوح قليلاً','relaxed slightly parted lips'],['عض الشفة السفلية','subtly biting lower lip'],['رفع حاجب واحد','natural asymmetric single eyebrow raise'],['تضييق العين من الشمس','natural squint caused by sunlight'],['تثاؤب خفيف','small spontaneous yawn'],['ابتسامة تظهر الأسنان','natural smile showing teeth'],['نظر للأسفل','eyes looking down toward the phone'],['حواجب مقطبة','naturally furrowed brows'],['عيون واسعة','slightly widened eyes'],['ضحك مع إغماض العين','laughing with eyes closed'],['ابتسامة جانبية','subtle asymmetric smirk']
-];
-export const expressions:Option[]=rows.map(([label,prompt],i)=>({id:'expression-'+(i+1),label,prompt:prompt+', preserving natural facial anatomy and exact identity'}));
+import { getOptions } from './canonical';
 
+// Arabic labels and English prompt text come from the same validated catalogue.
+export const expressions = getOptions('expressions');
