@@ -38,8 +38,8 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
   const base=(import.meta.env.VITE_API_BASE_URL as string|undefined)?.trim()??'';
   const endpoint=base?base.replace(/\/$/,'')+'/api/prompt':'/api/prompt';
   const controller=new AbortController();
-  // NVIDIA model inference can require substantially more than twelve seconds.
-  const timer=setTimeout(()=>controller.abort(),120000);
+  // Always finish a public-page request within a bounded time, even if the server stalls.
+  const timer=setTimeout(()=>controller.abort(),45000);
   try {
     const response=await fetch(endpoint,{
       method:'POST',
