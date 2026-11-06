@@ -3,7 +3,7 @@ function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   const count=promptWordCount(prompt);
   if(count<105||count>360) return false;
   if(!prompt.includes(IDENTITY_CORE)||!prompt.includes(BODY_CORE)||!prompt.includes(SUBJECT_CORE))return false;
-  if(!/\b195 cm\b/.test(prompt)||!/\b88 kg\b/.test(prompt)||!/lean athletic/.test(prompt))return false;
+  if(!/\b193 cm\b/.test(prompt)||!/\b83 kg\b/.test(prompt)||!/lean athletic/.test(prompt))return false;
   if(!prompt.includes('Scene:')||!prompt.includes('Camera:')||!prompt.includes('Lighting:')||
      !prompt.includes('Photographic realism:'))return false;
   if(!/\b2022\b[\s\S]{0,85}\bRange Rover Sport\b|\b2022\b[\s\S]{0,85}\bRange Rover Sport\b/i.test(prompt))return false;
@@ -12,7 +12,7 @@ function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   if(/\b(?:single portrait|portrait.oriented|vertical infotainment)\s+(?:screen|display)/i.test(prompt))return false;
   if(/\b(?:two suns|opposing key lights|extra studio fill|cinematic lighting)\b/i.test(prompt)&&
      !/\b(?:no|without)\s+(?:extra studio fill|cinematic lighting)\b/i.test(prompt))return false;
-  if(/(?:192|193|194|196|197)\s*cm|\b(?:83|84|85|86|87|89|90)\s*kg/i.test(prompt))return false;
+  if(/(?:192|194|195|196|197)\s*cm|\b(?:84|85|86|87|88|89|90)\s*kg/i.test(prompt))return false;
   if(/\b(?:beige|cream|tan)\s+(?:leather\s+)?steering wheel\b/i.test(prompt))return false;
   if(choices){
     const cabin=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
@@ -60,8 +60,8 @@ const mustHave=[
   /CGI/i
 ];
 const contradictoryBody=[
-  /\b(?!195\b)\d{2,3}\s*(?:cm|centimeters?)\b/i,
-  /\b(?!88\b)\d{2,3}\s*(?:kg|kilograms?)\b/i,
+  /\b(?!193\b)\d{2,3}\s*(?:cm|centimeters?)\b/i,
+  /\b(?!83\b)\d{2,3}\s*(?:kg|kilograms?)\b/i,
   /\b(?:bodybuilder|bodybuilding physique|extremely thin physique|massively muscular physique|extreme thinness as the actual physique)\b/i
 ];
 const contradictoryCar=[
@@ -86,7 +86,7 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(/\b(?:burj khalifa|kingdom cent(?:re|er)|al faisaliah|dubai mall|riyadh park|red sea mall)\b/i.test(prompt))return false;
   if(/\b(?:the car|the suv|the vehicle|range rover)\s+(?:is\s+)?(?:moving|driving|speeding|racing)\b/i.test(prompt))return false;
   if(/\b(?:steering wheel is\s+(?:beige|tan|cream)|beige leather steering wheel)\b/i.test(prompt))return false;
-  if(/\b(?:he|person|subject)\s+weighs\s+(?!88\b)\d+\s*kg\b/i.test(prompt))return false;
+  if(/\b(?:he|person|subject)\s+weighs\s+(?!83\b)\d+\s*kg\b/i.test(prompt))return false;
   if(/\b(?:cinematic lighting illuminates|opposing shadows fall|two dominant light sources)\b/i.test(prompt))return false;
   if(/\b(?:a|the)\s+(?:driving|moving|speeding)\s+(?:pearl-white\s+)?(?:2022\s+)?Range Rover Sport\b/i.test(prompt))return false;
   if(/\b(?:driving|moving|speeding)\s+(?:pearl-white\s+)?2022\s+Range Rover Sport\b/i.test(prompt))return false;
