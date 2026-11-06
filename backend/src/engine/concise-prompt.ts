@@ -10,7 +10,7 @@ export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, natural asymmetry, apparent age, skin tone and texture, eyes, brows, nose, lips, jaw, hairline, thinning, hair density, curl pattern and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 193 cm, weight 83 kg, natural lean athletic physique with proportional anatomy.';
-export const SUBJECT_CORE = 'The reference person is the sole primary subject; never widen for scenery.';
+export const SUBJECT_CORE = 'The reference person is the sole primary subject; no wider scenery framing.';
 export const promptWordCount = (text: string): number => text.trim().split(/\s+/).filter(Boolean).length;
 const numberOf = (id: string): number => Number(id.split('-').at(-1));
 
@@ -56,7 +56,7 @@ function lightingProse(choices: ResolvedSelections, inside: boolean): string {
       : 'Existing diffuse skylight makes soft contact shadows; no hidden fill.';
   return inside
     ? 'Morning sunlight enters through existing glazing; face and cabin shadows follow its real path, with natural bounce only.'
-    : 'Existing morning sun lights the exposed face; surroundings share its shadow direction, no studio fill.';
+    : 'Existing morning sun lights the face; shadows agree with its direction, no fill.';
 }
 
 function framingProse(inside: boolean, close: boolean, steeringHand: boolean): string {
@@ -66,7 +66,7 @@ function framingProse(inside: boolean, close: boolean, steeringHand: boolean): s
     return steeringHand
       ? 'Framing: face and shoulders dominate 9:16, cropped near chest; wheel hand at edge only, never full lap or console.'
       : 'Framing: face and shoulders dominate 9:16, cropped near chest; hands appear only if the angle includes them, never a full lap or dashboard.';
-  return 'Framing: face and upper torso dominate 9:16; no pullback to showcase car or road.';
+  return 'Framing: face and upper torso dominate 9:16; no car-showcase pullback.';
 }
 
 const unsafeAddition = /\b(?:show|reveal|widen|entire|whole|full.body|landmark|tower|skyline|famous|new face|different person|studio|cinematic|beauty|retouch|CGI|8K|perfect skin|second sun|extra light|two suns|recolor|replace|redesign|zoom out|pull back|crane|drone|selfie stick)\b/i;
@@ -138,12 +138,12 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
       : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie on a physically supported cabin mount, timer started by the subject; no invented hand-held photographer.'
     : reflection
       ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
-      : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; slight phone distortion and hand tilt; phone is outside its own direct view, no remote photographer or portrait mode.';
+      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; phone is outside its own direct view; real lens distortion and tilt, no remote photographer, portrait mode or beautification.';
   const support = capture.mounted
     ? 'Both hands follow the selected wheel grip; phone mount and seat contact are physically supported.'
     : inside
       ? 'Seat contact and hands obey gravity; selfie and free hands remain distinct.'
-      : 'Natural grip, support and gravity-driven folds.';
+      : 'Real grip, support and garment folds.';
   const surface = inside
     ? 'Clean or hidden cabin surfaces stay clean.'
     : condition === 1 ? 'Freshly washed surfaces stay clean.'
