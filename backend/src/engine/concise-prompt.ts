@@ -46,7 +46,7 @@ function lightingProse(choices:ResolvedSelections):string {
   return line+' Reflected light may soften shadows; no studio or hidden fill.';
 }
 
-export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan):string {
+export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,variation=0):string {
   const inside=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
   const visibleVehicle=carVisibility(choices,inside);
   const angle=Number(choices.selfieAngles.id.split('-').at(-1));
@@ -80,8 +80,14 @@ export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan):s
   const texture=plan?
     plan.photographicImperfectionControl.skin+'; '+plan.photographicImperfectionControl.optics+'.':
     'Natural skin texture, phone processing and material reflections.';
+  const seenBackground=plan?.environmentalRealism.background;
+  const safeModelBackground=seenBackground&&!seenBackground.startsWith('only ordinary')?seenBackground:'';
+  const understated=[
+    'a distant passerby at the frame edge','a few parked vehicles in the far background',
+    'a restrained trace of road dust far behind the subject'
+  ][Math.abs(variation)%3]!;
   const environment=close||inside?'Do not force roads or crowds into view.':
-    'Only if in frame: '+surface.surface+' and ordinary background activity.';
+    'If already in frame: '+surface.surface+'; '+(safeModelBackground||understated)+'.';
   const realism='Photographic realism: '+texture+' '+environment+
     ' No waxy skin, beauty filters, CGI, false defects or exaggerated HDR. 9:16.';
   const result=[identity,scene,vehicle,cabin,camera,lighting,realism].join(' ').replace(/\s+/g,' ').trim();
