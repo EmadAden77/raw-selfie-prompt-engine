@@ -55,7 +55,7 @@ function lightingProse(choices: ResolvedSelections, inside: boolean): string {
       ? 'Diffuse skylight through real windows gives soft facial contrast; the deeper cabin receives less light.'
       : 'Existing diffuse skylight makes soft contact shadows; no hidden fill.';
   return inside
-    ? 'Morning sunlight enters through actual glazing; face and cabin shadows follow its path, no fill.'
+    ? 'Morning sun through real glazing; face and cabin shadows follow its path, no fill.'
     : 'Existing morning sun lights the face; shadows agree with its direction, no fill.';
 }
 
@@ -130,7 +130,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
       ? 'The parked pearl-white 2022 Range Rover Sport retains sport package, black rims and grille, LED headlights; ' + choices.carConditions.text + ' only where visible.'
       : 'Pearl-white 2022 Range Rover Sport with sport package and black rims stays parked off-frame.';
   const cabin = inside
-    ? LHD_GEOMETRY + ' Visible only: light beige leather seats/dashboard, black leather three-spoke wheel, glossy dark wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. Never reveal off-frame details.'
+    ? LHD_GEOMETRY + ' Visible: light beige leather seats/dashboard, black leather three-spoke wheel, glossy dark wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. No off-frame details.'
     : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = capture.mounted
     ? reflection
@@ -138,14 +138,14 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
       : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie on a physically supported cabin mount, timer started by the subject; no invented hand-held photographer.'
     : reflection
       ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
-      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at arm reach; phone is outside its own direct view; natural tilt, no photographer, portrait mode or beautification.';
+      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at arm reach; phone is outside its own direct view; slight tilt, no photographer, portrait mode or beauty processing.';
   const support = capture.mounted
     ? 'Hands grip wheel; fixed mount and seat contact obey physics.'
     : inside
       ? 'Seat contact and hands obey gravity; selfie and free hands remain distinct.'
       : 'Real grip, support and garment folds.';
   const surface = inside
-    ? 'Clean cabin surfaces stay clean; hidden parts stay hidden.'
+    ? 'No invented cabin grime.'
     : condition === 1 ? 'Freshly washed surfaces stay clean.'
       : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
         : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
