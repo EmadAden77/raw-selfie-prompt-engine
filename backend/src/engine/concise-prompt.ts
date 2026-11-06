@@ -5,11 +5,11 @@ import { cabinMayBeVisible } from '../rules/cabin.rules.js';
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 import { isReflectionSelfie } from './photographic-auditor-v8.js';
 
-export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right, wheel physically left, console right; no mirrored layout.';
+export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right, wheel left, console right; never mirror.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, natural asymmetry, apparent age, skin tone and texture, eyes, brows, nose, lips, jaw, hairline, thinning, hair density, curl pattern and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 193 cm, weight 83 kg, natural lean athletic physique with proportional anatomy.';
-export const SUBJECT_CORE = 'The reference person is the sole primary subject; never widen for surroundings.';
+export const SUBJECT_CORE = 'The reference person is the sole primary subject; never widen for scenery.';
 export const promptWordCount = (text: string): number => text.trim().split(/\s+/).filter(Boolean).length;
 const numberOf = (id: string): number => Number(id.split('-').at(-1));
 
@@ -96,7 +96,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
   const identity = [REQUIRED_PREFIX + '.', IDENTITY_CORE, BODY_CORE, SUBJECT_CORE].join(' ');
   const expressionGuard = expression === 1 ? ' No smile or posed grin.'
     : expression === 5 ? ' Do not turn this serious look into a smile.' : '';
-  const scene = 'Scene: ' + choices.locations.text + ', unnamed everyday Saudi setting. ' +
+  const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting. ' +
     'Clothing: ' + choices.clothing.text + '. Expression: ' + choices.expressions.text + '.' +
     expressionGuard + ' Hair: ' + choices.hairstyles.text + ' within existing density. ' +
     'Pose: ' + choices.poses.text + '. Angle: ' + choices.selfieAngles.text + '.';
@@ -112,17 +112,17 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
     ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
     : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; slight phone distortion and hand tilt; phone is outside its own direct view, no remote photographer or portrait mode.';
   const support = inside
-    ? 'Seat compression and hands obey gravity; selfie and free hands remain distinct.'
-    : 'Real grip, supported pose and gravity-driven folds.';
+    ? 'Seat contact and hands obey gravity; selfie and free hands remain distinct.'
+    : 'Natural grip, support and gravity-driven folds.';
   const surface = inside
     ? 'Clean or hidden cabin surfaces stay clean.'
     : condition === 1 ? 'Freshly washed surfaces stay clean.'
       : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
         : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
   const surroundings = !inside && !close ? backgroundProse(choices, variation, plan) : '';
-  const realism = 'Photographic realism: shared phone exposure, reference pores, natural fabric folds, grounded shadows and highlights. ' +
+  const realism = 'Photographic realism: shared phone exposure, reference pores, real folds, coherent shadows and highlights. ' +
     support + ' ' + surface + ' ' + surroundings +
-    ' No wax or plastic skin, beauty filters, CGI, invented blemishes, extra fingers, impossible reflections or HDR.';
+    ' No wax or plastic skin, beauty filters, CGI, invented marks, extra fingers or HDR.';
   return [identity, scene, vehicle, cabin, camera, framingProse(inside, close),
     'Lighting: ' + lightingProse(choices, inside), realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
 }
