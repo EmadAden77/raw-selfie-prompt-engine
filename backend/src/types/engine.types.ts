@@ -9,7 +9,8 @@ export type FallbackReason =
   | 'rate_limited' | 'model_unavailable' | 'nvidia_timeout'
   | 'nvidia_network' | 'nvidia_unavailable' | 'request_rejected'
   | 'empty_response' | 'unsafe_output';
-export interface PromptResponse { prompt: string; source: 'server' | 'local'; reason?:FallbackReason }
+export interface PromptAuditReport { repairNotes: string[]; sceneCameraSurface: string }
+export interface PromptResponse { prompt: string; source: 'server' | 'local'; reason?:FallbackReason; audit?:PromptAuditReport }
 export interface SelectedOption { id: string; label: string; text: string }
 export type OptionCatalogue = Record<CategoryKey, SelectedOption[]>;
 export type ResolvedSelections = Record<CategoryKey, SelectedOption>;
