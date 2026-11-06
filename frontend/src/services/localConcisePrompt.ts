@@ -49,7 +49,7 @@ export function buildLocalPrompt(request:PromptRequest):string {
   return [
     PREFIX+'.',
     'Preserve the reference face, facial proportions, natural skin tone and texture, hairline, hair density, beard and moustache; no retouching or identity changes.',
-    'Fixed height 195 cm, weight 88 kg, natural lean athletic physique and proportional limbs; do not force a full-body view.',
+    'Fixed height 193 cm, weight 83 kg, natural lean athletic physique and proportional limbs; do not force a full-body view.',
     'The person is the sole primary subject; do not widen the frame or shrink the subject to show other objects.',
     scene,car,cabin,camera,'Lighting: '+lighting+' Natural reflections may soften shadows; no studio fill.',
     'Photographic realism: authentic reference skin, credible material reflections and normal phone processing. '+road+
