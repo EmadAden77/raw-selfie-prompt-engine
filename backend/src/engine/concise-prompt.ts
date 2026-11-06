@@ -3,11 +3,12 @@ import type { ScenePlan } from './scene-planner.js';
 import { deriveSceneLighting } from './rule-builder.js';
 import { cabinMayBeVisible } from '../rules/cabin.rules.js';
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
+import { auditPhotographicScene, isReflectionSelfie } from './photographic-auditor-v8.js';
 
 export const LHD_GEOMETRY = 'Saudi left-hand drive (LHD): wheel left, driver front-left, passenger front-right, center console on the driver’s physical right; selfie mirroring never swaps vehicle sides.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, upper infotainment and lower climate controls with rotary dials';
-export const IDENTITY_CORE = 'Preserve exact reference facial identity, proportions, skin tone/texture, hairline/density, beard and moustache; no retouching.';
-export const BODY_CORE = 'Height 195 cm, weight 88 kg, natural lean athletic physique with proportional anatomy.';
+export const IDENTITY_CORE = 'Preserve reference facial geometry, natural asymmetry, apparent age, skin tone and texture, eyes, brows, nose, lips, jaw, hairline, thinning, hair density, curl pattern and facial-hair gaps; no reshaping, beautification or invented marks.';
+export const BODY_CORE = 'Height 193 cm, weight 83 kg, natural lean athletic physique with proportional anatomy.';
 export const SUBJECT_CORE = 'The reference person is the sole primary subject; never widen the selfie for surroundings.';
 const words=(text:string)=>text.trim().split(/\s+/).filter(Boolean).length;
 export const promptWordCount=words;
@@ -28,7 +29,7 @@ function lightingProse(choices:ResolvedSelections):string {
   }else if(selection===9){
     line='Only the phone screen illuminates the nearby face; light falls off sharply below the chest into genuine darkness.';
   }else if(selection===10){
-    line='Only a physically available front-screen flash lights the close subject, with quick falloff and no invented fill.';
+    line=isReflectionSelfie(choices.selfieAngles.id)?'Use the actual rear LED flash along the reflected camera path, with correctly positioned glare and no invented fill.':'Use only the explicitly enabled front-screen flash, with quick falloff and no invented fill.';
   }else if(scene.time==='night'){
     line=area===4?'Use only available dim sky or a real roadside fixture if present; keep the night genuinely dark.':
       'Use the existing local street, station or villa fixture as the main night illumination, with natural falloff and subdued reflections.';
@@ -53,6 +54,7 @@ export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,va
   const close=[2,3,9,10,11].includes(angle);
   const loc=Number(choices.locations.id.split('-').at(-1));
   const surface=deriveSceneLighting(choices);
+  const audit=auditPhotographicScene(choices);
   const framing=close?'Show only the naturally visible face and shoulders.':
     'Keep normal subject scale.';
   const identity=[REQUIRED_PREFIX+'.',IDENTITY_CORE,BODY_CORE,SUBJECT_CORE].join(' ');
@@ -72,10 +74,9 @@ export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,va
     visibleVehicle?carBase+' '+parking:
     'The pearl-white 2022 Range Rover Sport stays parked, off-frame unless visible.';
   const cabin=inside?
-    LHD_GEOMETRY+' If visible: light beige leather, glossy dark wood, chrome, piano-black trim and a black leather three-spoke wheel; '+FACTORY_DASHBOARD+' remain factory-correct; show only in-frame parts.':
+    LHD_GEOMETRY+' If visible: light beige leather seats, beige dashboard panels, panoramic glass roof, glossy dark wood, chrome, piano-black trim and a black leather three-spoke wheel; '+FACTORY_DASHBOARD+' remain factory-correct; show only in-frame parts.':
     'Any visible cabin remains Saudi LHD.';
-  const camera='Camera: raw handheld front-phone selfie at arm length; '+framing+
-    ' Natural fabric gravity and body support.';
+  const camera=audit.camera+' '+framing+' '+audit.physicalConsistency;
   const lighting='Lighting: '+lightingProse(choices);
   // Only include small, optional, physically plausible model improvements.
   const texture=plan?
@@ -92,8 +93,8 @@ export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,va
     'worn patched Saudi asphalt';
   const environment=close||inside?'Keep off-frame scenery hidden.':
     'Only if visible: '+visibleGround+'; '+(safeModelBackground||understated)+'.';
-  const realism='Photographic realism: '+texture+' '+environment+
-    ' No beauty filters, wax skin, CGI, invented defects or exaggerated HDR. 9:16.';
+  const realism='Photographic realism: '+texture+' '+environment+' '+audit.surfaceHistory+' '+audit.exposure+
+    ' No beauty filters, wax or plastic skin, CGI, invented blemishes, floating geometry, extra digits, impossible reflections or exaggerated HDR. 9:16.';
   const result=[identity,scene,vehicle,cabin,camera,lighting,realism].join(' ').replace(/\s+/g,' ').trim();
   return result;
 }

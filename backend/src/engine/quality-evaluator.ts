@@ -11,7 +11,7 @@ export function evaluateQuality(plan:ScenePlan,prompt:string,choices:ResolvedSel
   const baseline=createScenePlan(choices);
   return [
     {category:'identity',passed:plan.humanAppearancePreservation.faceUnchanged&&
-      plan.humanAppearancePreservation.heightCm===195&&plan.humanAppearancePreservation.weightKg===88,
+      plan.humanAppearancePreservation.heightCm===193&&plan.humanAppearancePreservation.weightKg===83,
       note:'Protected identity and physique are specified, but the generated image is not evaluated.'},
     {category:'geometry',passed:JSON.stringify(plan.cameraGeometry)===JSON.stringify(baseline.cameraGeometry)&&
       JSON.stringify(plan.physicalPoseConsistency)===JSON.stringify(baseline.physicalPoseConsistency),

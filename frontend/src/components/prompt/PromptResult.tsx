@@ -30,6 +30,12 @@ export default function PromptResult({result}:{result:PromptResponse}){
         <p>{viaNvidia?'استُخدمت NVIDIA لإضافة تفاصيل واقعية، مع إبقاء قواعد الهوية والسيارة ثابتة.':reasons[result.reason??'invalid_response']}</p>
       </div>
     </div>
+    {result.audit&&<section className="audit-report" aria-label="تقرير التدقيق الفوتوغرافي">
+      <h3>ملاحظات الإصلاح · تدقيق v8</h3>
+      <ul>{result.audit.repairNotes.map((note,index)=><li key={index}>{note}</li>)}</ul>
+      <h3>المشهد والكاميرا والخامات</h3>
+      <p>{result.audit.sceneCameraSurface}</p>
+    </section>}
     <div className="prompt-output" dir="ltr" lang="en">{result.prompt}</div>
     <div className="result-actions"><CopyButton prompt={result.prompt}/></div>
     <p className="privacy-line"><Info size={16}/> التطبيق ينشئ نص البرومبت فقط، ولا يولّد الصور.</p>

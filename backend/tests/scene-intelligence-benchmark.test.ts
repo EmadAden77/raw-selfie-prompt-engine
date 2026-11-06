@@ -35,8 +35,8 @@ test('benchmark: all 8 scene categories preserve locked geometry, physics and di
     assert.equal(scenePlanSchema.safeParse(plan).success,true,b.name);
     assert.equal(plan.naturalLightSimulation.kelvin,b.kelvin,b.name);
     assert.equal(plan.vehicleInteriorConsistency.visible,b.cabin,b.name);
-    assert.equal(plan.humanAppearancePreservation.heightCm,195,b.name);
-    assert.equal(plan.humanAppearancePreservation.weightKg,88,b.name);
+    assert.equal(plan.humanAppearancePreservation.heightCm,193,b.name);
+    assert.equal(plan.humanAppearancePreservation.weightKg,83,b.name);
     assert.ok(plan.cameraGeometry.armReachCm<=110,b.name);
     assert.match(plan.environmentalRealism.parking,/parked|parallel|parking|road edge|roadside|bay/i,b.name);
     const critique=reviewScenePlan(plan,plan);
@@ -45,7 +45,7 @@ test('benchmark: all 8 scene categories preserve locked geometry, physics and di
     const result=evaluateQuality(critique.plan,generated,resolved);
     assert.ok(result.every(x=>x.passed),b.name+': '+result.filter(x=>!x.passed).map(x=>x.category).join(','));
     assert.ok(generated.includes('sole primary subject'),b.name);
-    assert.ok(generated.includes('195 cm')&&generated.includes('88 kg'),b.name);
+    assert.ok(generated.includes('193 cm')&&generated.includes('83 kg'),b.name);
     assert.ok(!/masterpiece|8K ultra/i.test(generated),b.name);
     const local=fallbackGenerator({selections,variation:1});
     assert.ok(local.startsWith('ChatGPT, using the reference image I uploaded'),b.name);

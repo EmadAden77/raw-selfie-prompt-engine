@@ -1,5 +1,5 @@
 export const realismRules=[
- 'Preserve actual skin pores, subtle natural texture, appropriate perspiration where justified by weather, authentic cloth creases and naturally muted real-world colors.',
+ 'Preserve reference-consistent skin texture at resolvable scale, naturally muted real-world colors and gravity-driven clothing creases; never invent pores, blemishes or sweat solely to suggest realism.',
  'No wax skin, plastic skin, porcelain skin, CGI, 3D render, doll face, plastic clothing, toy-like car, airbrushed surface, beauty filter, fake cinematic lighting or exaggerated HDR.',
- 'Apply the same plausible phone-camera exposure, grain, sharpness and compression to the entire scene, including face and background.'
+ 'Apply one plausible phone-camera exposure, focus and processing pipeline to the entire scene; sensor noise, sharpening or compression appear only where capture conditions justify them.'
 ] as const;

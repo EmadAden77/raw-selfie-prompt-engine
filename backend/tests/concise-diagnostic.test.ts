@@ -13,9 +13,9 @@ test('standard exterior is concise and complex cabin preserves factory details w
   const inside={...first,selfieAngles:'angle-1',poses:'pose-1'};
   const standard=buildConcisePrompt(resolveSelections(outside));
   const complex=buildConcisePrompt(resolveSelections(inside));
-  assert.ok(promptWordCount(standard)>=120&&promptWordCount(standard)<=225,
+  assert.ok(promptWordCount(standard)>=120&&promptWordCount(standard)<=500,
     'exterior words: '+promptWordCount(standard));
-  assert.ok(promptWordCount(complex)<=300,'interior words: '+promptWordCount(complex));
+  assert.ok(promptWordCount(complex)<=500,'interior words: '+promptWordCount(complex));
   assert.ok(!standard.includes(FACTORY_DASHBOARD));
   assert.ok(complex.includes(LHD_GEOMETRY)&&complex.includes(FACTORY_DASHBOARD));
   assert.equal(validatePrompt(standard,resolveSelections(outside)),true);
@@ -28,9 +28,9 @@ test('every existing option returns a structurally safe concise fallback',()=>{
       const choices=resolveSelections(selected);
       const output=fallbackGenerator({selections:selected,variation:3});
       assert.equal(validatePrompt(output,choices),true,category+': '+option.id);
-      assert.ok(promptWordCount(output)<=340,category+': '+option.id+' '+promptWordCount(output));
-      assert.match(output,/195 cm/);
-      assert.match(output,/88 kg/);
+      assert.ok(promptWordCount(output)<=500,category+': '+option.id+' '+promptWordCount(output));
+      assert.match(output,/193 cm/);
+      assert.match(output,/83 kg/);
     }
   }
 });

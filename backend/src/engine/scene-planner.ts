@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { ResolvedSelections } from '../types/engine.types.js';
 import { cabinMayBeVisible } from '../rules/cabin.rules.js';
 import { deriveSceneLighting } from './rule-builder.js';
+import { isReflectionSelfie } from './photographic-auditor-v8.js';
 
 // No image is transmitted. This is a textual plan grounded in validated option IDs.
 // Zod validates the complete model proposal before any value can affect the prompt.
@@ -37,30 +38,30 @@ export function createScenePlan(choices:ResolvedSelections):ScenePlan {
   const angle=angleNumber(choices.selfieAngles.id);
   const close=[2,3,9,10,11].includes(angle);
   const interior=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
-  const mirror=[4,29].includes(angle);
+  const mirror=isReflectionSelfie(choices.selfieAngles.id);
   const scene=deriveSceneLighting(choices);
-  const position=mirror?'a handheld phone visible only as a plausible mirror or glass reflection':
+  const position=mirror?'the subject-held rear-camera phone reflected naturally in the selected mirror or glass':
     interior?'the subject-held front camera at reachable arm length from the selected seat':
     'the subject-held front camera at reachable arm length beside the parked vehicle';
   const framing=close?'face':angle===10||angle===24?'torso':'upper-body';
   const candidate:ScenePlan={
     cameraGeometry:{
       phonePosition:position,
-      opticalAxis:mirror?'phone aimed at the selected reflective surface to capture the subject naturally':'front camera pointed at the reference subject from a plausible handheld angle',
+      opticalAxis:mirror?'rear lens aimed at the selected reflective surface, with the phone screen toward the subject':'front camera pointed at the reference subject from a plausible handheld angle',
       armReachCm:close?38:angle===10?83:65,framing,
       visibleBody:close?'face and only naturally included neck or shoulder':
         framing==='torso'?'face, shoulders and naturally framed torso':'face, shoulders and upper torso only where visible'
     },
     physicalPoseConsistency:{
       support:'body weight and seating or standing support follow the selected pose: '+choices.poses.text,
-      handPlacement:mirror?'one reachable phone hand has an honest optical reflection':
+      handPlacement:mirror?'one reachable phone hand grips a correctly oriented rear-camera phone in one coherent reflection':
         'one hand holds the front-facing phone at reachable arm length; the other follows the selected pose'
     },
     naturalLightSimulation:{
       source:scene.source,kelvin:scene.kelvin,shadowDirection:scene.shadows
     },
     humanAppearancePreservation:{
-      faceUnchanged:true,heightCm:195,weightKg:88,physique:'natural lean athletic'
+      faceUnchanged:true,heightCm:193,weightKg:83,physique:'natural lean athletic'
     },
     environmentalRealism:{
       parking:scene.parking,roadTexture:scene.surface,
@@ -72,16 +73,16 @@ export function createScenePlan(choices:ResolvedSelections):ScenePlan {
     },
     vehicleInteriorConsistency:{
       visible:interior,
-      visibleElements:interior?['light beige leather only if in frame','black leather steering wheel only if in frame','dark wood and piano-black trim only if in frame']:[],
+      visibleElements:interior?['light beige leather seats only if in frame','beige dashboard panels only if in frame','black leather steering wheel only if in frame','dark wood and piano-black trim only if in frame','panoramic roof only if in frame']:[],
       exteriorVisibleParts:angle>=16?(angle===19?['front grille only if in frame','nearby hood edge only if in frame']:
         angle===26?['rear hatch only if in frame']:
         angle===27?['side mirror only if in frame']:
         ['nearest parked pearl-white body panel only if in frame']):[],
-      materials:'fixed light beige leather, glossy dark wood, chrome and piano-black trim; black leather steering wheel'
+      materials:'fixed light beige leather seats and beige dashboard panels, panoramic glass roof, glossy dark wood, chrome and piano-black trim; black leather steering wheel'
     },
     photographicImperfectionControl:{
       skin:'preserve only natural reference skin texture with no invented blemishes',
-      optics:'plausible ordinary front-phone optics and restrained wide-angle perspective',
+      optics:mirror?'plausible rear-phone optics through a single mirror or glass reflection':'plausible ordinary front-phone optics and restrained wide-angle perspective',
       exposure:'phone exposure and reflections consistent with the single selected light source'
     }
   };
@@ -92,8 +93,8 @@ export function scenePlanInput(choices:ResolvedSelections,base:ScenePlan):string
   // No photo bytes, identity image or credential enters this model context.
   return JSON.stringify({
     selections:Object.fromEntries(Object.entries(choices).map(([key,value])=>[key,value.text])),
-    immutable:{heightCm:195,weightKg:88,physique:'lean athletic',car:'parked 2022 pearl-white Range Rover Sport',
-      cabin:'light beige leather, glossy dark wood, chrome, piano-black, black steering wheel',
+    immutable:{heightCm:193,weightKg:83,physique:'lean athletic',car:'parked 2022 pearl-white Range Rover Sport',
+      cabin:'light beige leather, beige dashboard panels, panoramic roof, glossy dark wood, chrome, piano-black, black steering wheel',
       identity:'preserve exact reference face, skin and hair; person is sole primary subject'},
     baseline:base
   });
