@@ -5,7 +5,7 @@ import { validatePrompt } from './prompt-validator.js';
 
 export function fallbackGenerator(request:PromptRequest):string{
   const choices=resolveSelections(request.selections);
-  const prompt=buildConcisePrompt(choices);
+  const prompt=buildConcisePrompt(choices,undefined,request.variation);
   if(!validatePrompt(prompt,choices))throw new Error('Fallback concise prompt rules failed validation');
   return prompt;
 }
