@@ -40,7 +40,7 @@ test('cabin rule is inserted for visible interior, not forced into an exterior s
   assert.match(inside,/piano-black/);
   assert.ok(!outside.includes(INTERIOR_RULE));
   assert.match(outside,/sole primary subject/);
-  assert.match(outside,/only show parts naturally|only for cabin surfaces naturally visible/i);
+  assert.match(outside,/show only parts naturally|only for cabin surfaces naturally visible/i);
 });
 test('validator rejects missing locked requirements and explicit contradictions',()=>{
   const base=fallbackGenerator({selections,variation:2});
