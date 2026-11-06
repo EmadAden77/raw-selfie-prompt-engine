@@ -8,7 +8,7 @@
 4. `Scene Planner` يبني JSON مرجعيًا من ثمانية أقسام، ويستخلص الإضاءة وهندسة السيلفي والمواد من الاختيارات.
 5. عند وجود مفتاح، تطلب خدمة NVIDIA خطة JSON واحدة (DeepSeek V4.1 Flash، حرارة 0.3 افتراضيًا) بناءً على النصوص والاختيارات فقط. يتحقق Zod من البنية ولا يُرسل النموذج البرومبت النهائي.
 6. `Consistency Critic` يصحح الخانات المتعارضة فقط ويحمي هوية الشخص والهندسة والمواد، ثم ينتقي `Realism Director` التفاصيل المناسبة.
-7. `Prompt Assembler` يجمع النص المحمي والتفاصيل المنتقاة، ثم يتحقق `Quality Evaluator` و`Prompt Validator` من الاتساق النصي.
+7. `Prompt Assembler` يستخدم `assembleConcisePrompt` لتركيب نسخة إنجليزية مختصرة من القواعد المحمية والاختيارات والتفاصيل المنتقاة، ثم يتحقق `Quality Evaluator` و`Prompt Validator` من الاتساق النصي.
 8. عند غياب المفتاح أو فشل NVIDIA، يعمل `Fallback Generator`، وعند تعذر Backend يعمل مولّد المتصفح.
 
 هذا التصميم يضمن ألا يكون النموذج الخارجي صاحب القرار في استبدال هوية الشخص أو لون السيارة. التوسيع الإبداعي محصور في التفاصيل المادية الصغيرة.
@@ -54,7 +54,7 @@ Frontend (React + TypeScript + Vite, Arabic RTL)
 Backend (Node.js + TypeScript + Express)
   → Validation → Rule Builder → Scene Planner JSON
   → NVIDIA API (deepseek-ai/deepseek-v4.1-flash) → Zod
-  → Consistency Critic → Realism Director → Prompt Assembler
+  → Consistency Critic → Concise Prompt Assembler
   → Quality Evaluator + Prompt Validator → English ChatGPT prompt
   ↳ NVIDIA missing/unavailable/invalid → Backend Fallback Generator
   ↳ Backend unreachable → Frontend local fallback
