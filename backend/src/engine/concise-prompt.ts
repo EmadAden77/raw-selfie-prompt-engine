@@ -74,7 +74,7 @@ export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,va
     visibleVehicle?carBase+' '+parking:
     'The pearl-white 2022 Range Rover Sport stays parked, off-frame unless visible.';
   const cabin=inside?
-    LHD_GEOMETRY+' If visible: light beige leather, glossy dark wood, chrome, piano-black trim and a black leather three-spoke wheel; '+FACTORY_DASHBOARD+' remain factory-correct; show only in-frame parts.':
+    LHD_GEOMETRY+' If visible: light beige leather seats, beige dashboard panels, panoramic glass roof, glossy dark wood, chrome, piano-black trim and a black leather three-spoke wheel; '+FACTORY_DASHBOARD+' remain factory-correct; show only in-frame parts.':
     'Any visible cabin remains Saudi LHD.';
   const camera=audit.camera+' '+framing+' '+audit.physicalConsistency;
   const lighting='Lighting: '+lightingProse(choices);
