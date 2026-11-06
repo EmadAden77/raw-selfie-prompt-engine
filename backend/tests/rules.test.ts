@@ -16,6 +16,6 @@ test('all fixed rules enter generated base',()=>{
   assert.ok(prompt.startsWith('ChatGPT, using the reference image I uploaded'));
   assert.match(prompt,/no wax skin/i);
   assert.match(prompt,/stationary/);
-  assert.match(prompt,/no famous/i);
+  assert.match(prompt,/famous building/i);
 });
 
