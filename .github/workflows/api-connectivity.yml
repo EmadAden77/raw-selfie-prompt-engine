@@ -27,5 +27,9 @@ jobs:
           echo "CORS preflight status: $status"
           cat /tmp/cors-headers
           test "$status" = "204"
-          tr -d '\\r' < /tmp/cors-headers | grep -iF 'access-control-allow-origin: https://emadaden77.github.io'
-          grep -iq '^access-control-allow-methods: .*POST' /tmp/cors-headers
+          python3 - <<'PY'
+          from pathlib import Path
+          headers = Path('/tmp/cors-headers').read_text().lower().splitlines()
+          assert 'access-control-allow-origin: https://emadaden77.github.io' in headers
+          assert any(line.startswith('access-control-allow-methods:') and 'post' in line for line in headers)
+          PY
