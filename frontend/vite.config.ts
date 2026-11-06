@@ -6,6 +6,9 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
+    strictPort: true,
+    // Private Codespaces URLs use this domain; no blanket allowedHosts setting.
+    allowedHosts: ['.app.github.dev'],
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:3001',

@@ -2,37 +2,26 @@
 
 > **هذا التطبيق مخصص لك وحدك.** لا تنشره على Vercel أو Netlify أو GitHub Pages أو أي نطاق أو خادم متاح للجمهور. لا تضف زر نشر تلقائي. احتفظ بالمستودع **Private**، ولا تغيّر رؤية منافذ Codespaces إلى Public.
 
-## الخيار الأسهل بدون تثبيت برامج: GitHub Codespaces
+## GitHub Codespaces — تشغيل تلقائي خاص (دون تيرمكس أو أوامر)
 
-1. ادخل إلى حسابك على GitHub وافتح `EmadAden77/raw-selfie-prompt-engine`.
-2. تأكد أن عبارة **Private** تظهر بجوار المستودع.
-3. اضغط **Code** ثم **Codespaces** ثم **Create codespace on main**.
-4. في المحرر الذي يفتح، اختر **Terminal → New Terminal**.
-5. اكتب/الصق هذا الأمر واضغط Enter، مرة واحدة:
+جهز المشروع إعداد `.devcontainer/devcontainer.json` ليقوم Codespaces الجديد تلقائيًا بتثبيت الاعتماديات، وبدء Backend والواجهة الأمامية، وتوجيه المنفذ **5173**. لا يحتاج المستخدم إلى أوامر أو تنزيل ملفات أو توكن شخصي.
 
-```bash
-npm install
-```
+1. افتح [المستودع الخاص على GitHub](https://github.com/EmadAden77/raw-selfie-prompt-engine).
+2. اضغط **Code → Codespaces → Create codespace on main**.
+3. بعد انتهاء تجهيز Codespace، افتح **Ports** واضغط **Open in Browser** للمنفذ **5173**؛ قد تُفتح الواجهة تلقائيًا.
+4. تحقق من أن خصوصية المنفذ **5173 = Private**. إن كان Public فاختر **Port Visibility → Private** فورًا. لا تنشر الرابط.
+5. أدخل مفتاح NVIDIA في الخانة العلوية داخل التطبيق نفسه فقط إذا أردت الاتصال الفعلي؛ أدخله في واجهة المتصفح، **وليس في GitHub أو المحرر أو Terminal**. عند عدم وجود مفتاح تستخدم القواعد المحلية.
+6. إن كان Codespace موجودًا قبل إضافة إعدادات المشروع، يلزم اختيار **Rebuild Container** من قائمة أوامر Codespaces لتطبيق إعدادات الحاوية الجديدة؛ لا يلزم تشغيل الأوامر يدويًا بعد إعادة البناء.
 
-6. في الطرفية نفسها شغّل الخادم:
+### حدود حماية المنافذ
 
-```bash
-npm run dev:backend
-```
+- GitHub يجعل المنافذ المحوّلة **Private افتراضيًا**، لكنها إعدادات قابلة للتغيير من صاحب Codespace. `.devcontainer` يطلب فتح المنفذ 5173 فقط، ولا يستطيع قفل خيار المشاركة العامة من حساب فردي.
+- Backend يستمع في Codespaces على `127.0.0.1:3001` فقط؛ تتواصل معه الواجهة عن طريق Vite Proxy عبر `/api`. لا يطلب المشروع تحويل المنفذ 3001.
+- الرابط الخاص للمنفذ 5173 يتطلب تسجيل الدخول إلى GitHub؛ **ليس نشرًا عامًا**. احفظ الرابط لنفسك وأوقف Codespace بعد استخدامه.
+- لا توجد أي طريقة تؤكد عمل مفتاحك الحقيقي لدى NVIDIA دون إدخاله في التطبيق وتشغيل الطلب من حسابك؛ اختبارات GitHub الآلية تستخدم محاكاة دون أسرار.
+- ليس لدينا اتصال مباشر لإدارة جلسات Codespaces أو قراءة حالة منفذ حقيقي؛ إعدادات المشروع والاختبارات تثبت صلاحية التهيئة فقط.
 
-7. افتح طرفية جديدة عبر **Terminal → New Terminal** وشغّل الواجهة:
-
-```bash
-npm run dev:frontend
-```
-
-8. افتح تبويب **Ports** في المحرر. إذا لم يظهر منفذ ما، يمكنك إضافته يدويًا عبر **Add port**.
-9. راجع المنفذين **5173** (الواجهة) و**3001** (الخادم). لكليهما يجب أن يكون **Port Visibility = Private**؛ إذا ظهرت **Public** فغيّرها إلى **Private** من قائمة المنفذ.
-10. اضغط رابط المنفذ **5173** من تبويب Ports أثناء تسجيل دخولك بحساب GitHub. تظهر لك الواجهة العربية الخاصة بك، بدون نشر موقع عام.
-
-**ملاحظة خصوصية:** منفذ Codespaces الخاص يعمل عبر رابط إنترنت محمي بمصادقة GitHub، وليس عنوان `localhost` على جهازك. بحسب توثيق GitHub، المنفذ الخاص متاح لصاحب Codespace المسجل الدخول فقط؛ لا تنشر رابط المنفذ ولا تشارك حسابك ولا تغيّر خصوصيته. أوقف Codespace بعد الاستخدام لتجنب الاستهلاك غير اللازم. قد تختلف إتاحة Codespaces والحصص حسب حسابك.
-
-توثيق GitHub الرسمي: [إنشاء Codespace](https://docs.github.com/en/codespaces/developing-in-a-codespace/creating-a-codespace-for-a-repository) و[إدارة المنافذ](https://docs.github.com/en/codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace).
+مراجع GitHub: [إنشاء Codespace](https://docs.github.com/en/codespaces/developing-in-a-codespace/creating-a-codespace-for-a-repository) و[خصوصية المنافذ](https://docs.github.com/en/codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace).
 
 ## الخيار الآخر: تشغيل محلي على جهازك (localhost)
 

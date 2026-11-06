@@ -1,0 +1,23 @@
+{
+  "name": "محرك السيلفي الخاص",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22",
+  "postCreateCommand": "npm install --no-audit --no-fund",
+  "postStartCommand": "node .devcontainer/start.mjs",
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": {
+      "label": "واجهة السيلفي الخاصة",
+      "onAutoForward": "openBrowser",
+      "protocol": "http"
+    },
+    "3001": {
+      "label": "الخادم الداخلي - لا تشارك المنفذ",
+      "onAutoForward": "ignore"
+    }
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["README.md"]
+    }
+  }
+}

@@ -1,9 +1,11 @@
 import { app } from './app.js';
 import { env } from './config/env.js';
 
-const server=app.listen(env.port,'0.0.0.0',()=>{
-  // Do not log environment secrets or any user input.
-  console.info('Backend is listening on port '+env.port);
+// Inside a codespace only Vite (5173) is forwarded. The API (3001)
+// listens on loopback and is reachable via Vite's same-origin /api proxy.
+const host=process.env.CODESPACES==='true'?'127.0.0.1':'0.0.0.0';
+const server=app.listen(env.port,host,()=>{
+  console.info('Backend started on its configured private interface.');
 });
 function shutdown(){
   server.close(()=>process.exit(0));
@@ -11,4 +13,3 @@ function shutdown(){
 }
 process.on('SIGINT',shutdown);
 process.on('SIGTERM',shutdown);
-

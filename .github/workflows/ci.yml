@@ -25,3 +25,5 @@ jobs:
         run: npm run build
       - name: Backend tests
         run: npm test
+      - name: Codespaces private-port routing smoke test
+        run: node .devcontainer/smoke.mjs
