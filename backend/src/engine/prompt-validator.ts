@@ -64,7 +64,7 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   // Additional contradictory light and parking claims override neither the
   // policy nor the computed scene plan; reject them rather than merging them.
   const freeText=prompt.split('Lighting selection:').slice(1).join('Lighting selection:');
-  if(/\b(?:cinematic|studio|beauty)\s+(?:fill\s+)?lighting\s+(?:illuminates|lights|brightens|falls on)\b/i.test(freeText))return false;
+  if(/\b(?:cinematic|studio|beauty)\s+(?:fill\s+)?lighting(?:\s+that)?\s+(?:illuminates|lights|brightens|falls on)\b/i.test(freeText))return false;
   if(/\b(?:two|multiple|several)\s+(?:opposing\s+)?(?:dominant\s+)?(?:light\s+sources|streetlamps|shadow\s+directions)\b/i.test(freeText))return false;
   if(/\b(?:opposing|conflicting|multi.directional)\s+shadows\s+(?:fall|appear|cross|are cast)\b/i.test(freeText))return false;
   if(/\b(?:parked|parking)\s+(?:diagonally|perpendicular)\s+across\s+(?:the\s+)?(?:road|street|traffic)\b/i.test(freeText))return false;
