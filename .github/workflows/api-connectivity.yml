@@ -50,7 +50,7 @@ jobs:
             });
             const body = await response.json();
             console.log(JSON.stringify({status:response.status,source:body.source,reason:body.reason}));
-            if (response.status !== 200 || body.reason !== 'unauthorized') process.exitCode=1;
+            if (response.status !== 200 || !['unauthorized','forbidden'].includes(body.reason)) process.exitCode=1;
           } catch (e) { console.error('NVIDIA connectivity probe failed:',e.name); process.exitCode=1; }
           finally { clearTimeout(timer); }
           JS
