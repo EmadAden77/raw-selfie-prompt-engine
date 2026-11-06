@@ -1,14 +1,11 @@
 import type { PromptRequest, PromptResponse } from '../types/engine.types.js';
 import { resolveSelections } from '../data/option-mappings.js';
-import { buildRulePrompt } from '../engine/rule-builder.js';
-import { expandCreativeDetails } from '../engine/creative-expander.js';
-import { assemblePrompt } from '../engine/prompt-assembler.js';
+import { buildConcisePrompt } from '../engine/concise-prompt.js';
 import { fallbackGenerator } from '../engine/fallback-generator.js';
 import { validatePrompt } from '../engine/prompt-validator.js';
 import { planWithNvidia, NvidiaFailure } from './nvidia.service.js';
 import { createScenePlan, scenePlanInput } from '../engine/scene-planner.js';
 import { reviewScenePlan } from '../engine/consistency-critic.js';
-import { directRealism } from '../engine/realism-director.js';
 import { evaluateQuality } from '../engine/quality-evaluator.js';
 
 export function validateCreativeAddition(value:string):boolean{
@@ -36,7 +33,6 @@ export function validateCreativeAddition(value:string):boolean{
 }
 export async function generatePrompt(request:PromptRequest):Promise<PromptResponse>{
   const resolved=resolveSelections(request.selections);
-  const base=buildRulePrompt(resolved);
   const baseline=createScenePlan(resolved);
   const fallback=fallbackGenerator(request);
   if(!validatePrompt(fallback,resolved))throw new Error('Internal prompt rules failed validation');
@@ -47,8 +43,7 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
     const proposal=await planWithNvidia(scenePlanInput(resolved,baseline),request.nvidiaApiKey);
     const reviewed=reviewScenePlan(proposal,baseline);
     if(!reviewed)return {prompt:fallback,source:'local',reason:'unsafe_output'};
-    const addition=directRealism(reviewed.plan,resolved);
-    const generated=assemblePrompt(base,addition);
+    const generated=buildConcisePrompt(resolved,reviewed.plan);
     const quality=evaluateQuality(reviewed.plan,generated,resolved);
     if(quality.some(result=>!result.passed))
       return {prompt:fallback,source:'local',reason:'unsafe_output'};
