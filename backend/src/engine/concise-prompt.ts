@@ -4,6 +4,7 @@ import { deriveSceneLighting } from './rule-builder.js';
 import { cabinMayBeVisible } from '../rules/cabin.rules.js';
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 import { isReflectionSelfie } from './photographic-auditor-v8.js';
+import { resolveCapture } from './scene-geometry.js';
 
 export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right, wheel left, console right; never mirror.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
@@ -58,11 +59,13 @@ function lightingProse(choices: ResolvedSelections, inside: boolean): string {
     : 'Existing morning sun lights the exposed face; surroundings share its shadow direction, no studio fill.';
 }
 
-function framingProse(inside: boolean, close: boolean): string {
+function framingProse(inside: boolean, close: boolean, steeringHand: boolean): string {
   if (close)
     return 'Framing: tight 9:16 face and shoulders; no pulled-back cabin or roadside view.';
   if (inside)
-    return 'Framing: face and shoulders dominate 9:16, cropped near chest; wheel hand at edge only, never full lap or console.';
+    return steeringHand
+      ? 'Framing: face and shoulders dominate 9:16, cropped near chest; wheel hand at edge only, never full lap or console.'
+      : 'Framing: face and shoulders dominate 9:16, cropped near chest; hands appear only if the angle includes them, never a full lap or dashboard.';
   return 'Framing: face and upper torso dominate 9:16; no pullback to showcase car or road.';
 }
 
@@ -88,8 +91,8 @@ function backgroundProse(choices: ResolvedSelections, variation: number, plan?: 
 
 export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan, variation = 0): string {
   const angle = numberOf(choices.selfieAngles.id);
-  const inside = cabinMayBeVisible(choices.selfieAngles.id, choices.poses.id);
-  const close = [2, 3, 9, 10, 11].includes(angle);
+  const capture = resolveCapture(choices);
+  const { inside, close } = capture;
   const reflection = isReflectionSelfie(choices.selfieAngles.id);
   const expression = numberOf(choices.expressions.id);
   const condition = numberOf(choices.carConditions.id);
@@ -99,21 +102,27 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
   const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting. ' +
     'Clothing: ' + choices.clothing.text + '. Expression: ' + choices.expressions.text + '.' +
     expressionGuard + ' Hair: ' + choices.hairstyles.text + ' within existing density. ' +
-    'Pose: ' + choices.poses.text + '. Angle: ' + choices.selfieAngles.text + '.';
+    'Pose: ' + capture.pose + '. Angle: ' + choices.selfieAngles.text + '.';
   const vehicle = inside
     ? 'The parked pearl-white 2022 Range Rover Sport has black rims; exterior off-frame.'
     : vehicleVisible(choices, false)
-      ? 'The parked pearl-white 2022 Range Rover Sport has black rims; ' + choices.carConditions.text + '.'
-      : 'Pearl-white 2022 Range Rover Sport with black rims stays parked off-frame.';
+      ? 'The parked pearl-white 2022 Range Rover Sport retains sport package, black rims and grille, LED headlights; ' + choices.carConditions.text + ' only where visible.'
+      : 'Pearl-white 2022 Range Rover Sport with sport package and black rims stays parked off-frame.';
   const cabin = inside
     ? LHD_GEOMETRY + ' Visible only: light beige leather seats/dashboard, black leather three-spoke wheel, glossy dark wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. Never reveal off-frame details.'
     : 'Saudi LHD unchanged; no off-frame cabin details.';
-  const camera = reflection
-    ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
-    : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; slight phone distortion and hand tilt; phone is outside its own direct view, no remote photographer or portrait mode.';
-  const support = inside
-    ? 'Seat contact and hands obey gravity; selfie and free hands remain distinct.'
-    : 'Natural grip, support and gravity-driven folds.';
+  const camera = capture.mounted
+    ? reflection
+      ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; stable user-set timer mount aimed at a real mirror, one reflection, no hand-held viewpoint.'
+      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie on a physically supported cabin mount, timer started by the subject; no invented hand-held photographer.'
+    : reflection
+      ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
+      : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; slight phone distortion and hand tilt; phone is outside its own direct view, no remote photographer or portrait mode.';
+  const support = capture.mounted
+    ? 'Both hands follow the selected wheel grip; phone mount and seat contact are physically supported.'
+    : inside
+      ? 'Seat contact and hands obey gravity; selfie and free hands remain distinct.'
+      : 'Natural grip, support and gravity-driven folds.';
   const surface = inside
     ? 'Clean or hidden cabin surfaces stay clean.'
     : condition === 1 ? 'Freshly washed surfaces stay clean.'
@@ -122,7 +131,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
   const surroundings = !inside && !close ? backgroundProse(choices, variation, plan) : '';
   const realism = 'Photographic realism: shared phone exposure, reference pores, real folds, coherent shadows and highlights. ' +
     support + ' ' + surface + ' ' + surroundings +
-    ' No wax or plastic skin, beauty filters, CGI, invented marks, extra fingers or HDR.';
-  return [identity, scene, vehicle, cabin, camera, framingProse(inside, close),
+    ' No wax or plastic skin, beauty filters, CGI, invented marks, extra fingers, false reflections or exaggerated HDR.';
+  return [identity, scene, vehicle, cabin, camera, framingProse(inside, close, capture.steeringHand),
     'Lighting: ' + lightingProse(choices, inside), realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
 }
