@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+// GitHub Pages serves this repository under a path; Codespaces still runs at /.
 export default defineConfig({
+  base: process.env.GITHUB_PAGES === 'true' ? '/raw-selfie-prompt-engine/' : '/',
   plugins: [react()],
   server: {
     host: '0.0.0.0',
