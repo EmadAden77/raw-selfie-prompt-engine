@@ -23,29 +23,48 @@ export function buildLocalPrompt(request:PromptRequest):string {
   return [PREFIX+'.',...LOCKS,'Scene and selected details: '+details.join('; ')+'.','Additional realistic background detail: '+detail+'.','Apply one consistent phone-camera processing treatment to the face, clothing, car and background. Portrait aspect ratio 9:16.'].join(' ');
 }
 
+const validReasons = new Set([
+  'no_key','invalid_key','unauthorized','forbidden','quota','rate_limited',
+  'model_unavailable','nvidia_timeout','nvidia_network','nvidia_unavailable',
+  'request_rejected','empty_response','unsafe_output'
+]);
+
 export async function generatePrompt(request:PromptRequest):Promise<PromptResponse> {
-  const fallback:PromptResponse={prompt:buildLocalPrompt(request),source:'local'};
-  // Default to the same-origin backend route; the Vite dev proxy handles localhost.
-  // In production, configure a reverse proxy or an explicit backend origin.
+  const fallback=(reason:PromptResponse['reason']):PromptResponse => ({
+    prompt:buildLocalPrompt(request),source:'local',reason
+  });
+  if (!request.nvidiaApiKey) return fallback('no_key');
+  if (!/^nvapi-[a-zA-Z0-9_-]{10,512}$/.test(request.nvidiaApiKey)) return fallback('invalid_key');
   const base=(import.meta.env.VITE_API_BASE_URL as string|undefined)?.trim()??'';
-  const endpoint=base ? base.replace(/\/$/,'')+'/api/prompt' : '/api/prompt';
+  const endpoint=base?base.replace(/\/$/,'')+'/api/prompt':'/api/prompt';
+  const controller=new AbortController();
+  // NVIDIA model inference can require substantially more than twelve seconds.
+  const timer=setTimeout(()=>controller.abort(),120000);
   try {
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),12000);
-    try {
-      const response=await fetch(endpoint,{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(request),signal:controller.signal,cache:'no-store',referrerPolicy:'no-referrer'
-      });
-      if(!response.ok) return fallback;
-      const data:unknown=await response.json();
-      if(data&&typeof data==='object'&&'prompt' in data&&typeof data.prompt==='string'&&
-        data.prompt.startsWith(PREFIX)&&!/[\u0600-\u06ff]/.test(data.prompt)&&data.prompt.length>400&&
-        /2022\s+Range Rover Sport/i.test(data.prompt)&&/pearl.white/i.test(data.prompt)&&
-        /beige/i.test(data.prompt)&&/parked|stationary/i.test(data.prompt)&&
-        /no wax skin/i.test(data.prompt)&&/plastic skin/i.test(data.prompt))
-        return {prompt:data.prompt,source:'server'};
-      return fallback;
-    } finally {clearTimeout(timeout);}
-  } catch {return fallback;}
+    const response=await fetch(endpoint,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(request),
+      signal:controller.signal,
+      cache:'no-store',
+      referrerPolicy:'no-referrer'
+    });
+    if (!response.ok) return fallback(response.status===400?'invalid_key':'backend_error');
+    const data:unknown=await response.json();
+    if (!data||typeof data!=='object'||!('prompt' in data)||typeof data.prompt!=='string')
+      return fallback('invalid_response');
+    if (!data.prompt.startsWith(PREFIX)||/[\u0600-\u06ff]/.test(data.prompt)||data.prompt.length<400||
+        !/2022\s+Range Rover Sport/i.test(data.prompt)||!/pearl.white/i.test(data.prompt)||
+        !/beige/i.test(data.prompt)||!/parked|stationary/i.test(data.prompt)||
+        !/no wax skin/i.test(data.prompt)||!/plastic skin/i.test(data.prompt))
+      return fallback('invalid_response');
+    const source='source' in data && data.source==='server'?'server':'local';
+    const reason='reason' in data&&typeof data.reason==='string'&&validReasons.has(data.reason)
+      ?data.reason as PromptResponse['reason']:undefined;
+    return {prompt:data.prompt,source,reason:source==='local'?(reason??'invalid_response'):undefined};
+  } catch(error) {
+    return fallback(error instanceof Error&&error.name==='AbortError'?'nvidia_timeout':'backend_unreachable');
+  } finally {
+    clearTimeout(timer);
+  }
 }

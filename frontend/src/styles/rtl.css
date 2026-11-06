@@ -1,2 +1,3 @@
 html,body,#root{direction:rtl}input,textarea,button{direction:inherit}.prompt-output{direction:ltr;unicode-bidi:plaintext}.brand,.step-nav,.category-list,.navigation-bar{direction:rtl}
 
+.key-input,.key-input[dir="ltr"]{direction:ltr!important;text-align:left!important;unicode-bidi:plaintext}
