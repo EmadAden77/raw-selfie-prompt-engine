@@ -1,0 +1,29 @@
+name: فحص اتصال NVIDIA من الموقع العام
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify public API health
+        run: |
+          set -euo pipefail
+          curl -fSL --max-time 15 --retry 2 https://raw-selfie-nvidia-api.vercel.app/api/health | grep -F '"status":"ok"'
+      - name: Verify browser CORS preflight from GitHub Pages
+        run: |
+          set -euo pipefail
+          status=$(curl -sS -o /dev/null -D /tmp/cors-headers --max-time 15 -w '%{http_code}' -X OPTIONS \
+            -H 'Origin: https://emadaden77.github.io' \
+            -H 'Access-Control-Request-Method: POST' \
+            -H 'Access-Control-Request-Headers: content-type' \
+            https://raw-selfie-nvidia-api.vercel.app/api/prompt)
+          test "$status" = "204"
+          grep -iFx 'access-control-allow-origin: https://emadaden77.github.io' /tmp/cors-headers
+          grep -iq '^access-control-allow-methods: .*POST' /tmp/cors-headers
