@@ -14,5 +14,18 @@ test('diagnose compact prompt acceptance',()=>{
       checks:{identity:p.includes(IDENTITY_CORE),body:p.includes(BODY_CORE),subject:p.includes(SUBJECT_CORE),lhd:p.includes(LHD_GEOMETRY),dash:p.includes(FACTORY_DASHBOARD),
       hasScene:p.includes('Scene:'),hasCamera:p.includes('Camera:'),hasLighting:p.includes('Lighting:'),hasRealism:p.includes('Photographic realism:'),car:/2022[\s\S]{0,85}Range Rover Sport/.test(p)},
       excerpt:p.slice(-480)}));
+  const categories=Object.keys(optionCatalogue) as Array<keyof typeof optionCatalogue>;
+  for(const category of categories){
+    for(const entry of optionCatalogue[category]){
+      const choices=resolveSelections({...first,[category]:entry.id});
+      const p=buildConcisePrompt(choices);
+      if(!validatePrompt(p,choices))console.log('INVALID_COMPACT',category,entry.id,promptWordCount(p),p.slice(0,450));
+    }
+  }
+  for(const location of optionCatalogue.locations)for(const lighting of optionCatalogue.lighting){
+    const choices=resolveSelections({...first,locations:location.id,lighting:lighting.id});
+    const p=buildConcisePrompt(choices);
+    if(!validatePrompt(p,choices))console.log('INVALID_PAIR',location.id,lighting.id,promptWordCount(p));
+  }
   }
 });
