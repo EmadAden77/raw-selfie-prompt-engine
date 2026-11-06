@@ -1,12 +1,16 @@
 import { categories } from '../data';
 import { backgroundDetails } from '../data/backgrounds';
+import { FIXED_BODY_RULE, FIXED_BODY_FRAMING, FIXED_COMPOSITION_RULE, FIXED_INTERIOR_RULE, FIXED_INTERIOR_VISIBILITY, cabinMayBeVisible } from '../data/fixedRules';
 import type { PromptRequest, PromptResponse } from '../types/prompt';
 
 const PREFIX = 'ChatGPT, using the reference image I uploaded, generate an image of the exact same person';
 const LOCKS = [
-  'Preserve exactly the reference face geometry, apparent age, skin tone, body proportions and natural asymmetry, with no identity changes, beautification, whitening or retouching.',
+  'Preserve exactly the reference face geometry, apparent age, skin tone and natural asymmetry, with no identity changes, beautification, whitening or retouching. Adjust only body proportions for the specified 195 cm, 88 kg lean athletic physique, without changing the reference face.',
+  FIXED_BODY_RULE,
+  FIXED_BODY_FRAMING,
+  FIXED_COMPOSITION_RULE,
   'Retain the exact original hairline, available length, thickness and density; change only physically possible styling directions.',
-  'Include the same stationary 2022 Range Rover Sport, pearl-white exterior, sport package, black rims, black grille and LED headlights; beige leather seats, beige dashboard, beige steering wheel, beige door panels and panoramic roof wherever visible.',
+  'The specified vehicle is always a stationary 2022 Range Rover Sport, pearl-white exterior, sport package, black rims, black grille and LED headlights; only show parts naturally within the selfie field of view. The fixed cabin uses light beige leather seats, light beige leather door panels, a beige leather center armrest, glossy dark wood, subtle chrome, piano-black control surfaces, a BLACK leather three-spoke steering wheel, a portrait-oriented infotainment screen and a panoramic glass roof, wherever naturally visible.',
   'The vehicle is parked throughout the scene, never driving.',
   'Use a raw handheld front-phone-camera selfie from the subject\'s reachable arm, except when a selected reflection angle specifically requires a mirror; preserve correct hand position, perspective, gravity, body support and light direction.',
   'Natural pores and skin microtexture, authentic cloth draping, modest phone sensor noise, limited dynamic range, imperfect framing and subtle wide-angle distortion.',
@@ -20,7 +24,9 @@ export function buildLocalPrompt(request:PromptRequest):string {
     return value.prompt;
   });
   const detail=backgroundDetails[Math.abs(request.variation)%backgroundDetails.length];
-  return [PREFIX+'.',...LOCKS,'Scene and selected details: '+details.join('; ')+'.','Additional realistic background detail: '+detail+'.','Apply one consistent phone-camera processing treatment to the face, clothing, car and background. Portrait aspect ratio 9:16.'].join(' ');
+  const interior=cabinMayBeVisible(request.selections.selfieAngles,request.selections.poses)
+    ? [FIXED_INTERIOR_RULE, FIXED_INTERIOR_VISIBILITY] : [];
+  return [PREFIX+'.',...LOCKS,...interior,'Scene and selected details: '+details.join('; ')+'.','Only if already inside the natural selfie frame, consider background detail: '+detail+'.','Keep the person the sole primary subject; never widen the frame, invent off-screen vehicle or cabin parts, or force a full-body view. Apply one consistent phone-camera processing treatment to the face, clothing, car and background. Portrait aspect ratio 9:16.'].join(' ');
 }
 
 const validReasons = new Set([
@@ -54,6 +60,10 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
     if (!data||typeof data!=='object'||!('prompt' in data)||typeof data.prompt!=='string')
       return fallback('invalid_response');
     if (!data.prompt.startsWith(PREFIX)||/[\u0600-\u06ff]/.test(data.prompt)||data.prompt.length<400||
+        !data.prompt.includes(FIXED_BODY_RULE)||!data.prompt.includes(FIXED_COMPOSITION_RULE)||
+        !/195 cm/.test(data.prompt)||!/88 kg/.test(data.prompt)||!/lean athletic/.test(data.prompt)||
+        !/black leather/i.test(data.prompt)||!/glossy dark wood/i.test(data.prompt)||
+        (cabinMayBeVisible(request.selections.selfieAngles,request.selections.poses)&&!data.prompt.includes(FIXED_INTERIOR_RULE))||
         !/2022\s+Range Rover Sport/i.test(data.prompt)||!/pearl.white/i.test(data.prompt)||
         !/beige/i.test(data.prompt)||!/parked|stationary/i.test(data.prompt)||
         !/no wax skin/i.test(data.prompt)||!/plastic skin/i.test(data.prompt))
