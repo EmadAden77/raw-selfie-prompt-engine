@@ -134,13 +134,13 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
     : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = capture.mounted
     ? reflection
-      ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; stable user-set timer mount aimed at a real mirror, one reflection, no hand-held viewpoint.'
+      ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; supported timer mount aimed at a real mirror; one reflection, no hand-held viewpoint.'
       : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie on a physically supported cabin mount, timer started by the subject; no invented hand-held photographer.'
     : reflection
       ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
       : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; phone is outside its own direct view; real lens distortion and tilt, no remote photographer, portrait mode or beautification.';
   const support = capture.mounted
-    ? 'Both hands follow the selected wheel grip; phone mount and seat contact are physically supported.'
+    ? 'Hands grip wheel; fixed mount and seat contact obey physics.'
     : inside
       ? 'Seat contact and hands obey gravity; selfie and free hands remain distinct.'
       : 'Real grip, support and garment folds.';
