@@ -36,7 +36,7 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
       return fallback('invalid_response');
     if (!data.prompt.startsWith(PREFIX)||/[\u0600-\u06ff]/.test(data.prompt)||data.prompt.length<400||
         !/sole primary subject|sole primary/i.test(data.prompt)||
-        !/195 cm/.test(data.prompt)||!/88 kg/.test(data.prompt)||!/lean athletic/.test(data.prompt)||
+        !/193 cm/.test(data.prompt)||!/83 kg/.test(data.prompt)||!/lean athletic/.test(data.prompt)||
         (cabinMayBeVisible(request.selections.selfieAngles,request.selections.poses)&&(!/black leather/i.test(data.prompt)||!/glossy dark wood/i.test(data.prompt)||!/Touch Pro Duo/i.test(data.prompt)||!/left.hand drive|\bLHD\b/i.test(data.prompt)))||
         
         !/2022\s+Range Rover Sport/i.test(data.prompt)||!/pearl.white/i.test(data.prompt)||
