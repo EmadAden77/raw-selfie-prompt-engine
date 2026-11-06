@@ -40,7 +40,7 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
         (cabinMayBeVisible(request.selections.selfieAngles,request.selections.poses)&&(!/black leather/i.test(data.prompt)||!/glossy dark wood/i.test(data.prompt)||!/Touch Pro Duo/i.test(data.prompt)||!/left.hand drive|\bLHD\b/i.test(data.prompt)))||
         
         !/2022\s+Range Rover Sport/i.test(data.prompt)||!/pearl.white/i.test(data.prompt)||
-        !/beige/i.test(data.prompt)||!/parked|stationary/i.test(data.prompt)||
+        !/parked|stationary/i.test(data.prompt)||
         !/no wax|no beauty filters|no waxy skin/i.test(data.prompt))
       return fallback('invalid_response');
     const source='source' in data && data.source==='server'?'server':'local';
