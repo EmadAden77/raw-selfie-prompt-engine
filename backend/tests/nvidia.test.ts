@@ -135,3 +135,21 @@ test('scene context contains no photo data and preserves exact option mapping',(
   assert.equal(validateCreativeAddition('A blue car is moving through the shopping center while the photographer follows behind.'),false);
   assert.equal(validateCreativeAddition('A few distant shoppers cross the ordinary pavement, casting modest shadows beneath the existing light.'),true);
 });
+
+test('planner temperature is adjustable for fixed benchmark experiments without changing frontend',async()=>{
+  const oldTemperature=process.env.NVIDIA_PLAN_TEMPERATURE;
+  try{
+    process.env.NVIDIA_PLAN_TEMPERATURE='0.5';
+    globalThis.fetch=async (_url,options)=>{
+      const body=JSON.parse((options as RequestInit).body as string) as {temperature:number};
+      assert.equal(body.temperature,0.5);
+      return nvidiaJson(baseline);
+    };
+    const result=await generatePrompt(request);
+    assert.equal(result.source,'server',result.reason);
+  }finally{
+    globalThis.fetch=original;
+    if(oldTemperature===undefined)delete process.env.NVIDIA_PLAN_TEMPERATURE;
+    else process.env.NVIDIA_PLAN_TEMPERATURE=oldTemperature;
+  }
+});
