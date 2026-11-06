@@ -1,0 +1,41 @@
+{
+  "name": "raw-selfie-prompt-engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Arabic RTL web application for generating realistic English selfie prompts for ChatGPT using a rule-based engine and NVIDIA API.",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build --workspaces --if-present",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "start": "npm run start --workspace=backend",
+    "test": "npm run test --workspace=backend",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0",
+    "npm": ">=10.0.0"
+  },
+  "keywords": [
+    "raw-selfie",
+    "prompt-engine",
+    "chatgpt",
+    "nvidia-api",
+    "typescript",
+    "react",
+    "vite",
+    "express",
+    "arabic",
+    "rtl",
+    "realistic-selfie"
+  ]
+}
