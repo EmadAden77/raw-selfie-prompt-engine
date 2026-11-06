@@ -73,12 +73,12 @@ export function createScenePlan(choices:ResolvedSelections):ScenePlan {
     },
     vehicleInteriorConsistency:{
       visible:interior,
-      visibleElements:interior?['light beige leather only if in frame','black leather steering wheel only if in frame','dark wood and piano-black trim only if in frame']:[],
+      visibleElements:interior?['light beige leather seats only if in frame','beige dashboard panels only if in frame','black leather steering wheel only if in frame','dark wood and piano-black trim only if in frame','panoramic roof only if in frame']:[],
       exteriorVisibleParts:angle>=16?(angle===19?['front grille only if in frame','nearby hood edge only if in frame']:
         angle===26?['rear hatch only if in frame']:
         angle===27?['side mirror only if in frame']:
         ['nearest parked pearl-white body panel only if in frame']):[],
-      materials:'fixed light beige leather, glossy dark wood, chrome and piano-black trim; black leather steering wheel'
+      materials:'fixed light beige leather seats and beige dashboard panels, panoramic glass roof, glossy dark wood, chrome and piano-black trim; black leather steering wheel'
     },
     photographicImperfectionControl:{
       skin:'preserve only natural reference skin texture with no invented blemishes',
@@ -94,7 +94,7 @@ export function scenePlanInput(choices:ResolvedSelections,base:ScenePlan):string
   return JSON.stringify({
     selections:Object.fromEntries(Object.entries(choices).map(([key,value])=>[key,value.text])),
     immutable:{heightCm:193,weightKg:83,physique:'lean athletic',car:'parked 2022 pearl-white Range Rover Sport',
-      cabin:'light beige leather, glossy dark wood, chrome, piano-black, black steering wheel',
+      cabin:'light beige leather, beige dashboard panels, panoramic roof, glossy dark wood, chrome, piano-black, black steering wheel',
       identity:'preserve exact reference face, skin and hair; person is sole primary subject'},
     baseline:base
   });
