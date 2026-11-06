@@ -5,7 +5,11 @@ import { expandCreativeDetails } from '../engine/creative-expander.js';
 import { assemblePrompt } from '../engine/prompt-assembler.js';
 import { fallbackGenerator } from '../engine/fallback-generator.js';
 import { validatePrompt } from '../engine/prompt-validator.js';
-import { expandWithNvidia, NvidiaFailure } from './nvidia.service.js';
+import { planWithNvidia, NvidiaFailure } from './nvidia.service.js';
+import { createScenePlan, scenePlanInput } from '../engine/scene-planner.js';
+import { reviewScenePlan } from '../engine/consistency-critic.js';
+import { directRealism } from '../engine/realism-director.js';
+import { evaluateQuality } from '../engine/quality-evaluator.js';
 
 export function validateCreativeAddition(value:string):boolean{
   const text=value.trim();
@@ -33,20 +37,24 @@ export function validateCreativeAddition(value:string):boolean{
 export async function generatePrompt(request:PromptRequest):Promise<PromptResponse>{
   const resolved=resolveSelections(request.selections);
   const base=buildRulePrompt(resolved);
-  const expansion=expandCreativeDetails(resolved,request.variation);
+  const baseline=createScenePlan(resolved);
   const fallback=fallbackGenerator(request);
   if(!validatePrompt(fallback,resolved))throw new Error('Internal prompt rules failed validation');
   if(!request.nvidiaApiKey)return {prompt:fallback,source:'local',reason:'no_key'};
   try {
-    // NVIDIA only supplies a small compatible addition. Immutable rules and options
-    // are assembled by our own engine; the model no longer has to echo them exactly.
-    const addition=await expandWithNvidia(base,expansion,request.nvidiaApiKey);
-    if(!validateCreativeAddition(addition))return {prompt:fallback,source:'local',reason:'unsafe_output'};
+    // One structured response. Only validated selections and a textual baseline
+    // are sent; the reference image is never sent to NVIDIA.
+    const proposal=await planWithNvidia(scenePlanInput(resolved,baseline),request.nvidiaApiKey);
+    const reviewed=reviewScenePlan(proposal,baseline);
+    if(!reviewed)return {prompt:fallback,source:'local',reason:'unsafe_output'};
+    const addition=directRealism(reviewed.plan,resolved);
     const generated=assemblePrompt(base,addition);
-    if(!validatePrompt(generated,resolved))
+    const quality=evaluateQuality(reviewed.plan,generated,resolved);
+    if(quality.some(result=>!result.passed))
       return {prompt:fallback,source:'local',reason:'unsafe_output'};
     return {prompt:generated,source:'server'};
-  } catch(error) {
-    return {prompt:fallback,source:'local',reason:error instanceof NvidiaFailure?error.reason:'nvidia_unavailable'};
+  }catch(error){
+    return {prompt:fallback,source:'local',
+      reason:error instanceof NvidiaFailure?error.reason:'nvidia_unavailable'};
   }
 }
