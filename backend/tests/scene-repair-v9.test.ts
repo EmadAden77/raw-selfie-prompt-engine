@@ -14,6 +14,8 @@ const defaults = Object.fromEntries(Object.entries(optionCatalogue)
 const scene = (changes: Partial<Selections>) => resolveSelections({ ...defaults, ...changes });
 
 test('v9: all 30 x 30 pose and camera pairs remain physically compatible, protected, and identical offline', () => {
+  let maxWords = 0;
+  let maxPair = '';
   for (const angle of optionCatalogue.selfieAngles) {
     for (const pose of optionCatalogue.poses) {
       const selections = { ...defaults, selfieAngles: angle.id, poses: pose.id };
@@ -23,9 +25,10 @@ test('v9: all 30 x 30 pose and camera pairs remain physically compatible, protec
       assert.equal(buildLocalPrompt({ selections, variation: 0 }), result, angle.id + '/' + pose.id);
       assert.equal(validatePrompt(result, choices), true, angle.id + '/' + pose.id);
       assert.ok(result.includes(camera.pose) && result.includes(camera.angleText), angle.id + '/' + pose.id);
-      assert.ok(promptWordCount(result) <= 330, angle.id + '/' + pose.id + ': ' + promptWordCount(result));
+      if (promptWordCount(result) > maxWords) { maxWords = promptWordCount(result); maxPair = angle.id + '/' + pose.id; }
     }
   }
+  assert.ok(maxWords <= 300, 'Max words ' + maxWords + ' for ' + maxPair);
 });
 
 test('v9: driver-only steering hand never appears in passenger or rear-seat framing', () => {
