@@ -22,6 +22,7 @@ export function validateCreativeAddition(value:string):boolean{
   if(/\b(?:bodybuilder|bodybuilding|bulky physique|extremely skinny|extremely thin|massive muscles|muscular giant)\b/i.test(text))return false;
   if(/\b(?:beige|cream|tan|white|brown|red|blue)\s+(?:leather\s+)?(?:three.spoke\s+)?steering wheel\b/i.test(text))return false;
   if(/\b(?:steering wheel|dashboard|console|upholstery|seats|door panels)\b.{0,50}\b(?:changed|replaced|reconfigured|rearranged|recolored|redesigned)\b/i.test(text))return false;
+  if(/\b(?:replace|reconfigure|rearrange|recolor|redesign|change|move)\b.{0,40}\b(?:steering wheel|dashboard|console|upholstery|seats|door panels|interior layout)\b/i.test(text))return false;
   if(/\b(?:different|new|extra)\s+(?:steering wheel|dashboard layout|car model|interior color|camera position|person)\b/i.test(text))return false;
   if(/\b(?:widen(?:ed|ing)?|zoom(?:ed)? out|pulled back|move(?:d)? the camera away|shrink(?:ing)? the (?:person|subject)|full.body shot|wide establishing shot)\b/i.test(text))return false;
   if(/\b(?:show|reveal|display)\s+(?:the\s+)?(?:entire|whole|complete)\s+(?:interior|cabin|dashboard|body|vehicle)\b/i.test(text))return false;
