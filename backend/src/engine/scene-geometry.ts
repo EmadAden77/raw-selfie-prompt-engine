@@ -40,12 +40,12 @@ export function resolveCapture(choices: ResolvedSelections): ResolvedCapture {
   let pose = choices.poses.text;
   if (mismatch) {
     pose = seat === 'outside'
-      ? 'naturally standing or sitting at the chosen exterior selfie position, with supported balance'
+      ? 'naturally posed at the selected exterior spot, with supported balance'
       : seat === 'passenger'
-        ? 'naturally seated in the front-right passenger seat, with a free phone hand'
+        ? 'seated in front-right passenger seat with reachable phone hand'
         : seat === 'rear'
-          ? 'naturally seated in the rear seat with an attainable phone grip'
-          : 'naturally seated in the front-left driver seat with the phone within reach';
+          ? 'seated in rear seat with reachable phone grip'
+          : 'seated in front-left driver seat with phone within reach';
   }
   const mounted = !mismatch && poseNumber === 8;
   const steeringHand = !mismatch && seat === 'driver' && [1, 5, 8].includes(poseNumber);
