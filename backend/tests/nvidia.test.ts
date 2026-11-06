@@ -37,8 +37,8 @@ test('DeepSeek JSON scene planner uses 0.3 and leaves protected prompt text unch
     const result=await generatePrompt(request);
     assert.equal(result.source,'server',result.reason);
     assert.equal(result.reason,undefined);
-    assert.match(result.prompt,/195 cm/);
-    assert.match(result.prompt,/88 kg/);
+    assert.match(result.prompt,/193 cm/);
+    assert.match(result.prompt,/83 kg/);
     assert.match(result.prompt,/2022 Range Rover Sport/);
     assert.doesNotMatch(result.prompt,/few distant shoppers move naturally/); // off-frame in a driver-seat selfie
     assert.doesNotMatch(result.prompt,/nvapi-/);
@@ -56,8 +56,8 @@ test('NVIDIA adds bounded environment detail only for a naturally visible outdoo
     const result=await generatePrompt({selections:outside,variation:2,nvidiaApiKey:key});
     assert.equal(result.source,'server',result.reason);
     assert.ok(result.prompt.includes(approved));
-    assert.match(result.prompt,/195 cm/);
-    assert.match(result.prompt,/88 kg/);
+    assert.match(result.prompt,/193 cm/);
+    assert.match(result.prompt,/83 kg/);
     assert.match(result.prompt,/Saudi LHD/);
   }finally{globalThis.fetch=original;}
 });
@@ -72,7 +72,7 @@ test('Consistency Critic repairs only conflicting fields, preserving safe enviro
   proposal.photographicImperfectionControl.optics='A gently imperfect phone sensor image preserves ordinary color and focus rolloff.';
   const reviewed=reviewScenePlan(proposal,baseline);
   assert.ok(reviewed);
-  assert.equal(reviewed.plan.humanAppearancePreservation.heightCm,195);
+  assert.equal(reviewed.plan.humanAppearancePreservation.heightCm,193);
   assert.equal(reviewed.plan.naturalLightSimulation.kelvin,baseline.naturalLightSimulation.kelvin);
   assert.deepEqual(reviewed.plan.cameraGeometry,baseline.cameraGeometry);
   assert.deepEqual(reviewed.plan.vehicleInteriorConsistency,baseline.vehicleInteriorConsistency);
@@ -144,8 +144,8 @@ test('model-proposed CGI, false steering material and unauthorized extra light a
 
 test('scene context contains no photo data and preserves exact option mapping',()=>{
   const input=scenePlanInput(choices,baseline);
-  assert.match(input,/195/);
-  assert.match(input,/88/);
+  assert.match(input,/193/);
+  assert.match(input,/83/);
   assert.match(input,/parked 2022/);
   assert.ok(!input.includes(key));
   assert.ok(!input.includes('imageBase64'));
