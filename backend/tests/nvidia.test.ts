@@ -46,3 +46,19 @@ test('unsafe additions are rejected without changing fixed base rules',()=>{
   assert.equal(validateCreativeAddition('A blue car is moving through the shopping center while the photographer follows behind.'),false);
   assert.equal(validateCreativeAddition('A few distant shoppers cross the ordinary pavement, casting modest shadows beneath the existing light.'),true);
 });
+
+test('a slow DeepSeek request falls back to fast NVIDIA instead of local rules',async()=>{
+  const previous=globalThis.fetch;
+  const requestedModels:string[]=[];
+  try {
+    globalThis.fetch=async (_url,options)=>{
+      const body=JSON.parse((options as RequestInit).body as string) as {model:string};
+      requestedModels.push(body.model);
+      if (requestedModels.length===1) throw new DOMException('simulated upstream timeout','TimeoutError');
+      return new Response(JSON.stringify({choices:[{message:{content:'A few distant pedestrians move along the pavement while existing daylight creates naturally imperfect reflections on the parked vehicle and subtle smartphone sensor texture.'},finish_reason:'stop'}]}),{status:200});
+    };
+    const result=await generatePrompt(request);
+    assert.equal(result.source,'server');
+    assert.deepEqual(requestedModels,['deepseek-ai/deepseek-v4.1-flash','nvidia/nemotron-3.5-lightning-30b-a3b']);
+  }finally {globalThis.fetch=previous;}
+});
