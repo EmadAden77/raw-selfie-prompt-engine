@@ -10,6 +10,7 @@ import { COMPOSITION_RULE } from '../rules/composition.rules.js';
 import { INTERIOR_RULE, INTERIOR_VISIBILITY_RULE, cabinMayBeVisible } from '../rules/cabin.rules.js';
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 import type { ResolvedSelections } from '../types/engine.types.js';
+import { isReflectionSelfie } from './photographic-auditor-v8.js';
 
 // Mandatory composition-independent constraints. These describe the physical
 // world; the subject remains the sole primary subject and nothing is widened
@@ -17,7 +18,7 @@ import type { ResolvedSelections } from '../types/engine.types.js';
 export const PARKING_RULE = 'The 2022 Range Rover Sport is completely stationary in a legal, physically plausible parked position: parallel to the curb when a roadside curb exists, aligned with the actual road edge on a safe desert shoulder without inventing a curb, or correctly within a marked parking bay or service area where parallel curb parking is not possible. Wheels, orientation, clearance, contact with the ground and road geometry must agree; never park diagonally across traffic, in a travel lane, or block a pump or entrance.';
 export const STREET_RULE = 'Where the selected selfie field of view naturally shows the roadway, use a worn realistic everyday Saudi street: faded uneven asphalt, modest patched sections, dust at edges, irregular curb wear, subdued paint and believable tire marks, only in amounts appropriate to the location. In desert scenes use a weathered sandy shoulder or rough road edge rather than inventing an urban curb; in covered parking use scuffed concrete and faint bay lines rather than inventing an outdoor street. Do not widen the selfie or fabricate any road surface outside the visible frame.';
 
-export const LIGHTING_POLICY = 'Derive all lighting strictly from the selected scene: its location, time of day, weather, and camera angle. Calculate the single dominant light source position, color temperature, intensity, and shadow direction for that exact scene, and apply it consistently to the face, body, vehicle, interior, and background. At noon, use harsh 5500K sunlight with short sharp shadows. In the afternoon, use warm 4000K light with long shadows. At sunset, use 3200K orange light. At night, use one warm 3000K street lamp as the sole dominant source. At dawn, use soft cool 6500K light. Indoor or covered locations use only their ceiling lights. The face must be lit from the same side and with the same color temperature as the background. All shadows must fall in one direction matching the source. No cinematic lighting, no studio fill, no hidden light, no multi-directional shadows, no beauty light on the face.';
+export const LIGHTING_POLICY = 'Use only scene-supported light sources. Derive direction, color and intensity from time, cover, fixtures and camera geometry; allow passive surface bounce only as reflected light. Do not invent lamps, fill, rim lights or fixed Kelvin values where not justified. For screen-only shots the display is weak and close; a direct front camera cannot use a rear LED as frontal flash. Mirror selfies may use the rear LED with glare bound to its reflected position. All face, car, cabin and background shadows and reflections follow the same real sources. Preserve natural limited phone exposure and only physically justified clipping, noise or catchlights.';
 
 // Location/time overrides must win when an otherwise valid selectable light
 // contradicts a physical enclosure or explicitly night/sunset location.
@@ -78,9 +79,9 @@ export function deriveSceneLighting(s:ResolvedSelections):SceneLighting {
   if(light===9){time='night with screen light';kelvin=6500;
     source='the actual phone screen at reachable selfie distance only';
     shadows='rapid downward light falloff below the chest and very deep background shadows';}
-  if(light===10){time='night with front-camera screen flash';kelvin=5500;
-    source='the phone front-screen flash only when the device can physically provide it';
-    shadows='brief front-lit soft-edged shadows and rapid falloff; no invented LED or studio light';}
+  if(light===10){time='night with requested camera flash';kelvin=5500;
+    source=isReflectionSelfie(s.selfieAngles.id)?'the real rear LED flash aimed along the mirror or glass reflection path':'the explicitly enabled phone front-screen flash';
+    shadows='brief source-aligned shadows and rapid falloff; no extra fill or invented LED';}
   if(covered){
     // A ceiling occludes sunlight; a streetlight cannot illuminate an underground
     // garage or covered workshop. Screen-only selections also cannot reveal
