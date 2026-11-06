@@ -16,6 +16,17 @@ export function validateCreativeAddition(value:string):boolean{
   if(/(?:blue|black|red|green|silver)\s+(?:car|suv|range rover|interior|leather|dashboard|seats)/i.test(text))return false;
   if(/(?:different|new|changed|altered)\s+(?:face|person|identity|hair|skin|outfit|car)/i.test(text))return false;
   if(/(?:studio lighting|cinematic lighting|beauty filter|CGI render|3D render)/i.test(text))return false;
+  // NVIDIA is allowed to decorate visible scene texture, never to replace locked
+  // measurements, body type, vehicle materials, cabin layout or selfie framing.
+  if(/\b\d{2,3}\s*(?:cm|kg|centimeters?|kilograms?)\b/i.test(text))return false;
+  if(/\b(?:bodybuilder|bodybuilding|bulky physique|extremely skinny|extremely thin|massive muscles|muscular giant)\b/i.test(text))return false;
+  if(/\b(?:beige|cream|tan|white|brown|red|blue)\s+(?:leather\s+)?(?:three.spoke\s+)?steering wheel\b/i.test(text))return false;
+  if(/\b(?:steering wheel|dashboard|console|upholstery|seats|door panels)\b.{0,50}\b(?:changed|replaced|reconfigured|rearranged|recolored|redesigned)\b/i.test(text))return false;
+  if(/\b(?:different|new|extra)\s+(?:steering wheel|dashboard layout|car model|interior color|camera position|person)\b/i.test(text))return false;
+  if(/\b(?:widen(?:ed|ing)?|zoom(?:ed)? out|pulled back|move(?:d)? the camera away|shrink(?:ing)? the (?:person|subject)|full.body shot|wide establishing shot)\b/i.test(text))return false;
+  if(/\b(?:show|reveal|display)\s+(?:the\s+)?(?:entire|whole|complete)\s+(?:interior|cabin|dashboard|body|vehicle)\b/i.test(text))return false;
+  if(/\b(?:portrait|vertical)\s+(?:infotainment|screen|display)\s+(?:becomes|is replaced by)\s+(?:landscape|horizontal)\b/i.test(text))return false;
+
   return true;
 }
 export async function generatePrompt(request:PromptRequest):Promise<PromptResponse>{
