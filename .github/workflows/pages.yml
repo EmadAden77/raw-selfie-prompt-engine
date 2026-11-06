@@ -26,6 +26,12 @@ jobs:
           node-version: '22'
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Restore missing Linux Rollup optional binary if needed
+        run: |
+          if ! node -e "require('@rollup/rollup-linux-x64-gnu')"; then
+            version="$(node -p "require('rollup/package.json').version")"
+            npm install --no-save --no-package-lock --no-audit --no-fund "@rollup/rollup-linux-x64-gnu@$version"
+          fi
       - name: Build static website
         env:
           GITHUB_PAGES: 'true'
