@@ -40,8 +40,25 @@ test('DeepSeek JSON scene planner uses 0.3 and leaves protected prompt text unch
     assert.match(result.prompt,/195 cm/);
     assert.match(result.prompt,/88 kg/);
     assert.match(result.prompt,/2022 Range Rover Sport/);
-    assert.match(result.prompt,/few distant shoppers move naturally/);
+    assert.doesNotMatch(result.prompt,/few distant shoppers move naturally/); // off-frame in a driver-seat selfie
     assert.doesNotMatch(result.prompt,/nvapi-/);
+  }finally{globalThis.fetch=original;}
+});
+
+test('NVIDIA adds bounded environment detail only for a naturally visible outdoor selfie',async()=>{
+  const outside={...selections,selfieAngles:'angle-19',poses:'pose-17'};
+  const reference=createScenePlan(resolveSelections(outside));
+  const approved='A distant passerby crosses an existing sidewalk beyond the parked car.';
+  try{
+    globalThis.fetch=async()=>nvidiaJson({
+      ...reference,environmentalRealism:{...reference.environmentalRealism,background:approved}
+    });
+    const result=await generatePrompt({selections:outside,variation:2,nvidiaApiKey:key});
+    assert.equal(result.source,'server',result.reason);
+    assert.ok(result.prompt.includes(approved));
+    assert.match(result.prompt,/195 cm/);
+    assert.match(result.prompt,/88 kg/);
+    assert.match(result.prompt,/Saudi LHD/);
   }finally{globalThis.fetch=original;}
 });
 
