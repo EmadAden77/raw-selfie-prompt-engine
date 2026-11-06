@@ -106,7 +106,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
       ? 'Parked pearl-white 2022 Range Rover Sport, black rims, ' + choices.carConditions.text + '.'
       : 'Pearl-white 2022 Range Rover Sport with black rims stays parked off-frame.';
   const cabin = inside
-    ? LHD_GEOMETRY + ' Visible only: light beige leather seats/dashboard, black leather three-spoke wheel, dark wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. Never reveal off-frame details.'
+    ? LHD_GEOMETRY + ' Visible only: light beige leather seats/dashboard, black leather three-spoke wheel, glossy dark wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. Never reveal off-frame details.'
     : '';
   const camera = reflection
     ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
