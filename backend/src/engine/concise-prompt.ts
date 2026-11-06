@@ -102,7 +102,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
   const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting. ' +
     'Clothing: ' + choices.clothing.text + '. Expression: ' + choices.expressions.text + '.' +
     expressionGuard + ' Hair: ' + choices.hairstyles.text + ' within existing density. ' +
-    'Pose: ' + capture.pose + '. Angle: ' + choices.selfieAngles.text + '.';
+    'Pose: ' + capture.pose + '. Angle: ' + capture.angleText + '.';
   const vehicle = inside
     ? 'The parked pearl-white 2022 Range Rover Sport has black rims; exterior off-frame.'
     : vehicleVisible(choices, false)
