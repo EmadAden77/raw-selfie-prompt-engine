@@ -23,9 +23,9 @@ jobs:
             -H 'Origin: https://emadaden77.github.io' \
             -H 'Access-Control-Request-Method: POST' \
             -H 'Access-Control-Request-Headers: content-type' \
-            https://raw-selfie-nvidia-api.vercel.app/api/prompt)
+            https://raw-selfie-nvidia-api-emadaden77s-projects.vercel.app/api/prompt)
           echo "CORS preflight status: $status"
           cat /tmp/cors-headers
           test "$status" = "204"
-          grep -iFx 'access-control-allow-origin: https://emadaden77.github.io' /tmp/cors-headers
+          tr -d '\\r' < /tmp/cors-headers | grep -iF 'access-control-allow-origin: https://emadaden77.github.io'
           grep -iq '^access-control-allow-methods: .*POST' /tmp/cors-headers
