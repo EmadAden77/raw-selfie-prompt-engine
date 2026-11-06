@@ -10,4 +10,5 @@ export type PromptResponse = {
   prompt: string;
   source: 'local' | 'server';
   reason?: FallbackReason;
+  audit?: { repairNotes: string[]; sceneCameraSurface: string };
 };
