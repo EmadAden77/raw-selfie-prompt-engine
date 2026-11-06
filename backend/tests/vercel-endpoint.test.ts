@@ -9,6 +9,7 @@ test('Vercel Express entrypoint is a callable default export', () => {
 
 test('public GitHub Pages origin can preflight NVIDIA API without exposing a key', async () => {
   const server = app.listen(0, '127.0.0.1');
+  await new Promise<void>(resolve => server.once('listening', resolve));
   try {
     const address = server.address() as AddressInfo;
     const response = await fetch('http://127.0.0.1:' + address.port + '/api/prompt', {
