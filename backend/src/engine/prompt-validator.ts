@@ -81,6 +81,13 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(typeof prompt!=='string'||prompt.length<450||prompt.length>16000) return false;
   if(!prompt.startsWith(REQUIRED_PREFIX)) return false;
   if(/[\u0600-\u06ff]/.test(prompt)||/[`<>]/.test(prompt)) return false;
+  // Shared guards apply to both historical exhaustive templates and the
+  // modern concise format. Never let the early concise branch bypass them.
+  if(/\b(?:burj khalifa|kingdom cent(?:re|er)|al faisaliah|dubai mall|riyadh park|red sea mall)\b/i.test(prompt))return false;
+  if(/\b(?:the car|the suv|the vehicle|range rover)\s+(?:is\s+)?(?:moving|driving|speeding|racing)\b/i.test(prompt))return false;
+  if(/\b(?:steering wheel is\s+(?:beige|tan|cream)|beige leather steering wheel)\b/i.test(prompt))return false;
+  if(/\b(?:he|person|subject)\s+weighs\s+(?!88\b)\d+\s*kg\b/i.test(prompt))return false;
+  if(/\b(?:cinematic lighting illuminates|opposing shadows fall|two dominant light sources)\b/i.test(prompt))return false;
   if(!prompt.includes(BODY_RULE))return validateConcise(prompt,choices);
   if(!prompt.includes(BODY_RULE)||!prompt.includes(COMPOSITION_RULE)) return false;
   if(!prompt.includes(PARKING_RULE)||!prompt.includes(STREET_RULE)||!prompt.includes(LIGHTING_POLICY)) return false;
