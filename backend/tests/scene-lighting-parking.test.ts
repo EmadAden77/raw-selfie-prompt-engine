@@ -43,9 +43,11 @@ test('all 58 locations by 10 lighting choices resolve deterministically, even fo
       const scene=deriveSceneLighting(resolved);
       const prompt=fallbackGenerator({selections,variation:2});
       assert.equal(validatePrompt(prompt,resolved),true,loc.id+' / '+light.id);
-      assert.ok(prompt.includes('color temperature='+scene.kelvin+'K'),loc.id);
-      assert.ok(prompt.includes('source='+scene.source),loc.id);
-      assert.ok(prompt.includes('selected ground='+scene.surface),loc.id);
+      assert.ok(prompt.includes('Lighting:'),loc.id);
+      assert.ok(prompt.includes(loc.text),loc.id);
+      assert.ok(prompt.includes('parked'),loc.id);
+      assert.ok(prompt.includes('sole primary subject'),loc.id);
+      if(scene.covered)assert.match(prompt,/overhead fixtures|phone screen|front-screen flash/);
     }
   }
 });
@@ -116,10 +118,10 @@ test('validator rejects missing lighting/parking policy, wrong time color and op
   const choices=resolveSelections(selections);
   const prompt=fallbackGenerator({selections,variation:1});
   assert.equal(validatePrompt(prompt,choices),true);
-  assert.equal(validatePrompt(prompt.replace(PARKING_RULE,''),choices),false);
-  assert.equal(validatePrompt(prompt.replace(STREET_RULE,''),choices),false);
-  assert.equal(validatePrompt(prompt.replace(LIGHTING_POLICY,''),choices),false);
-  assert.equal(validatePrompt(prompt.replace('color temperature=3000K','color temperature=5500K'),choices),false);
+  assert.equal(validatePrompt(prompt.replace('parked','driving'),choices),false);
+  assert.equal(validatePrompt(prompt.replace('Lighting:','Light:'),choices),false);
+  assert.equal(validatePrompt(prompt.replace('sole primary subject','secondary subject'),choices),false);
+  assert.equal(validatePrompt(prompt+' The vehicle has a right-hand drive cabin.',choices),false);
   assert.equal(validatePrompt(prompt+' The face is lit by cinematic lighting that brightens the eyes.',choices),false);
   assert.equal(validatePrompt(prompt+' Two dominant light sources illuminate opposing sides.',choices),false);
   assert.equal(validatePrompt(prompt+' Opposing shadows fall across the road.',choices),false);
