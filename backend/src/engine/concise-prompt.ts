@@ -7,8 +7,8 @@ import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 export const LHD_GEOMETRY = 'Saudi left-hand drive (LHD): wheel left, driver front-left, passenger front-right, center console on the driver’s physical right; selfie mirroring never swaps vehicle sides.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, upper infotainment and lower climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve the reference face, proportions, skin tone and texture, natural hairline and density, beard and moustache; no retouching or identity changes.';
-export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique with proportional limbs and no forced full-body view.';
-export const SUBJECT_CORE = 'The person alone is primary; never widen the selfie or shrink the subject to show surroundings.';
+export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique with proportional limbs, showing only visible anatomy.';
+export const SUBJECT_CORE = 'The person is the sole primary subject; never widen the selfie or shrink the person to show surroundings.';
 const words=(text:string)=>text.trim().split(/\s+/).filter(Boolean).length;
 export const promptWordCount=words;
 
