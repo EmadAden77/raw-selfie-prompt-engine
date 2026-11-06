@@ -30,7 +30,9 @@ export async function expandWithNvidia(basePrompt:string,creativeExpansion:strin
       headers:{Authorization:'Bearer '+apiKey,'Content-Type':'application/json','Accept':'application/json'},
       signal:AbortSignal.timeout(timeoutMs),
       body:JSON.stringify({
-        model,temperature:1,top_p:0.95,max_tokens:3072,stream:false,
+        model,temperature:1,top_p:0.95,max_tokens:512,stream:false,
+        // This task needs one short paragraph, not a long reasoning trace.
+        chat_template_kwargs:{enable_thinking:false},
         messages:[
           {role:'system',content:nvidiaSystemPrompt},
           {role:'user',content:JSON.stringify({
