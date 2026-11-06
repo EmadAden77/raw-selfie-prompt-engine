@@ -43,7 +43,7 @@ function lightingProse(choices:ResolvedSelections):string {
   }else{
     line='Use only the existing sun or indirect skylight for this time and setting, with naturally variable contrast.';
   }
-  return line+' Reflected light may soften shadows; no studio or hidden fill.';
+  return line+' Allow reflected light; no studio fill.';
 }
 
 export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,variation=0):string {
@@ -73,9 +73,9 @@ export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,va
     'The pearl-white 2022 Range Rover Sport stays parked, off-frame unless visible.';
   const cabin=inside?
     LHD_GEOMETRY+' If visible: light beige leather, glossy dark wood, chrome, piano-black trim and a black leather three-spoke wheel; '+FACTORY_DASHBOARD+' remain factory-correct; show only in-frame parts.':
-    'Maintain Saudi LHD geometry if the cabin enters the frame.';
+    'Any visible cabin remains Saudi LHD.';
   const camera='Camera: raw handheld front-phone selfie at arm length; '+framing+
-    ' Natural body support, fabric gravity and perspective.';
+    ' Natural fabric gravity and body support.';
   const lighting='Lighting: '+lightingProse(choices);
   // Only include small, optional, physically plausible model improvements.
   const texture=plan?
@@ -87,8 +87,11 @@ export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,va
     'a distant passerby at the frame edge','a few parked vehicles in the far background',
     'a restrained trace of road dust far behind the subject'
   ][Math.abs(variation)%3]!;
-  const environment=close||inside?'Do not force roads or crowds into view.':
-    'If already in frame: '+surface.surface+'; '+(safeModelBackground||understated)+'.';
+  const visibleGround=surface.covered?'worn parking concrete':
+    [1,2,3,4,5,53,55,56].includes(loc)?'a dusty sandy road edge':
+    'worn patched Saudi asphalt';
+  const environment=close||inside?'Keep off-frame scenery hidden.':
+    'Only if visible: '+visibleGround+'; '+(safeModelBackground||understated)+'.';
   const realism='Photographic realism: '+texture+' '+environment+
     ' No beauty filters, wax skin, CGI, invented defects or exaggerated HDR. 9:16.';
   const result=[identity,scene,vehicle,cabin,camera,lighting,realism].join(' ').replace(/\s+/g,' ').trim();
