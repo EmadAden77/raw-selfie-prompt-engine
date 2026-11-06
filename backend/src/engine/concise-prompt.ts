@@ -5,7 +5,7 @@ import { cabinMayBeVisible } from '../rules/cabin.rules.js';
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 import { isReflectionSelfie } from './photographic-auditor-v8.js';
 
-export const LHD_GEOMETRY = 'Saudi LHD: steering wheel physically left, driver front-left, passenger front-right, console to the driver’s right; selfie mirroring never swaps sides.';
+export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right, wheel physically left, console right; no mirrored layout.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, natural asymmetry, apparent age, skin tone and texture, eyes, brows, nose, lips, jaw, hairline, thinning, hair density, curl pattern and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 193 cm, weight 83 kg, natural lean athletic physique with proportional anatomy.';
@@ -26,44 +26,44 @@ function lightingProse(choices: ResolvedSelections, inside: boolean): string {
   const location = numberOf(choices.locations.id);
   const mirror = isReflectionSelfie(choices.selfieAngles.id);
   if (light === 9)
-    return 'Only the nearby phone screen lights the face; illumination fades sharply below the chest, leaving the cabin and distance dark. No other lights or fill.';
+    return 'Only the phone screen lights the face; rapid falloff below chest leaves the cabin dark, no fill.';
   if (light === 10)
     return mirror
-      ? 'Only the real rear LED flash lights the reflected path; glare remains at the reflected LED position, with correct falloff and no fill.'
-      : 'Only the enabled front-screen flash lights the near face, not the rear LED; quick falloff, no extra fill.';
+      ? 'Only rear LED flash lights the reflection; glare stays at its reflected position, with real falloff.'
+      : 'Only enabled front-screen flash lights near face, not rear LED; rapid falloff, no fill.';
   if (scene.covered)
     return inside
-      ? 'Existing overhead fixtures light the covered space through the car windows; face and cabin receive weaker reflected light, with plausible shadows and no fill.'
+      ? 'Existing overhead fixtures enter through car windows; face and cabin receive dimmer reflected light and grounded shadows.'
       : 'Existing overhead fixtures cast grounded shadows in the covered space; no direct sun or studio fill.';
   if (scene.time === 'night')
     return inside
-      ? 'Only dim night sky or an actually present fixture enters the car through its windows; the shaded cabin stays dark, without hidden fill.'
+      ? 'Dim night sky or an actual fixture enters through car windows; the cabin remains dark, without fill.'
       : location === 4
         ? 'Use dim night sky or an actually visible roadside fixture; keep real darkness and source-aligned shadows.'
         : 'Light comes from the actual nearby street or building fixture; shadows fade naturally, with no studio fill.';
   if (scene.time === 'sunset' || scene.time === 'afternoon')
     return inside
-      ? 'Low warm sun enters through the actual window or windshield; window-facing cheek catches light while the opposite cheek and cabin remain shaded.'
+      ? 'Low warm sun through real glazing lights the window-facing cheek; opposite cheek and cabin stay shaded.'
       : 'Low warm sun creates long compatible shadows across the visible face and ground; natural reflections only.';
   if (scene.time === 'noon')
     return inside
-      ? 'Harsh midday daylight enters only through actual vehicle glazing; roof and seat shade the inner cheek, while window-facing skin and white fabric retain realistic highlights.'
+      ? 'Midday sun enters through real glazing; roof shades cabin-side cheek, white fabric retains realistic highlights.'
       : 'High sun creates short grounded shadows and natural highlight clipping; no artificial fill.';
   if (scene.time === 'overcast daylight' || scene.time === 'daylight in shade')
     return inside
-      ? 'Diffuse skylight reaches the face through the side window and windshield; the far cheek and cabin stay softly shaded, without fill.'
+      ? 'Diffuse skylight through car windows softly lights the face; inner cheek and cabin remain shaded.'
       : 'Existing diffuse skylight makes soft contact shadows; no hidden fill.';
   return inside
-    ? 'Morning daylight enters through the real side window and windshield; the window-facing cheek is brighter than the cabin-facing cheek, with natural bounce only.'
-    : 'Existing morning daylight lights the exposed face and nearby surfaces from one compatible direction; no studio fill.';
+    ? 'Morning daylight through real windows lights window-facing cheek; cabin-side cheek stays shaded, no extra fill.'
+    : 'Existing morning sun lights the exposed face; surroundings share its shadow direction, no studio fill.';
 }
 
 function framingProse(inside: boolean, close: boolean): string {
   if (close)
-    return 'Framing: face fills the close 9:16 selfie, with only naturally captured neck and shoulders; no pulled-back interior or roadside view.';
+    return 'Framing: tight 9:16 face and shoulders; no pulled-back cabin or roadside view.';
   if (inside)
-    return 'Framing: face and shoulders dominate 9:16; crop around the upper chest. A steering hand or wheel edge may appear naturally, never the full lap, console or dashboard showcase.';
-  return 'Framing: face and upper torso dominate 9:16 at reachable arm length; never shrink the person to showcase the car or road.';
+    return 'Framing: face and shoulders dominate 9:16, cropped near chest; wheel hand at edge only, never full lap or console.';
+  return 'Framing: face and upper torso dominate 9:16; no pullback to showcase car or road.';
 }
 
 function backgroundProse(choices: ResolvedSelections, variation: number, plan?: ScenePlan): string {
@@ -94,35 +94,35 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
   const expression = numberOf(choices.expressions.id);
   const condition = numberOf(choices.carConditions.id);
   const identity = [REQUIRED_PREFIX + '.', IDENTITY_CORE, BODY_CORE, SUBJECT_CORE].join(' ');
-  const expressionGuard = expression === 1 ? ' Lips at rest: no smile or posed grin.'
+  const expressionGuard = expression === 1 ? ' No smile or posed grin.'
     : expression === 5 ? ' Do not turn this serious look into a smile.' : '';
   const scene = 'Scene: ' + choices.locations.text + ', unnamed everyday Saudi setting. ' +
     'Clothing: ' + choices.clothing.text + '. Expression: ' + choices.expressions.text + '.' +
     expressionGuard + ' Hair: ' + choices.hairstyles.text + ' within existing density. ' +
     'Pose: ' + choices.poses.text + '. Angle: ' + choices.selfieAngles.text + '.';
   const vehicle = inside
-    ? 'Parked pearl-white 2022 Range Rover Sport, black rims; exterior outside this selfie.'
+    ? 'Parked pearl-white 2022 Range Rover Sport, black rims; exterior off-frame.'
     : vehicleVisible(choices, false)
       ? 'Parked pearl-white 2022 Range Rover Sport, black rims, ' + choices.carConditions.text + '.'
       : 'Pearl-white 2022 Range Rover Sport with black rims stays parked off-frame.';
   const cabin = inside
-    ? LHD_GEOMETRY + ' Only where framed: light beige leather seats, beige dashboard, black leather three-spoke wheel, dark glossy wood, chrome, piano-black trim, panoramic glass roof; ' + FACTORY_DASHBOARD + '. Never pull back to reveal hidden parts.'
+    ? LHD_GEOMETRY + ' Visible only: light beige leather seats/dashboard, black leather three-spoke wheel, dark wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. Never reveal off-frame details.'
     : '';
   const camera = reflection
-    ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; phone and grip reflected once, rear lens aimed at the mirror or glass, scale and occlusion physically coherent.'
-    : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie, hand-held at possible arm length; slight phone perspective and natural hand tilt, no external photographer, visible phone or portrait-mode blur.';
+    ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, lens aimed at mirror/glass, real scale and occlusion.'
+    : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; slight real phone distortion and hand tilt, no external photographer, visible phone or portrait mode.';
   const support = inside
-    ? 'Real seat compression, supported joints and garment folds; phone hand and free hand stay distinct.'
-    : 'Reachable selfie grip, physically supported pose and gravity-consistent garment folds.';
+    ? 'Seat compression and hands follow contact and gravity; phone hand and free hand distinct.'
+    : 'Real grip, supported pose and gravity-driven folds.';
   const surface = inside
-    ? 'Keep hidden or clean cabin surfaces clean.'
+    ? 'Clean or hidden cabin surfaces stay clean.'
     : condition === 1 ? 'Freshly washed surfaces stay clean.'
       : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
         : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
   const surroundings = !inside && !close ? backgroundProse(choices, variation, plan) : '';
-  const realism = 'Photographic realism: reference-faithful skin pores, one natural phone exposure across face, fabric and visible cabin or car; believable shadows and restrained highlights. ' +
+  const realism = 'Photographic realism: one shared phone exposure, reference skin pores, natural cloth folds, realistic shadows and restrained highlights. ' +
     support + ' ' + surface + ' ' + surroundings +
-    ' No beauty filter, wax or plastic skin, CGI, invented blemishes, extra digits, impossible reflections or exaggerated HDR.';
+    ' No wax or plastic skin, beauty filters, CGI, invented blemishes, extra fingers, impossible reflections or HDR.';
   return [identity, scene, vehicle, cabin, camera, framingProse(inside, close),
     'Lighting: ' + lightingProse(choices, inside), realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
 }
