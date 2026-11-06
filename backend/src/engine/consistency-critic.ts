@@ -39,14 +39,14 @@ export function reviewScenePlan(value:unknown,baseline:ScenePlan):CriticResult|n
     ['photographicImperfectionControl','exposure']
   ] as const;
   for(const [group,key] of patches){
-    const value=proposal[group][key];
+    const value=(proposal[group] as Record<string,string>)[key]!;
     if(acceptable(value)){
       const lower=value.toLowerCase();
       if(/\b(?:sun|lamp|flash|spotlight|softbox|steering wheel|dashboard|seats|range rover|car model|camera move)\b/.test(lower)){
         repairs.push('rejected_conflicting_'+group+'_'+key);continue;
       }
       (plan[group] as unknown as Record<string,string>)[key]=value;accepted++;
-    }else if(value!==baseline[group][key]){
+    }else if(value!==(baseline[group] as Record<string,string>)[key]){
       repairs.push('rejected_unsafe_'+group+'_'+key);
     }
   }
