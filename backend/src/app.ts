@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import helmet from 'helmet';
+import { helmet } from 'helmet';
 import { env } from './config/env.js';
 import { promptRouter } from './routes/prompt.routes.js';
 import { errorHandler, notFound } from './middleware/error-handler.js';
