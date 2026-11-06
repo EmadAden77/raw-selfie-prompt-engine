@@ -33,3 +33,6 @@ app.get('/health',(_req,res)=>res.json({status:'ok'}));
 app.use('/api/prompt',promptLimiter,promptRouter);
 app.use(notFound);
 app.use(errorHandler);
+
+// Vercel's Express framework expects a default-exported request handler.
+export default app;
