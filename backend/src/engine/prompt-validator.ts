@@ -1,6 +1,7 @@
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 import { BODY_RULE } from '../rules/body.rules.js';
 import { COMPOSITION_RULE } from '../rules/composition.rules.js';
+import { LIGHTING_POLICY, PARKING_RULE, STREET_RULE, deriveSceneLighting, sceneLightingStatement, sceneParkingStatement } from './rule-builder.js';
 import { INTERIOR_RULE, cabinMayBeVisible } from '../rules/cabin.rules.js';
 import type { ResolvedSelections } from '../types/engine.types.js';
 
@@ -49,6 +50,8 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(!prompt.startsWith(REQUIRED_PREFIX)) return false;
   if(/[\u0600-\u06ff]/.test(prompt)||/[`<>]/.test(prompt)) return false;
   if(!prompt.includes(BODY_RULE)||!prompt.includes(COMPOSITION_RULE)) return false;
+  if(!prompt.includes(PARKING_RULE)||!prompt.includes(STREET_RULE)||!prompt.includes(LIGHTING_POLICY)) return false;
+  if(!prompt.includes('Scene-specific parking and road surface:')||!prompt.includes('Scene-specific lighting:'))return false;
   if(forbiddenLandmarks.some(name=>prompt.toLowerCase().includes(name))) return false;
   if(/(?:subject|range rover|sport|white suv|the suv|the vehicle|the car)\s+(?:is\s+)?(?:driving|moving|speeding|racing)/i.test(prompt))return false;
   if(mustHave.some(pattern=>!pattern.test(prompt)))return false;
@@ -58,9 +61,23 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   // composition rule. Inspect only additions that occur AFTER that locked rule.
   const addition=prompt.split(COMPOSITION_RULE).slice(1).join(COMPOSITION_RULE);
   if(forbiddenReframing.some(pattern=>pattern.test(addition.replace(/Never\s+\w[^.]*\./gi,'')))) return false;
+  // Additional contradictory light and parking claims override neither the
+  // policy nor the computed scene plan; reject them rather than merging them.
+  const freeText=prompt.split('Lighting selection:').slice(1).join('Lighting selection:');
+  if(/\b(?:cinematic|studio|beauty)\s+(?:fill\s+)?lighting\s+(?:illuminates|lights|brightens|falls on)\b/i.test(freeText))return false;
+  if(/\b(?:two|multiple|several)\s+(?:opposing\s+)?(?:dominant\s+)?(?:light\s+sources|streetlamps|shadow\s+directions)\b/i.test(freeText))return false;
+  if(/\b(?:opposing|conflicting|multi.directional)\s+shadows\s+(?:fall|appear|cross|are cast)\b/i.test(freeText))return false;
+  if(/\b(?:parked|parking)\s+(?:diagonally|perpendicular)\s+across\s+(?:the\s+)?(?:road|street|traffic)\b/i.test(freeText))return false;
   if(choices){
     if(!choices.locations||!choices.clothing||!choices.selfieAngles||!choices.poses)return false;
     if(cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id) && !prompt.includes(INTERIOR_RULE))return false;
+    if(!prompt.includes(sceneParkingStatement(choices))||!prompt.includes(sceneLightingStatement(choices)))return false;
+    // Only the scene's resolved temperature is permitted in free-model additions;
+    // the fixed lighting policy contains conditional temperatures for all times.
+    const creativeText=prompt.split('Lighting selection:').slice(1).join('Lighting selection:');
+    const expected=deriveSceneLighting(choices).kelvin;
+    const temperatures=[...creativeText.matchAll(/\b(\d{4})K\b/g)].map(match=>Number(match[1]));
+    if(temperatures.some(k=>k!==expected))return false;
   }
   return true;
 }
