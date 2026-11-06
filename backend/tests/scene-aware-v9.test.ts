@@ -17,10 +17,10 @@ test('v9: reported neutral driver selfie is face-first, physically lit and conci
   const prompt = buildConcisePrompt(choices);
   assert.match(prompt,/neutral relaxed face/);
   assert.match(prompt,/No smile or posed grin/);
-  assert.match(prompt,/face and shoulders dominate 9:16, cropped near chest/);
-  assert.match(prompt,/wheel hand at edge only, never full lap or console/);
-  assert.match(prompt,/Morning sunlight enters through existing glazing/);
-  assert.match(prompt,/face and cabin shadows follow its real path/);
+  assert.match(prompt,/face and shoulders dominate 9:16, chest crop/);
+  assert.match(prompt,/wheel hand at edge only, no lap or console/);
+  assert.match(prompt,/Morning sunlight enters through actual glazing/);
+  assert.match(prompt,/face and cabin shadows follow its path/);
   assert.match(prompt,/Touch Pro Duo dual stacked landscape screens/);
   assert.equal(validatePrompt(prompt,choices),true);
   assert.ok(promptWordCount(prompt)<=300,'driver selfie words: '+promptWordCount(prompt));
