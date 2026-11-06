@@ -6,9 +6,9 @@ import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 
 export const LHD_GEOMETRY = 'Saudi left-hand drive (LHD): wheel left, driver front-left, passenger front-right, center console on the driver’s physical right; selfie mirroring never swaps vehicle sides.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, upper infotainment and lower climate controls with rotary dials';
-export const IDENTITY_CORE = 'Preserve the reference face, proportions, skin tone and texture, natural hairline and density, beard and moustache; no retouching or identity changes.';
-export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique with proportional limbs, showing only visible anatomy.';
-export const SUBJECT_CORE = 'The person is the sole primary subject; never widen the selfie or shrink the person to show surroundings.';
+export const IDENTITY_CORE = 'Preserve exact reference facial identity, proportions, skin tone/texture, hairline/density, beard and moustache; no retouching.';
+export const BODY_CORE = 'Height 195 cm, weight 88 kg, natural lean athletic physique with proportional anatomy.';
+export const SUBJECT_CORE = 'The reference person is the sole primary subject; never widen the selfie for surroundings.';
 const words=(text:string)=>text.trim().split(/\s+/).filter(Boolean).length;
 export const promptWordCount=words;
 
@@ -54,27 +54,28 @@ export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,va
   const loc=Number(choices.locations.id.split('-').at(-1));
   const surface=deriveSceneLighting(choices);
   const framing=close?'Show only the naturally visible face and shoulders.':
-    'Preserve human scale within the chosen angle.';
+    'Keep normal subject scale.';
   const identity=[REQUIRED_PREFIX+'.',IDENTITY_CORE,BODY_CORE,SUBJECT_CORE].join(' ');
   const scene=[
-    'Scene: '+choices.locations.text+' in an unnamed everyday Saudi setting.',
-    'Clothing: '+choices.clothing.text+'; expression: '+choices.expressions.text+
-    '; existing hair styled '+choices.hairstyles.text+'.',
+    'Scene: '+choices.locations.text+' in an unnamed Saudi setting.',
+    'Wear '+choices.clothing.text+'; expression '+choices.expressions.text+
+    '; existing hair '+choices.hairstyles.text+'.',
     'Pose: '+choices.poses.text+'; angle: '+choices.selfieAngles.text+'.'
   ].join(' ');
-  const carBase='A parked pearl-white 2022 Range Rover Sport with black rims and grille, '+choices.carConditions.text+'.';
+  const carBase='Parked pearl-white 2022 Range Rover Sport: black rims and grille, '+choices.carConditions.text+';';
   const parking=loc<=5||[53,55,56].includes(loc)?
     'aligned safely with the desert road edge.':
     /parking|bay|garage|station|car wash|pump/i.test(choices.locations.text)?
     'parked inside a real parking or service bay.':
     'parallel to a real curb when present.';
-  const vehicle=visibleVehicle?carBase+' '+parking:
-    'The pearl-white 2022 Range Rover Sport stays parked, off-frame unless naturally visible.';
+  const vehicle=inside?'The pearl-white 2022 Range Rover Sport stays parked; exterior stays outside this selfie.':
+    visibleVehicle?carBase+' '+parking:
+    'The pearl-white 2022 Range Rover Sport stays parked, off-frame unless visible.';
   const cabin=inside?
     LHD_GEOMETRY+' If visible: light beige leather, glossy dark wood, chrome, piano-black trim and a black leather three-spoke wheel; '+FACTORY_DASHBOARD+' remain factory-correct; show only in-frame parts.':
     'Maintain Saudi LHD geometry if the cabin enters the frame.';
   const camera='Camera: raw handheld front-phone selfie at arm length; '+framing+
-    ' Realistic body support, fabric gravity and perspective.';
+    ' Natural body support, fabric gravity and perspective.';
   const lighting='Lighting: '+lightingProse(choices);
   // Only include small, optional, physically plausible model improvements.
   const texture=plan?
@@ -89,7 +90,7 @@ export function buildConcisePrompt(choices:ResolvedSelections,plan?:ScenePlan,va
   const environment=close||inside?'Do not force roads or crowds into view.':
     'If already in frame: '+surface.surface+'; '+(safeModelBackground||understated)+'.';
   const realism='Photographic realism: '+texture+' '+environment+
-    ' No waxy skin, beauty filters, CGI, false defects or exaggerated HDR. 9:16.';
+    ' No beauty filters, wax skin, CGI, invented defects or exaggerated HDR. 9:16.';
   const result=[identity,scene,vehicle,cabin,camera,lighting,realism].join(' ').replace(/\s+/g,' ').trim();
   return result;
 }
