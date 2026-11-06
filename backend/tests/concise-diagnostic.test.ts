@@ -26,6 +26,8 @@ test('every existing option returns a structurally safe concise fallback',()=>{
     for(const option of optionCatalogue[category]){
       const selected={...first,[category]:option.id};
       const choices=resolveSelections(selected);
+      const preview=buildConcisePrompt(choices,undefined,3);
+      assert.equal(validatePrompt(preview,choices),true,category+': '+option.id+' words='+promptWordCount(preview));
       const output=fallbackGenerator({selections:selected,variation:3});
       assert.equal(validatePrompt(output,choices),true,category+': '+option.id);
       assert.ok(promptWordCount(output)<=300,category+': '+option.id+' '+promptWordCount(output));
