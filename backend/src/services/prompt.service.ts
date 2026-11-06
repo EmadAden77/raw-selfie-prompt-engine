@@ -1,6 +1,6 @@
 import type { PromptRequest, PromptResponse } from '../types/engine.types.js';
 import { resolveSelections } from '../data/option-mappings.js';
-import { buildConcisePrompt } from '../engine/concise-prompt.js';
+import { assembleConcisePrompt } from '../engine/prompt-assembler.js';
 import { fallbackGenerator } from '../engine/fallback-generator.js';
 import { validatePrompt } from '../engine/prompt-validator.js';
 import { planWithNvidia, NvidiaFailure } from './nvidia.service.js';
@@ -43,7 +43,7 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
     const proposal=await planWithNvidia(scenePlanInput(resolved,baseline),request.nvidiaApiKey);
     const reviewed=reviewScenePlan(proposal,baseline);
     if(!reviewed)return {prompt:fallback,source:'local',reason:'unsafe_output'};
-    const generated=buildConcisePrompt(resolved,reviewed.plan);
+    const generated=assembleConcisePrompt(resolved,reviewed.plan);
     const quality=evaluateQuality(reviewed.plan,generated,resolved);
     if(quality.some(result=>!result.passed))
       return {prompt:fallback,source:'local',reason:'unsafe_output'};
