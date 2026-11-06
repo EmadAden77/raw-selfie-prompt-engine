@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { helmet } from 'helmet';
+import helmet from 'helmet';
 import { env } from './config/env.js';
 import { promptRouter } from './routes/prompt.routes.js';
 import { errorHandler, notFound } from './middleware/error-handler.js';
@@ -15,7 +15,7 @@ function isOwnPrivateCodespaceOrigin(origin:string):boolean{
 }
 export const app=express();
 app.disable('x-powered-by');
-app.use(helmet());
+app.use((helmet as unknown as () => import('express').RequestHandler)());
 app.use(cors({
   origin(origin,callback){
     if(!origin||origin===publicPagesOrigin||env.corsOrigins.includes(origin)||isOwnPrivateCodespaceOrigin(origin))
