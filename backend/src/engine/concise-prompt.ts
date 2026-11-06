@@ -69,6 +69,18 @@ function framingProse(inside: boolean, close: boolean, steeringHand: boolean): s
   return 'Framing: face and upper torso dominate 9:16; no pullback to showcase car or road.';
 }
 
+const unsafeAddition = /\b(?:show|reveal|widen|entire|whole|full.body|landmark|tower|skyline|famous|new face|different person|studio|cinematic|beauty|retouch|CGI|8K|perfect skin|second sun|extra light|two suns|recolor|replace|redesign|zoom out|pull back|crane|drone|selfie stick)\b/i;
+function safeDetail(raw: string | undefined, maxCharacters: number): string {
+  if (!raw) return '';
+  const text = raw.trim().replace(/[.!?]+$/, '').trim();
+  if (text.length < 15 || text.length > maxCharacters ||
+      /[<>{}\u0600-\u06ff`]|[\n\r]/.test(text) || unsafeAddition.test(text)) return '';
+  return text;
+}
+
+// NVIDIA descriptions are context checked even after the consistency critic.
+// In particular, a desert shoulder is not an urban sidewalk, and a clean car
+// must not receive invented grime simply to make the image look photographic.
 function backgroundProse(choices: ResolvedSelections, variation: number, plan?: ScenePlan): string {
   const location = numberOf(choices.locations.id);
   const desert = [1, 2, 3, 4, 5, 53, 55, 56].includes(location);
@@ -79,14 +91,23 @@ function backgroundProse(choices: ResolvedSelections, variation: number, plan?: 
     : covered
       ? ['a partial parked-car edge', 'faint scuffs on visible concrete', 'one distant pedestrian'][option]
       : ['a passing pedestrian at the far edge', 'a partly visible parked car', 'subtle worn road markings'][option];
-  // A proposed NVIDIA background can describe only a small visible detail.
-  // Never let it expand the crop or introduce unknown locations.
-  const candidate = plan?.environmentalRealism.background?.trim();
-  const safe = candidate && candidate.length <= 110 &&
-    !/^only ordinary/i.test(candidate) &&
-    !/\b(?:show|reveal|widen|entire|whole|full|landmark|mall|tower|skyline)\b/i.test(candidate)
-      ? candidate : contextual;
-  return 'Only at the existing frame edge, if visible: ' + safe + '.';
+  const proposal = safeDetail(plan?.environmentalRealism.background, 110);
+  const condition = numberOf(choices.carConditions.id);
+  const conflicting = desert && /\b(?:sidewalk|curb|traffic lights|shopping|storefront|urban|pavement slabs)\b/i.test(proposal)
+    || covered && /\b(?:sunbeam|direct sun|roadside|open sky|desert shoulder)\b/i.test(proposal)
+    || condition === 1 && /\b(?:dirty vehicle|dusty car|mud on (?:paint|doors)|grimy paint)\b/i.test(proposal)
+    || condition !== 5 && /\b(?:rainfall|wet asphalt|wet pavement|puddles)\b/i.test(proposal);
+  return 'Only at the existing frame edge, if visible: ' + (proposal && !conflicting ? proposal : contextual) + '.';
+}
+
+function nvidiaMaterialDetail(choices: ResolvedSelections, plan?: ScenePlan): string {
+  const candidate = safeDetail(plan?.clothingAndMaterialPhysics.fabricBehavior, 115);
+  if (!candidate || !/\b(?:fabric|folds?|creases?|drapes?|sleeves?|garment|cloth|seams?)\b/i.test(candidate) ||
+      /\b(?:face|smile|hair|skin|wheel|dashboard|camera|flash|lighting|windows?|road|car)\b/i.test(candidate) ||
+      /^gravity-consistent folds in\b/i.test(candidate) ||
+      /\bcotton\b/i.test(candidate) && !/\b(?:cotton|thobe)\b/i.test(choices.clothing.text))
+    return '';
+  return 'Cloth detail: ' + candidate + '.';
 }
 
 export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan, variation = 0): string {
@@ -129,8 +150,9 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
       : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
         : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
   const surroundings = !inside && !close ? backgroundProse(choices, variation, plan) : '';
+  const material = nvidiaMaterialDetail(choices, plan);
   const realism = 'Photographic realism: shared phone exposure, reference pores, real folds, coherent shadows and highlights. ' +
-    support + ' ' + surface + ' ' + surroundings +
+    support + ' ' + surface + ' ' + surroundings + ' ' + material +
     ' No wax or plastic skin, beauty filters, CGI, invented marks, extra fingers, false reflections or exaggerated HDR.';
   return [identity, scene, vehicle, cabin, camera, framingProse(inside, close, capture.steeringHand),
     'Lighting: ' + lightingProse(choices, inside), realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
