@@ -19,11 +19,11 @@ function lightingProse(request: PromptRequest, inside: boolean): string {
   const covered = coveredLocations.includes(location);
   const night = [4, 17].includes(location) || [7, 8].includes(light);
   if (light === 9)
-    return 'Only the phone screen lights the face; rapid falloff below chest leaves the cabin dark, no fill.';
+    return 'Only the phone screen lights the face; weak illumination fades sharply below chest, leaving cabin dark, no fill.';
   if (light === 10)
     return reflection
-      ? 'Only rear LED flash lights the reflection; glare stays at its reflected position, with real falloff.'
-      : 'Only enabled front-screen flash lights near face, not rear LED; rapid falloff, no fill.';
+      ? 'Only rear LED flash lights reflection; glare stays at reflected LED position, with real falloff.'
+      : 'Only enabled front-screen flash lights near face, not the rear LED; rapid falloff, no fill.';
   if (covered)
     return inside
       ? 'Existing overhead fixtures enter through car windows; face and cabin receive dimmer reflected light and grounded shadows.'
@@ -84,8 +84,8 @@ export function buildLocalPrompt(request: PromptRequest): string {
     ? 'Saudi LHD: driver front-left, passenger front-right, wheel physically left, console right; no mirrored layout. Visible only: light beige leather seats/dashboard, black leather three-spoke wheel, dark wood, chrome, piano-black trim, panoramic roof; original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials. Never reveal off-frame details.'
     : '';
   const camera = reflection
-    ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, lens aimed at mirror/glass, real scale and occlusion.'
-    : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; slight real phone distortion and hand tilt, no external photographer, visible phone or portrait mode.';
+    ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
+    : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; slight phone distortion and hand tilt; phone is outside its own direct view, no remote photographer or portrait mode.';
   const support = inside
     ? 'Seat compression and hands follow contact and gravity; phone hand and free hand distinct.'
     : 'Real grip, supported pose and gravity-driven folds.';
