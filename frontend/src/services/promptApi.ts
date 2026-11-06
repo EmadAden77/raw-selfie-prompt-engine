@@ -25,20 +25,25 @@ export function buildLocalPrompt(request:PromptRequest):string {
 
 export async function generatePrompt(request:PromptRequest):Promise<PromptResponse> {
   const fallback:PromptResponse={prompt:buildLocalPrompt(request),source:'local'};
-  const base=(import.meta.env.VITE_API_BASE_URL as string|undefined)?.trim();
-  if(!base) return fallback;
+  // Default to the same-origin backend route; the Vite dev proxy handles localhost.
+  // In production, configure a reverse proxy or an explicit backend origin.
+  const base=(import.meta.env.VITE_API_BASE_URL as string|undefined)?.trim()??'';
+  const endpoint=base ? base.replace(/\/$/,'')+'/api/prompt' : '/api/prompt';
   try {
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),12000);
     try {
-      const response=await fetch(base.replace(/\/$/,'')+'/api/prompt',{
+      const response=await fetch(endpoint,{
         method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify(request),signal:controller.signal
       });
       if(!response.ok) return fallback;
       const data:unknown=await response.json();
       if(data&&typeof data==='object'&&'prompt' in data&&typeof data.prompt==='string'&&
-        data.prompt.startsWith(PREFIX)&&!/[\u0600-\u06ff]/.test(data.prompt)&&data.prompt.length>400)
+        data.prompt.startsWith(PREFIX)&&!/[\u0600-\u06ff]/.test(data.prompt)&&data.prompt.length>400&&
+        /2022\s+Range Rover Sport/i.test(data.prompt)&&/pearl.white/i.test(data.prompt)&&
+        /beige/i.test(data.prompt)&&/parked|stationary/i.test(data.prompt)&&
+        /no wax skin/i.test(data.prompt)&&/plastic skin/i.test(data.prompt))
         return {prompt:data.prompt,source:'server'};
       return fallback;
     } finally {clearTimeout(timeout);}
