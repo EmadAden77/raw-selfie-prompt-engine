@@ -15,6 +15,9 @@ function isOwnPrivateCodespaceOrigin(origin:string):boolean{
 }
 export const app=express();
 app.disable('x-powered-by');
+// Vercel terminates HTTPS and forwards the client IP through one trusted proxy.
+// Keep local development unproxied; never trust arbitrary forwarded headers globally.
+if (process.env.VERCEL === '1') app.set('trust proxy', 1);
 app.use((helmet as unknown as () => import('express').RequestHandler)());
 app.use(cors({
   origin(origin,callback){
