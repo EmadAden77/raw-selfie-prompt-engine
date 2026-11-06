@@ -13,6 +13,7 @@ export interface ResolvedCapture {
   mounted: boolean;
   seat: 'driver' | 'passenger' | 'rear' | 'unspecified' | 'outside';
   pose: string;
+  angleText: string;
   poseRepaired: boolean;
   steeringHand: boolean;
 }
@@ -48,5 +49,9 @@ export function resolveCapture(choices: ResolvedSelections): ResolvedCapture {
   }
   const mounted = !mismatch && poseNumber === 8;
   const steeringHand = !mismatch && seat === 'driver' && [1, 5, 8].includes(poseNumber);
-  return { inside, close, mounted, seat, pose, poseRepaired: mismatch, steeringHand };
+  const angleText = mounted
+    ? angle === 4 ? 'rear-camera timer reflection from a supported cabin phone mount'
+      : 'subject-initiated front-camera timer selfie from the selected seat, using a real phone mount'
+    : choices.selfieAngles.text;
+  return { inside, close, mounted, seat, pose, angleText, poseRepaired: mismatch, steeringHand };
 }
