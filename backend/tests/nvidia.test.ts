@@ -51,7 +51,7 @@ test('DeepSeek JSON scene planner uses 0.3 and leaves protected prompt text unch
 test('NVIDIA adds bounded environment detail only for a naturally visible outdoor selfie',async()=>{
   const outside={...selections,selfieAngles:'angle-19',poses:'pose-17'};
   const reference=createScenePlan(resolveSelections(outside));
-  const approved='A distant passerby crosses an existing sidewalk beyond the parked car.';
+  const approved='A distant passerby walks beside the dusty roadside beyond the parked car.';
   try{
     globalThis.fetch=async()=>nvidiaJson({
       ...reference,environmentalRealism:{...reference.environmentalRealism,background:approved}
