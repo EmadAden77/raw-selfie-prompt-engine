@@ -9,8 +9,8 @@ import { resolveCapture } from './scene-geometry.js';
 export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right, wheel left, console right; no mirroring.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, natural asymmetry, apparent age, skin tone and texture, eyes, brows, nose, lips, jaw, hairline, thinning, hair density, curl pattern and facial-hair gaps; no reshaping, beautification or invented marks.';
-export const BODY_CORE = 'Height 193 cm, weight 83 kg, natural lean athletic physique with proportional anatomy.';
-export const SUBJECT_CORE = 'The reference person is the sole primary subject; no wider scenery framing.';
+export const BODY_CORE = 'Height 193 cm, weight 83 kg; natural lean athletic physique and proportions.';
+export const SUBJECT_CORE = 'Reference person remains the sole primary subject; no scenery-driven pullback.';
 export const promptWordCount = (text: string): number => text.trim().split(/\s+/).filter(Boolean).length;
 const numberOf = (id: string): number => Number(id.split('-').at(-1));
 
@@ -55,7 +55,7 @@ function lightingProse(choices: ResolvedSelections, inside: boolean): string {
       ? 'Diffuse skylight through real windows gives soft facial contrast; the deeper cabin receives less light.'
       : 'Existing diffuse skylight makes soft contact shadows; no hidden fill.';
   return inside
-    ? 'Morning sunlight enters through existing glazing; face and cabin shadows follow its real path, with natural bounce only.'
+    ? 'Morning sunlight enters through actual glazing; face and cabin shadows follow its path, no fill.'
     : 'Existing morning sun lights the face; shadows agree with its direction, no fill.';
 }
 
@@ -64,7 +64,7 @@ function framingProse(inside: boolean, close: boolean, steeringHand: boolean): s
     return 'Framing: tight 9:16 face and shoulders; no pulled-back cabin or roadside view.';
   if (inside)
     return steeringHand
-      ? 'Framing: face and shoulders dominate 9:16, cropped near chest; wheel hand at edge only, never full lap or console.'
+      ? 'Framing: face and shoulders dominate 9:16, chest crop; wheel hand at edge only, no lap or console.'
       : 'Framing: face and shoulders dominate 9:16; hands appear only if the angle includes them, never full dashboard.';
   return 'Framing: face and upper torso dominate 9:16; no pullback.';
 }
@@ -145,7 +145,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
       ? 'Seat contact and hands obey gravity; selfie and free hands remain distinct.'
       : 'Real grip, support and garment folds.';
   const surface = inside
-    ? 'Clean or hidden cabin surfaces stay clean.'
+    ? 'Clean cabin surfaces stay clean; hidden parts stay hidden.'
     : condition === 1 ? 'Freshly washed surfaces stay clean.'
       : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
         : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
