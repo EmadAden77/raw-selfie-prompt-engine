@@ -30,32 +30,32 @@ function lightingProse(choices: ResolvedSelections, inside: boolean): string {
     return 'Only the phone screen lights the face; weak illumination fades sharply below chest, leaving cabin dark, no fill.';
   if (light === 10)
     return mirror
-      ? 'Only rear LED flash lights reflection; glare stays at reflected LED position, with real falloff.'
-      : 'Only enabled front-screen flash lights near face, not the rear LED; rapid falloff, no fill.';
+      ? 'Only actual rear LED flash lights the selected reflection; glare remains at the reflected LED position, with real falloff.'
+      : 'Only enabled front-screen flash lights the near face, not the rear LED; rapid falloff, no extra fill.';
   if (scene.covered)
     return inside
-      ? 'Existing overhead fixtures enter through car windows; face and cabin receive dimmer reflected light and grounded shadows.'
+      ? 'Only existing overhead fixtures illuminate the covered area; their light reaches the cabin via real glazing, with grounded shadows.'
       : 'Existing overhead fixtures cast grounded shadows in the covered space; no direct sun or studio fill.';
   if (scene.time === 'night')
     return inside
-      ? 'Dim night sky or an actual fixture enters through car windows; the cabin remains dark, without fill.'
+      ? 'Only actual nearby night fixtures or dim sky light the windows; real obstructions leave the inner cabin dark.'
       : location === 4
         ? 'Use dim night sky or an actually visible roadside fixture; keep real darkness and source-aligned shadows.'
         : 'Light comes from the actual nearby street or building fixture; shadows fade naturally, with no studio fill.';
   if (scene.time === 'sunset' || scene.time === 'afternoon')
     return inside
-      ? 'Low warm sun through real glazing lights the window-facing cheek; opposite cheek and cabin stay shaded.'
+      ? 'Low warm sun enters only through unobstructed vehicle glazing; facial highlights and cabin shade follow its actual direction.'
       : 'Low warm sun creates long compatible shadows across the visible face and ground; natural reflections only.';
   if (scene.time === 'noon')
     return inside
-      ? 'Midday sun enters through real glazing; roof shades cabin-side cheek, white fabric retains realistic highlights.'
+      ? 'Midday sunlight passes actual glazing; roof, pillars and seat cast source-aligned shade; white fabric retains highlights.'
       : 'High sun creates short grounded shadows and natural highlight clipping; no artificial fill.';
   if (scene.time === 'overcast daylight' || scene.time === 'daylight in shade')
     return inside
-      ? 'Diffuse skylight through car windows softly lights the face; inner cheek and cabin remain shaded.'
+      ? 'Diffuse skylight through real windows gives soft facial contrast; the deeper cabin receives less light.'
       : 'Existing diffuse skylight makes soft contact shadows; no hidden fill.';
   return inside
-    ? 'Morning daylight through real windows lights window-facing cheek; cabin-side cheek stays shaded, no extra fill.'
+    ? 'Morning sunlight enters through existing glazing; face and cabin shadows follow its real path, with natural bounce only.'
     : 'Existing morning sun lights the exposed face; surroundings share its shadow direction, no studio fill.';
 }
 
