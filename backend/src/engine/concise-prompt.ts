@@ -9,7 +9,7 @@ export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, natural asymmetry, apparent age, skin tone and texture, eyes, brows, nose, lips, jaw, hairline, thinning, hair density, curl pattern and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 193 cm, weight 83 kg, natural lean athletic physique with proportional anatomy.';
-export const SUBJECT_CORE = 'The reference person is the sole primary subject; never widen the selfie for surroundings.';
+export const SUBJECT_CORE = 'The reference person is the sole primary subject; never widen for surroundings.';
 export const promptWordCount = (text: string): number => text.trim().split(/\s+/).filter(Boolean).length;
 const numberOf = (id: string): number => Number(id.split('-').at(-1));
 
@@ -101,18 +101,18 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
     expressionGuard + ' Hair: ' + choices.hairstyles.text + ' within existing density. ' +
     'Pose: ' + choices.poses.text + '. Angle: ' + choices.selfieAngles.text + '.';
   const vehicle = inside
-    ? 'Parked pearl-white 2022 Range Rover Sport, black rims; exterior off-frame.'
+    ? 'The parked pearl-white 2022 Range Rover Sport has black rims; exterior off-frame.'
     : vehicleVisible(choices, false)
-      ? 'Parked pearl-white 2022 Range Rover Sport, black rims, ' + choices.carConditions.text + '.'
+      ? 'The parked pearl-white 2022 Range Rover Sport has black rims; ' + choices.carConditions.text + '.'
       : 'Pearl-white 2022 Range Rover Sport with black rims stays parked off-frame.';
   const cabin = inside
     ? LHD_GEOMETRY + ' Visible only: light beige leather seats/dashboard, black leather three-spoke wheel, glossy dark wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. Never reveal off-frame details.'
-    : '';
+    : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = reflection
     ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
     : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; slight phone distortion and hand tilt; phone is outside its own direct view, no remote photographer or portrait mode.';
   const support = inside
-    ? 'Seat compression and hands follow contact and gravity; phone hand and free hand distinct.'
+    ? 'Seat compression and hands obey gravity; selfie and free hands remain distinct.'
     : 'Real grip, supported pose and gravity-driven folds.';
   const surface = inside
     ? 'Clean or hidden cabin surfaces stay clean.'
@@ -120,7 +120,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
       : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
         : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
   const surroundings = !inside && !close ? backgroundProse(choices, variation, plan) : '';
-  const realism = 'Photographic realism: one shared phone exposure, reference skin pores, natural cloth folds, realistic shadows and restrained highlights. ' +
+  const realism = 'Photographic realism: shared phone exposure, reference pores, natural fabric folds, grounded shadows and highlights. ' +
     support + ' ' + surface + ' ' + surroundings +
     ' No wax or plastic skin, beauty filters, CGI, invented blemishes, extra fingers, impossible reflections or HDR.';
   return [identity, scene, vehicle, cabin, camera, framingProse(inside, close),
