@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, LockKeyhole, WandSparkles } from 'lucide-react';
 import Header from '../components/layout/Header';
 import StepNavigation from '../components/layout/StepNavigation';
@@ -10,6 +10,8 @@ import { useSelections } from '../hooks/useSelections';
 import { usePromptGenerator } from '../hooks/usePromptGenerator';
 
 export default function App(){
+  // Remove any API key stored by the old UI; credentials now stay server-side.
+  useEffect(()=>{try{window.localStorage.removeItem('raw-selfie-nvidia-key');}catch{/* unavailable storage */}},[]);
   const [step,setStep]=useState(0);
   const [image,setImage]=useState<File|null>(null);
   const {selections,select}=useSelections();
