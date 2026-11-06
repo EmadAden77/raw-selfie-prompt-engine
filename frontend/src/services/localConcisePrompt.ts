@@ -76,18 +76,18 @@ export function buildLocalPrompt(request: PromptRequest): string {
     expressionGuard + ' Hair: ' + option(request, 'hairstyles') + ' within existing density. ' +
     'Pose: ' + option(request, 'poses') + '. Angle: ' + option(request, 'selfieAngles') + '.';
   const vehicle = inside
-    ? 'Parked pearl-white 2022 Range Rover Sport, black rims; exterior off-frame.'
+    ? 'The parked pearl-white 2022 Range Rover Sport has black rims; exterior off-frame.'
     : visibleCar
-      ? 'Parked pearl-white 2022 Range Rover Sport, black rims, ' + option(request, 'carConditions') + '.'
+      ? 'The parked pearl-white 2022 Range Rover Sport has black rims; ' + option(request, 'carConditions') + '.'
       : 'Pearl-white 2022 Range Rover Sport with black rims stays parked off-frame.';
   const cabin = inside
     ? 'Saudi LHD: driver front-left, passenger front-right, wheel physically left, console right; no mirrored layout. Visible only: light beige leather seats/dashboard, black leather three-spoke wheel, glossy dark wood, chrome, piano-black trim, panoramic roof; original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials. Never reveal off-frame details.'
-    : '';
+    : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = reflection
     ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
     : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; slight phone distortion and hand tilt; phone is outside its own direct view, no remote photographer or portrait mode.';
   const support = inside
-    ? 'Seat compression and hands follow contact and gravity; phone hand and free hand distinct.'
+    ? 'Seat compression and hands obey gravity; selfie and free hands remain distinct.'
     : 'Real grip, supported pose and gravity-driven folds.';
   const surface = inside
     ? 'Clean or hidden cabin surfaces stay clean.'
@@ -100,14 +100,14 @@ export function buildLocalPrompt(request: PromptRequest): string {
       ? ['a partial parked-car edge', 'faint scuffs on visible concrete', 'one distant pedestrian'][Math.abs(request.variation ?? 0) % 3]
       : ['a passing pedestrian at the far edge', 'a partly visible parked car', 'subtle worn road markings'][Math.abs(request.variation ?? 0) % 3];
   const surroundings = !inside && !close ? 'Only at the existing frame edge, if visible: ' + contextual + '.' : '';
-  const realism = 'Photographic realism: one shared phone exposure, reference skin pores, natural cloth folds, realistic shadows and restrained highlights. ' +
+  const realism = 'Photographic realism: shared phone exposure, reference pores, natural fabric folds, grounded shadows and highlights. ' +
     support + ' ' + surface + ' ' + surroundings +
     ' No wax or plastic skin, beauty filters, CGI, invented blemishes, extra fingers, impossible reflections or HDR.';
   return [
     PREFIX + '.',
     'Preserve reference facial geometry, natural asymmetry, apparent age, skin tone and texture, eyes, brows, nose, lips, jaw, hairline, thinning, hair density, curl pattern and facial-hair gaps; no reshaping, beautification or invented marks.',
     'Height 193 cm, weight 83 kg, natural lean athletic physique with proportional anatomy.',
-    'The reference person is the sole primary subject; never widen the selfie for surroundings.',
+    'The reference person is the sole primary subject; never widen for surroundings.',
     scene, vehicle, cabin, camera, framingProse(inside, close),
     'Lighting: ' + lightingProse(request, inside), realism
   ].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
