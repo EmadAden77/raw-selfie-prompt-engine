@@ -1,7 +1,7 @@
 import { promptWordCount, LHD_GEOMETRY, FACTORY_DASHBOARD, IDENTITY_CORE, BODY_CORE, SUBJECT_CORE } from './concise-prompt.js';
 function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   const count=promptWordCount(prompt);
-  if(count<105||count>360) return false;
+  if(count<105||count>500) return false;
   if(!prompt.includes(IDENTITY_CORE)||!prompt.includes(BODY_CORE)||!prompt.includes(SUBJECT_CORE))return false;
   if(!/\b193 cm\b/.test(prompt)||!/\b83 kg\b/.test(prompt)||!/lean athletic/.test(prompt))return false;
   if(!prompt.includes('Scene:')||!prompt.includes('Camera:')||!prompt.includes('Lighting:')||
@@ -12,10 +12,13 @@ function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   if(/\b(?:single portrait|portrait.oriented|vertical infotainment)\s+(?:screen|display)/i.test(prompt))return false;
   if(/\b(?:two suns|opposing key lights|extra studio fill|cinematic lighting)\b/i.test(prompt)&&
      !/\b(?:no|without)\s+(?:extra studio fill|cinematic lighting)\b/i.test(prompt))return false;
-  if(/(?:192|194|193|196|197)\s*cm|\b(?:84|85|86|87|83|89|90)\s*kg/i.test(prompt))return false;
+  if(/(?:192|194|195|196|197)\s*cm|\b(?:84|85|86|87|88|89|90)\s*kg/i.test(prompt))return false;
   if(/\b(?:beige|cream|tan)\s+(?:leather\s+)?steering wheel\b/i.test(prompt))return false;
   if(choices){
     const cabin=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
+    const reflection=[4,29].includes(Number(choices.selfieAngles.id.split('-').at(-1)));
+    if(reflection&&!/rear-camera reflection selfie/i.test(prompt))return false;
+    if(!reflection&&!/front-camera selfie/i.test(prompt))return false;
     if(cabin&&(!prompt.includes(LHD_GEOMETRY)||!prompt.includes(FACTORY_DASHBOARD)))return false;
     if(cabin&&!/black leather three.spoke wheel/i.test(prompt))return false;
     if(!prompt.includes(choices.locations.text)||!prompt.includes(choices.clothing.text)||
