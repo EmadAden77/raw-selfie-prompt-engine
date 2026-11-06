@@ -9,6 +9,7 @@ const detail=z.string().trim().min(5).max(200);
 export const scenePlanSchema=z.object({
   cameraGeometry:z.object({
     phonePosition:detail,
+    opticalAxis:detail,
     armReachCm:z.number().int().min(25).max(130),
     framing:z.enum(['face','upper-body','torso']),
     visibleBody:detail
@@ -23,7 +24,8 @@ export const scenePlanSchema=z.object({
   environmentalRealism:z.object({parking:detail,roadTexture:detail,background:detail}).strict(),
   clothingAndMaterialPhysics:z.object({fabricBehavior:detail,contactShadow:detail}).strict(),
   vehicleInteriorConsistency:z.object({
-    visible:z.boolean(),visibleElements:z.array(detail).max(5),materials:detail
+    visible:z.boolean(),visibleElements:z.array(detail).max(5),
+    exteriorVisibleParts:z.array(detail).max(4),materials:detail
   }).strict(),
   photographicImperfectionControl:z.object({skin:detail,optics:detail,exposure:detail}).strict()
 }).strict();
@@ -43,7 +45,9 @@ export function createScenePlan(choices:ResolvedSelections):ScenePlan {
   const framing=close?'face':angle===10||angle===24?'torso':'upper-body';
   const candidate:ScenePlan={
     cameraGeometry:{
-      phonePosition:position,armReachCm:close?38:angle===10?83:65,framing,
+      phonePosition:position,
+      opticalAxis:mirror?'phone aimed at the selected reflective surface to capture the subject naturally':'front camera pointed at the reference subject from a plausible handheld angle',
+      armReachCm:close?38:angle===10?83:65,framing,
       visibleBody:close?'face and only naturally included neck or shoulder':
         framing==='torso'?'face, shoulders and naturally framed torso':'face, shoulders and upper torso only where visible'
     },
@@ -69,6 +73,10 @@ export function createScenePlan(choices:ResolvedSelections):ScenePlan {
     vehicleInteriorConsistency:{
       visible:interior,
       visibleElements:interior?['light beige leather only if in frame','black leather steering wheel only if in frame','dark wood and piano-black trim only if in frame']:[],
+      exteriorVisibleParts:angle>=16?(angle===19?['front grille only if in frame','nearby hood edge only if in frame']:
+        angle===26?['rear hatch only if in frame']:
+        angle===27?['side mirror only if in frame']:
+        ['nearest parked pearl-white body panel only if in frame']):[],
       materials:'fixed light beige leather, glossy dark wood, chrome and piano-black trim; black leather steering wheel'
     },
     photographicImperfectionControl:{
