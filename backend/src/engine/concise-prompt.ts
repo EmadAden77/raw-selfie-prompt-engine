@@ -154,6 +154,11 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
   const realism = 'Photographic realism: shared phone exposure, reference pores, real folds, coherent shadows and highlights. ' +
     support + ' ' + surface + ' ' + surroundings + ' ' + material +
     ' No wax or plastic skin, beauty filters, CGI, invented marks, extra fingers, false reflections or exaggerated HDR.';
-  return [identity, scene, vehicle, cabin, camera, framingProse(inside, close, capture.steeringHand),
+  let result = [identity, scene, vehicle, cabin, camera, framingProse(inside, close, capture.steeringHand),
     'Lighting: ' + lightingProse(choices, inside), realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+  // Optional NVIDIA prose must never force a longer-than-allowed production prompt.
+  if (promptWordCount(result) > 300 && material) result = result.replace(' ' + material, '');
+  if (promptWordCount(result) > 300 && plan && surroundings)
+    result = result.replace(surroundings, backgroundProse(choices, variation));
+  return result.replace(/\s+/g, ' ').trim();
 }
