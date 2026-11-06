@@ -60,7 +60,7 @@ export function createScenePlan(choices:ResolvedSelections):ScenePlan {
       source:scene.source,kelvin:scene.kelvin,shadowDirection:scene.shadows
     },
     humanAppearancePreservation:{
-      faceUnchanged:true,heightCm:195,weightKg:88,physique:'natural lean athletic'
+      faceUnchanged:true,heightCm:193,weightKg:83,physique:'natural lean athletic'
     },
     environmentalRealism:{
       parking:scene.parking,roadTexture:scene.surface,
@@ -92,7 +92,7 @@ export function scenePlanInput(choices:ResolvedSelections,base:ScenePlan):string
   // No photo bytes, identity image or credential enters this model context.
   return JSON.stringify({
     selections:Object.fromEntries(Object.entries(choices).map(([key,value])=>[key,value.text])),
-    immutable:{heightCm:195,weightKg:88,physique:'lean athletic',car:'parked 2022 pearl-white Range Rover Sport',
+    immutable:{heightCm:193,weightKg:83,physique:'lean athletic',car:'parked 2022 pearl-white Range Rover Sport',
       cabin:'light beige leather, glossy dark wood, chrome, piano-black, black steering wheel',
       identity:'preserve exact reference face, skin and hair; person is sole primary subject'},
     baseline:base
