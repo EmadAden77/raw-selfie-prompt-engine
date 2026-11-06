@@ -5,13 +5,15 @@
 1. تستقبل الواجهة الاختيارات العربية، ثم ترسل معرّفاتها في JSON مع قيمة `variation`.
 2. يفحص Backend كل معرّف ضمن قائمة مسموحة حتى لا يتحول نص المستخدم الحر إلى تعليمات داخل المحرك.
 3. `Rule Builder` يجمع القواعد الثابتة مع الوصف الإنجليزي لكل اختيار.
-4. `Creative Expander` يضيف خلفية حيّة وتفاصيل داخلية أو خارجية مناسبة دون تغيير الشخص أو السيارة.
-5. `Prompt Assembler` يجمع النص مع نسبة التأطير الرأسية.
-6. إذا كان المفتاح موجودًا، يُرسل Backend القاعدة الثابتة والتفاصيل المقترحة إلى NVIDIA Chat Completions، موديل `deepseek-ai/deepseek-v4.1-flash`.
-7. يجب أن يبدأ النص المعاد بالقاعدة المبنية نفسها دون تغيير، ويجتاز `Prompt Validator`. وإلا يُعاد البرومبت الاحتياطي.
-8. إذا تعذر الوصول إلى Backend، يُنشئ Frontend برومبتًا احتياطيًا محليًا من بياناته.
+4. `Scene Planner` يبني JSON مرجعيًا من ثمانية أقسام، ويستخلص الإضاءة وهندسة السيلفي والمواد من الاختيارات.
+5. عند وجود مفتاح، تطلب خدمة NVIDIA خطة JSON واحدة (DeepSeek V4.1 Flash، حرارة 0.3 افتراضيًا) بناءً على النصوص والاختيارات فقط. يتحقق Zod من البنية ولا يُرسل النموذج البرومبت النهائي.
+6. `Consistency Critic` يصحح الخانات المتعارضة فقط ويحمي هوية الشخص والهندسة والمواد، ثم ينتقي `Realism Director` التفاصيل المناسبة.
+7. `Prompt Assembler` يجمع النص المحمي والتفاصيل المنتقاة، ثم يتحقق `Quality Evaluator` و`Prompt Validator` من الاتساق النصي.
+8. عند غياب المفتاح أو فشل NVIDIA، يعمل `Fallback Generator`، وعند تعذر Backend يعمل مولّد المتصفح.
 
 هذا التصميم يضمن ألا يكون النموذج الخارجي صاحب القرار في استبدال هوية الشخص أو لون السيارة. التوسيع الإبداعي محصور في التفاصيل المادية الصغيرة.
+
+للتفاصيل والاختبارات راجع [دليل NVIDIA Intelligent Photorealism Engine](nvidia-intelligent-photorealism.md).
 
 ## ثوابت لا تتغير
 
@@ -39,7 +41,7 @@ ChatGPT, using the reference image I uploaded, generate an image of the exact sa
 
 - يشتق `deriveSceneLighting` في Rule Builder وصفًا محددًا لكل مكان وإضاءة وزاوية وحالة سيارة، بدل قالب ثابت. يتضمن مصدر الضوء الحقيقي وحرارته واتجاه ظلاله ومادّة الطريق ونوع الوقوف الآمن؛ وكل وصف مقيَّد بمجال رؤية السيلفي ولا يغيّر أولوية الشخص.
 - تعارض الظهر مع موقف مغطى يُحل بضوء مصابيح السقف، وتعارض الرصيف مع طريق صحراوي يُحل بمحاذاة كتف الطريق، ومواقف المراكز تُستخدم فيها الخانات المرسومة بدل وقوف موازي غير ممكن.
-- يضع Creative Expander بيانات الإضاءة والمكان والطقس والزاوية **في بداية النص** المرسل إلى NVIDIA ضمن إعداد الاتصال الحالي. لا يمكن لـNVIDIA تغيير مصدر الضوء أو الوقوف أو الشارع؛ Prompt Validator يتحقق من السياسة والخطة الدقيقة ويرفض التعارضات.
+- يضع Scene Planner بيانات الإضاءة والمكان والطقس والزاوية ضمن خطة JSON المرجعية المرسلة إلى NVIDIA؛ أما Creative Expander القديم فيبقى لمسار Fallback. لا يمكن لـNVIDIA تغيير مصدر الضوء أو الوقوف أو الشارع؛ Prompt Validator يتحقق من السياسة والخطة الدقيقة ويرفض التعارضات.
 - يطبّق Backend Fallback الخطة نفسها ويتحقق منها؛ ويحاكي Fallback المتصفح الجدول ذاته عند انقطاع الاتصال بالخادم. جميع اختيارات القوائم الثماني تتبع القاعدة نفسها.
 - اختبارات المشاهد: صحراء ظهر 5500K وظلال قصيرة، فيلا ليل 3000K، مواقف مول خارجية عند الغروب 3200K وظلال طويلة، بالإضافة إلى تغطية 58×10 مكانًا وإضاءة.
 
@@ -50,9 +52,10 @@ Frontend (React + TypeScript + Vite, Arabic RTL)
   → JSON: { selections, variation }
   → POST /api/prompt
 Backend (Node.js + TypeScript + Express)
-  → Validation → Rule Builder → Creative Expander
-  → NVIDIA API (deepseek-ai/deepseek-v4.1-flash)
-  → Prompt Validator → English ChatGPT prompt
+  → Validation → Rule Builder → Scene Planner JSON
+  → NVIDIA API (deepseek-ai/deepseek-v4.1-flash) → Zod
+  → Consistency Critic → Realism Director → Prompt Assembler
+  → Quality Evaluator + Prompt Validator → English ChatGPT prompt
   ↳ NVIDIA missing/unavailable/invalid → Backend Fallback Generator
   ↳ Backend unreachable → Frontend local fallback
 ```
@@ -77,7 +80,7 @@ Backend (Node.js + TypeScript + Express)
 }
 ```
 
-الاستجابة تحتوي `prompt` (إنجليزي فقط يبدأ بالمقدمة الثابتة) و`source` (`server` أو `local`). لا يحتوي الطلب على صورة أو مفتاح NVIDIA.
+الاستجابة تحتوي `prompt` (إنجليزي فقط يبدأ بالمقدمة الثابتة) و`source` (`server` أو `local`). لا يحتوي الطلب على الصورة المرجعية، ولكنه قد يحتوي على مفتاح NVIDIA الذي أدخله المستخدم عند التوليد؛ لا يُضمَّن المفتاح في البرومبت ولا في سجلات الخادم.
 
 ## التشغيل على الجهاز
 
