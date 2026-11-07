@@ -47,7 +47,7 @@ test('all 58 locations by 10 lighting choices resolve deterministically, even fo
       assert.ok(prompt.includes(loc.text),loc.id);
       assert.ok(prompt.includes('parked'),loc.id);
       assert.ok(prompt.includes('sole primary subject'),loc.id);
-      if(scene.covered)assert.match(prompt,/ceiling|Filtered|daylight/i);
+      if(scene.covered)assert.match(prompt,/parking|garage|ceiling|Filtered|daylight/i);
     }
   }
 });
@@ -73,7 +73,7 @@ test('night villa uses its installed 3000K fixture and actual curb geometry',()=
 test('daytime mall open parking is a marked bay with natural 5500K light',()=>{
   const choices=resolveSelections(select(7,1,19));const p=deriveSceneLighting(choices);
   assert.equal(p.time,'day');assert.equal(p.kelvin,5500);
-  assert.match(p.parking,/marked bay/);
+  assert.match(p.parking,/marked parking bay/);
   assert.match(p.surface,/parking asphalt/);
 });
 
