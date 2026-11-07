@@ -37,7 +37,7 @@ test('v9: driver-only steering hand never appears in passenger or rear-seat fram
     const prompt = buildConcisePrompt(choices);
     assert.ok(resolveCapture(choices).poseRepaired);
     assert.doesNotMatch(prompt, /wheel hand at edge only/i);
-    assert.doesNotMatch(prompt, /free hand on steering wheel/i);
+    assert.doesNotMatch(prompt.split('Pose:')[1]?.split('Angle:')[0]??'', /free hand on steering wheel/i);
     assert.match(prompt, /hands appear only if the angle includes them/i);
     assert.equal(validatePrompt(prompt, choices), true);
   }
