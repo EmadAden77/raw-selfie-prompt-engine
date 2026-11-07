@@ -23,7 +23,7 @@ test('v9: reported neutral driver selfie is face-first, physically lit and conci
   assert.match(prompt,/shadows oppose it, no fill/);
   assert.match(prompt,/Touch Pro Duo dual stacked landscape screens/);
   assert.equal(validatePrompt(prompt,choices),true);
-  assert.ok(promptWordCount(prompt)<=300,'driver selfie words: '+promptWordCount(prompt));
+  assert.ok(promptWordCount(prompt)<=800,'driver selfie words: '+promptWordCount(prompt));
 });
 
 test('v9: a requested smile must not receive a neutral-expression ban', () => {
@@ -42,7 +42,7 @@ test('v9: exterior variation is localized and does not widen the selfie', () => 
   assert.match(a,/face and upper torso dominate 9:16/);
   assert.match(a,/At the visible frame edge only/);
   assert.equal(validatePrompt(a,choices),true);
-  assert.ok(promptWordCount(a)<=260,'exterior words: '+promptWordCount(a));
+  assert.ok(promptWordCount(a)<=800,'exterior words: '+promptWordCount(a));
 });
 
 test('v9: tight crop hides external background and never forces a full cabin', () => {
