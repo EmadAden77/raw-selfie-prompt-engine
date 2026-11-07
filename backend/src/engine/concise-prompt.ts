@@ -24,42 +24,16 @@ function vehicleVisible(choices: ResolvedSelections, inside: boolean): boolean {
 
 // Direct daylight in a parked vehicle enters through glazing, not a fictional
 // studio source. Keep the shaded cabin side darker than the window-facing side.
+// The place profile is the one authority for both lighting and exposure.
+// Never pair a generic street fixture with a desert or covered scene.
 function lightingProse(choices: ResolvedSelections, inside: boolean): string {
-  const scene = deriveSceneLighting(choices);
-  const light = numberOf(choices.lighting.id);
-  const location = numberOf(choices.locations.id);
-  const mirror = isReflectionSelfie(choices.selfieAngles.id);
-  if (light === 9)
-    return 'Only the phone screen lights the face; weak illumination fades sharply below chest, leaving cabin dark, no fill.';
-  if (light === 10)
-    return mirror
-      ? 'Only actual rear LED flash lights the selected reflection; glare remains at the reflected LED position, with real falloff.'
-      : 'Only enabled front-screen flash lights the near face, not the rear LED; rapid falloff, no extra fill.';
-  if (scene.covered)
-    return inside
-      ? 'Existing overhead fixture from ' + scene.cameraSide + ' reaches cabin through glazing; shadows fall away, no fill.'
-      : 'Covered overhead fixture from ' + scene.cameraSide + ' casts grounded shadows; no sun or fill.';
-  if (scene.time === 'night')
-    return inside
-      ? 'Actual night fixture from ' + scene.cameraSide + ' or dim sky through windows; cabin shade remains deep.'
-      : location === 4
-        ? 'Use dim night sky or an actually visible roadside fixture; keep real darkness and source-aligned shadows.'
-        : 'Actual street or building fixture from ' + scene.cameraSide + ' casts one set of shadows, no fill.';
-  if (scene.time === 'sunset' || scene.time === 'afternoon')
-    return inside
-      ? 'Low sun from ' + scene.cameraSide + ' enters unobstructed glazing; facial and cabin shadows follow its direction.'
-      : 'Low warm sun from ' + scene.cameraSide + ' casts long opposite shadows; real reflections only.';
-  if (scene.time === 'noon')
-    return inside
-      ? 'Midday sun from ' + scene.cameraSide + ' enters glazing; pillars and roof cast aligned shade, natural highlights.'
-      : 'High sun toward ' + scene.cameraSide + ' casts short grounded shadows; natural highlight clipping, no fill.';
-  if (scene.time === 'overcast daylight' || scene.time === 'daylight in shade')
-    return inside
-      ? 'Diffuse skylight through real windows gives soft facial contrast; the deeper cabin receives less light.'
-      : 'Existing diffuse skylight makes soft contact shadows; no hidden fill.';
-  return inside
-    ? 'Morning sun from ' + scene.cameraSide + ' through real glazing; shadows oppose it, no fill.'
-    : 'Morning sun from ' + scene.cameraSide + ' lights the face; shadows fall away, no fill.';
+  const scene=deriveSceneLighting(choices);
+  const profile=getPlaceProfile(choices.locations.id);
+  const local=scene.time==='night'?profile.night:profile.day;
+  const origin=inside?'Through existing cabin glazing only: ':'From the actual selected location only: ';
+  return origin+local.source+' Shadows: '+local.shadows+
+    ' Reflections: '+local.reflections+
+    ' No secondary light, artificial fill or impossible indoor sun; phone exposure remains natural.';
 }
 
 function framingProse(inside: boolean, close: boolean, steeringHand: boolean): string {
