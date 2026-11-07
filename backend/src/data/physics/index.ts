@@ -44,50 +44,25 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
   const p=resolvePhysicalOptions(selections);
   const clothing=p.clothing.physics,face=p.expressions.physics,hair=p.hairstyles.physics;
   const angle=p.selfieAngles.physics,pose=p.poses.physics,place=p.locations.physics;
-  const finish=p.carConditions.physics,light=p.lighting.physics;
+  const finish=p.carConditions.physics;
   const poseId=Number(selections.poses.id.split('-').at(-1));
-  const fold=poseId===27?clothing.walkingFolds:
-    inside||[22,29].includes(poseId)?clothing.seatedFolds:clothing.standingFolds;
-  const angleId=Number(selections.selfieAngles.id.split('-').at(-1));
-  const requestedOnSeat=pose.loadSupport==='seat';
-  const requestedOnCurb=pose.loadSupport==='curb';
-  const normalizedSupport=inside?'seat':requestedOnCurb?'curb':'feet';
-  const matches=pose.mechanicallySafe && (
-    (inside && requestedOnSeat) ||
-    (!inside && requestedOnCurb) ||
-    (!inside && pose.loadSupport==='feet'));
-  const support=normalizedSupport;
-  const elbow=matches?pose.elbowAngleDeg:inside?95:110;
-  const knee=matches?pose.kneeAngleDeg:inside?95:normalizedSupport==='curb'?80:170;
-  const hip=matches?pose.hipAngleDeg:inside?95:normalizedSupport==='curb'?90:170;
-  const lean=matches?pose.torsoLeanDeg:0;
-  const contacts=!matches
-    ? inside?'seat cushion and backrest'
-      : normalizedSupport==='curb'?'grounded feet and curb seat':'grounded feet; no hood seating'
-    : poseId===10 && angleId!==6?'selected seat cushion and backrest'
-    : pose.contactPoints;
-  const seatLoad=matches?pose.seatLoadPct:inside?75:0;
-  const curbLoad=matches?pose.curbLoadPct:normalizedSupport==='curb'?75:0;
-  const feetLoad=100-seatLoad-curbLoad;
-  const ground=place.curbHeightCm===15
-    ? 'curb 15 cm gap 20–30 cm, wheels straight'
-    : place.parkingGeometry+', no fabricated curb';
-  const surface=place.groundMaterial;
-  const wall=place.nearestWallClearanceMinCm===null?'':', wall ≥100cm if adjacent';
-  const intensity=scene.covered?Math.min(light.relativeIntensity,0.35):light.relativeIntensity;
-  const lens=angle.lensDistortion==='close-range perspective stretch'?'close lens stretch':'mild edge stretch';
-  const hairAir=hair.airflowOrContact==='none'?'':', '+hair.airflowOrContact;
-  const wind=clothing.modelArealMassGsm>=300?'resists breeze':'wind only if present';
-  const carZone=finish.modeledDustCoveragePct===0?'clean':finish.accumulationZones;
+  const folds=inside?clothing.seatedFolds:poseId===27?clothing.walkingFolds:clothing.standingFolds;
+  const vehicleGround=place.curbHeightCm===15?'15 cm curb, 20–30 cm clearance, straight wheels':
+    'straight wheels, parked on the existing ground without inventing a curb';
+  const contact=inside?'the real seat cushion and backrest':'grounded feet with realistic weight distribution';
+  const visualBody=inside?'face and shoulders dominate, only natural torso portions visible':'face and upper body dominate at achievable arm reach';
+  const surface=finish.modeledDustCoveragePct===0?'original clean paint':
+    finish.accumulationZones+', '+finish.contamination;
   return [
     'Physics:',
-    'fabric '+clothing.material+' ~'+clothing.modelArealMassGsm+'gsm/'+clothing.modelThicknessMm+'mm, '+clothing.gravityDrape+', '+fold+', '+wind+';',
-    'face '+face.activeMuscles+' brow'+face.browAngleDeg+'° mouth'+face.mouthCornerAngleDeg+'° eyes'+face.leftEyeOpeningPct+'/'+face.rightEyeOpeningPct+'% gaze'+face.eyeGazeAngleDeg+'°, identity fixed;',
-    'hair '+hair.strandDirection+' lift'+hair.strandLiftDeg+'°, gravity down'+hairAir+', original length/texture/density;',
-    'phone '+angle.cameraDistanceCm+'cm FOV'+angle.effectiveHorizontalFovDeg+'° pitch'+angle.pitchDeg+'° roll'+angle.rollDeg+'° '+(inside && pose.requiresFixedPhoneMount?'supported timer mount':'arm'+angle.armReachAngleDeg+'°')+', '+angle.visibleBody+'/'+angle.visibleVehicle+', '+lens+', '+(angle.wheelMayAppear?'wheel edge allowed':'wheel off-frame')+', '+(angle.dashboardMayAppear?'dash edge allowed':'dash off-frame')+';',
-    'joints elbow'+elbow+'° knee'+knee+'° hip'+hip+'° lean'+lean+'°, '+support+'-supported; contact '+contacts+'; body load seat'+seatLoad+'% feet'+feetLoad+'% curb'+curbLoad+'%;',
-    'ground if seen: '+surface+', '+ground+', wheels'+place.wheelOrientationDeg+'°'+wall+';',
-    'finish if seen: dust'+finish.modeledDustCoveragePct+'% water'+finish.modeledWaterCoveragePct+'%, '+carZone+', '+finish.opticalReflection+', '+(finish.glassAffected?'glass affected':'no invented glazing marks')+';',
-    'light '+scene.kelvin+'K '+scene.cameraSide+' intensity'+intensity+', source '+scene.source+', shadows '+scene.shadows+', '+(inside?light.cabinReflection:light.exteriorReflection)+'.'
-  ].join(' ').replace(/\s+/g,' ').trim();
+    'fabric '+clothing.material+' with natural medium-weight gravity folds, '+clothing.gravityDrape+', '+folds+';',
+    'face '+face.activeMuscles+'; original asymmetry and expression, without invented facial measurements;',
+    'hair '+hair.strandDirection+', original density, hairline, curls and any natural gaps;',
+    'generic smartphone front camera at reachable selfie arm length, '+visualBody+', natural minor lens distortion; no invented specifications;',
+    'pose '+pose.contactPoints+', '+contact+', plausible joints and clothing contact;',
+    'parking '+place.sceneProfile.parking+', '+vehicleGround+'; ground '+place.sceneProfile.ground+';',
+    'background when visible '+place.sceneProfile.background+', without inventing landmarks or widening the crop;',
+    'finish where visible '+surface+', '+finish.opticalReflection+';',
+    'lighting '+scene.kelvin+'K, '+scene.source+', '+scene.shadows+'; shared physically consistent exposure and reflections.'
+  ].join(' ').replace(/\\s+/g,' ').trim();
 }
