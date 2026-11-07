@@ -53,13 +53,13 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
     : 'wheels straight on the actual legal ground, no fabricated urban curb';
   return [
     'Physics:',
-    'medium-weight '+garment.material+' fabric with gravity-consistent drape: '+fabricFold+';',
+    'garment '+selections.clothing.text+', medium-weight '+garment.material+' fabric with gravity-consistent drape: '+fabricFold+';',
     'natural expression: '+selections.expressions.text+', original facial asymmetry and eye shapes maintained;',
-    'original hair density and hairline: '+hair.strandDirection+', natural gravity'+(hair.airflowOrContact==='none'?'':', '+hair.airflowOrContact)+';',
-    'generic smartphone camera at reachable selfie arm length, slight handheld perspective and mild edge stretch; framing '+angle.visibleBody+', vehicle edge only if naturally visible;',
-    'anatomy: grounded seated or standing support and plausible joints, '+(inside?'body supported by the correct seat and backrest':'weight supported by grounded feet')+', no impossible contact;',
+    'original hair density and hairline: '+selections.hairstyles.text+', '+hair.strandDirection+', natural gravity'+(hair.airflowOrContact==='none'?'':', '+hair.airflowOrContact)+';',
+    'generic smartphone camera at reachable selfie arm length, slight handheld perspective and mild edge stretch; angle '+selections.selfieAngles.text+', framing '+angle.visibleBody+', vehicle edge only if naturally visible;',
+    'anatomy: requested pose '+selections.poses.text+' with grounded seated or standing support and plausible joints, '+(inside?'body supported by the correct seat and backrest':'weight supported by grounded feet')+', no impossible contact;',
     'ground if seen: '+place.groundMaterial+', '+ground+';',
-    'surface if seen: '+finish.contamination+', '+finish.opticalReflection+', realistic dust or water only where the selected condition permits;',
-    'light '+scene.kelvin+'K from '+scene.source+', shadows '+scene.shadows+', realistic subtle glass and bodywork reflections.'
+    'surface if seen: '+selections.carConditions.text+', '+finish.contamination+', '+finish.opticalReflection+', realistic dust or water only where the selected condition permits;',
+    'light setting '+selections.lighting.text+', scene '+scene.kelvin+'K from '+scene.source+', shadows '+scene.shadows+', realistic subtle glass and bodywork reflections.'
   ].join(' ').replace(/\s+/g,' ').trim();
 }
