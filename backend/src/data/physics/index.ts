@@ -37,6 +37,8 @@ export interface ResolvedLightForPhysics {
   readonly kelvin: number;
   readonly cameraSide: string;
   readonly covered: boolean;
+  readonly source: string;
+  readonly shadows: string;
 }
 export function physicsStatement(selections: ResolvedSelections, scene: ResolvedLightForPhysics, inside: boolean): string {
   const p=resolvePhysicalOptions(selections);
@@ -46,7 +48,27 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
   const poseId=Number(selections.poses.id.split('-').at(-1));
   const fold=poseId===27?clothing.walkingFolds:
     inside||[22,29].includes(poseId)?clothing.seatedFolds:clothing.standingFolds;
-  const support=pose.mechanicallySafe?pose.loadSupport:'grounded feet';
+  const angleId=Number(selections.selfieAngles.id.split('-').at(-1));
+  const requestedOnSeat=pose.loadSupport==='seat';
+  const requestedOnCurb=pose.loadSupport==='curb';
+  const normalizedSupport=inside?'seat':requestedOnCurb?'curb':'feet';
+  const matches=pose.mechanicallySafe && (
+    (inside && requestedOnSeat) ||
+    (!inside && requestedOnCurb) ||
+    (!inside && pose.loadSupport==='feet'));
+  const support=normalizedSupport;
+  const elbow=matches?pose.elbowAngleDeg:inside?95:110;
+  const knee=matches?pose.kneeAngleDeg:inside?95:normalizedSupport==='curb'?80:170;
+  const hip=matches?pose.hipAngleDeg:inside?95:normalizedSupport==='curb'?90:170;
+  const lean=matches?pose.torsoLeanDeg:0;
+  const contacts=!matches
+    ? inside?'seat cushion and backrest'
+      : normalizedSupport==='curb'?'grounded feet and curb seat':'grounded feet; no hood seating'
+    : poseId===10 && angleId!==6?'selected seat cushion and backrest'
+    : pose.contactPoints;
+  const seatLoad=matches?pose.seatLoadPct:inside?75:0;
+  const curbLoad=matches?pose.curbLoadPct:normalizedSupport==='curb'?75:0;
+  const feetLoad=100-seatLoad-curbLoad;
   const ground=place.curbHeightCm===15
     ? 'curb 15 cm gap 20–30 cm, wheels straight'
     : place.parkingGeometry+', no fabricated curb';
@@ -60,12 +82,12 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
   return [
     'Physics:',
     'fabric '+clothing.material+' ~'+clothing.modelArealMassGsm+'gsm/'+clothing.modelThicknessMm+'mm, '+clothing.gravityDrape+', '+fold+', '+wind+';',
-    'face '+face.activeMuscles+' brow'+face.browAngleDeg+'° mouth'+face.mouthCornerAngleDeg+'° eyes'+face.leftEyeOpeningPct+'/'+face.rightEyeOpeningPct+'%, identity fixed;',
-    'hair '+hair.strandDirection+' lift'+hair.strandLiftDeg+'°, gravity down'+hairAir+', original density;',
-    'phone '+angle.cameraDistanceCm+'cm FOV'+angle.effectiveHorizontalFovDeg+'° pitch'+angle.pitchDeg+'° roll'+angle.rollDeg+'° arm'+angle.armReachAngleDeg+'°, '+angle.visibleBody+'/'+angle.visibleVehicle+', '+lens+';',
-    'joints elbow'+(pose.mechanicallySafe?pose.elbowAngleDeg:110)+'° knee'+(pose.mechanicallySafe?pose.kneeAngleDeg:170)+'° '+support+'-supported;',
-    'ground if seen: '+surface+', '+ground+wall+';',
-    'finish if seen: dust'+finish.modeledDustCoveragePct+'% water'+finish.modeledWaterCoveragePct+'%, '+carZone+';',
-    'light '+scene.kelvin+'K '+scene.cameraSide+' intensity'+intensity+'.'
+    'face '+face.activeMuscles+' brow'+face.browAngleDeg+'° mouth'+face.mouthCornerAngleDeg+'° eyes'+face.leftEyeOpeningPct+'/'+face.rightEyeOpeningPct+'% gaze'+face.eyeGazeAngleDeg+'°, identity fixed;',
+    'hair '+hair.strandDirection+' lift'+hair.strandLiftDeg+'°, gravity down'+hairAir+', original length/texture/density;',
+    'phone '+angle.cameraDistanceCm+'cm FOV'+angle.effectiveHorizontalFovDeg+'° pitch'+angle.pitchDeg+'° roll'+angle.rollDeg+'° arm'+angle.armReachAngleDeg+'°, '+angle.visibleBody+'/'+angle.visibleVehicle+', '+lens+', '+(angle.wheelMayAppear?'wheel edge allowed':'wheel off-frame')+', '+(angle.dashboardMayAppear?'dash edge allowed':'dash off-frame')+';',
+    'joints elbow'+elbow+'° knee'+knee+'° hip'+hip+'° lean'+lean+'°, '+support+'-supported; contact '+contacts+'; body load seat'+seatLoad+'% feet'+feetLoad+'% curb'+curbLoad+'%;',
+    'ground if seen: '+surface+', '+ground+', wheels'+place.wheelOrientationDeg+'°'+wall+';',
+    'finish if seen: dust'+finish.modeledDustCoveragePct+'% water'+finish.modeledWaterCoveragePct+'%, '+carZone+', '+finish.opticalReflection+', '+(finish.glassAffected?'glass affected':'no invented glazing marks')+';',
+    'light '+scene.kelvin+'K '+scene.cameraSide+' intensity'+intensity+', source '+scene.source+', shadows '+scene.shadows+', '+(inside?light.cabinReflection:light.exteriorReflection)+'.'
   ].join(' ').replace(/\s+/g,' ').trim();
 }
