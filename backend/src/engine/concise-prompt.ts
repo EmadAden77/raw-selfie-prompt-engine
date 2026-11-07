@@ -1,5 +1,6 @@
 import type { ResolvedSelections } from '../types/engine.types.js';
 import type { ScenePlan } from './scene-planner.js';
+import { getPlaceProfile } from '../data/place-profiles/index.js';
 import { deriveSceneLighting } from './rule-builder.js';
 import { cabinMayBeVisible } from '../rules/cabin.rules.js';
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
@@ -7,7 +8,7 @@ import { isReflectionSelfie } from './photographic-auditor-v8.js';
 import { resolveCapture } from './scene-geometry.js';
 import { physicsStatement } from '../data/physics/index.js';
 
-export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right, wheel left, console right; no mirroring.';
+export const LHD_GEOMETRY = 'Saudi LHD: driver front-left directly behind the left steering wheel, passenger front-right; wheel directly in front of driver and center console to driver's right; no mirroring or right-hand drive.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, asymmetry, age, skin tone, pores, eyes, brows, nose, lips, jaw, original hairline, density, curls and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique and proportions.';
@@ -78,11 +79,7 @@ function backgroundProse(choices: ResolvedSelections, variation: number): string
   const desert = [1, 2, 3, 4, 5, 53, 55, 56].includes(location);
   const covered = deriveSceneLighting(choices).covered;
   const index = Math.abs(variation) % 3;
-  const detail = desert
-    ? ['distant traffic', 'an irregular dusty shoulder', 'faint tire wear'][index]
-    : covered
-      ? ['a parked-car edge', 'faint concrete scuffs', 'one distant pedestrian'][index]
-      : ['a pedestrian at the edge', 'a partly visible parked car', 'worn road markings'][index];
+  const detail=getPlaceProfile(choices.locations.id).background;
   return 'At the visible frame edge only: ' + detail + '.';
 }
 
@@ -110,12 +107,10 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
     ? LHD_GEOMETRY + ' Visible: beige leather seats/dashboard, black leather three-spoke wheel, glossy wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. No off-frame details.'
     : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = capture.mounted
-    ? reflection
-      ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; supported timer mount aimed at a real mirror; one reflection, no hand-held viewpoint.'
-      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie on a physically supported cabin mount, timer started by the subject; no invented hand-held photographer.'
+    ? 'Camera: generic smartphone front camera on a securely supported selfie timer mount, activated by the subject; natural phone optics and no external photographer.'
     : reflection
-      ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
-      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at arm reach; phone is outside its own direct view; natural tilt, no beauty processing.';
+      ? 'Camera: generic smartphone rear-camera reflection selfie, phone held by the subject toward a real mirror or glass; single consistent reflection.'
+      : 'Camera: generic smartphone front camera held by the subject at comfortable arm length, natural slight tilt, ordinary phone noise and no beauty processing.';
   const lighting = deriveSceneLighting(choices);
   const physical = physicsStatement(choices, lighting, inside);
   const surface = inside ? '' : condition === 1
@@ -128,6 +123,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
   const mandatory = [identity, vehicle, cabin, scene, clothing,
     'Lighting: ' + lightingProse(choices, inside) + ' ' + lighting.kelvin + 'K.',
     personalDetails, camera, framingProse(inside, close, capture.steeringHand),
+    (/thobe/i.test(choices.clothing.text) ? 'Allow more of the upper garment within natural arm-length framing without shrinking the face or widening to full body.' : 'Keep the selfie centered on the reference face and shoulders.'),
     physical, realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
   const result = [mandatory,surface,surroundings].filter(Boolean).join(' ');
 
