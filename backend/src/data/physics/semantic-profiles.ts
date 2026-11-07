@@ -49,7 +49,7 @@ export const surfaceSemantics = freeze(carConditionPhysics.map(x => ({
   id:x.id,material:'unaltered pearl-white factory paint and existing glass',
   gravity:x.physics.contamination==='gravity-driven droplets'?'selected water droplets descend with gravity':
     'dry residue settles only at plausible contact and dust-collection zones',
-  contact:x.physics.accumulationZones,
+  contact:x.physics.accumulationZones==='none'?'no deposited contamination or contact dust':x.physics.accumulationZones,
   motion:x.physics.contamination+'; '+x.physics.opticalReflection+'; do not add rain, water or dust outside selected condition'
 })));
 export const placeSemantics = freeze(optionCatalogue.locations.map(x => {
