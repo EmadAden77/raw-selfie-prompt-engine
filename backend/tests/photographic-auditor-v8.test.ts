@@ -53,7 +53,7 @@ test('v12: night source comes from place rather than an independent camera flash
 
 test('v8: screen-only falloff and physically supported contamination',()=>{
   const night=selected({selfieAngles:'angle-19',lighting:'light-9',poses:'pose-17'});
-  assert.match(buildConcisePrompt(night),/weak illumination fades/i);
+  assert.match(buildConcisePrompt(night),/Dim natural night sky/i);
   const clean=selected({selfieAngles:'angle-19',poses:'pose-17',carConditions:'clean-1'});
   assert.match(auditPhotographicScene(clean).surfaceHistory,/do not add dirt to a clean vehicle/i);
   const wet=selected({selfieAngles:'angle-19',poses:'pose-17',carConditions:'clean-5'});
