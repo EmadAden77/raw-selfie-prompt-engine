@@ -19,8 +19,8 @@ test('v9: reported neutral driver selfie is face-first, physically lit and conci
   assert.match(prompt,/No smile or posed grin/);
   assert.match(prompt,/face and shoulders dominate 9:16, chest crop/);
   assert.match(prompt,/wheel hand at edge only, no lap or console/);
-  assert.match(prompt,/one natural sun source/);
-  assert.match(prompt,/shadows fall away from the single sun/);
+  assert.match(prompt,/one natural sun from the actual open sky/);
+  assert.match(prompt,/sun-opposed shadows/);
   assert.match(prompt,/Touch Pro Duo dual stacked landscape screens/);
   assert.equal(validatePrompt(prompt,choices),true);
   assert.ok(promptWordCount(prompt)<=800,'driver selfie words: '+promptWordCount(prompt));
