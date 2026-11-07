@@ -1,0 +1,24 @@
+{
+  "id": "location-58",
+  "label": "محطة حافلات",
+  "setting": "near a bus stop",
+  "parking": "Park parallel to an actual curb 20–30 cm away but outside the bus stopping zone; leave the shelter access unobstructed.",
+  "ground": "Worn patched Saudi asphalt, faded paint, dusty beige and gray sidewalk tiles and real concrete curb approximately 15 cm tall.",
+  "background": "Ordinary bus shelter, waiting pedestrians and passing traffic where naturally visible.",
+  "automaticAngle": "driver",
+  "angleReason": "Use a physically reachable front-camera selfie, placing the reference face first and keeping the real vehicle parking arrangement intact.",
+  "preferredTime": "day",
+  "goldenPeriod": "soft morning or late-afternoon daylight",
+  "day": {
+    "source": "Natural 5500K daylight from single sun/sky, with real dust and shade from actual structures only.",
+    "kelvin": 5500,
+    "shadows": "Away from actual daylight with small consistent contact shadows.",
+    "reflections": "Natural subdued glass and bodywork reflection."
+  },
+  "night": {
+    "source": "One already present road, kiosk or shelter light, warm 3000K, with shadows away from the actual fixture.",
+    "kelvin": 3000,
+    "shadows": "Only source-aligned shadows or weak dim sky contrast.",
+    "reflections": "Weak real reflections without studio fill."
+  }
+}
