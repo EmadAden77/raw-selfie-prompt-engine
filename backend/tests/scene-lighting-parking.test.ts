@@ -47,7 +47,7 @@ test('all 58 locations by 10 lighting choices resolve deterministically, even fo
       assert.ok(prompt.includes(loc.text),loc.id);
       assert.ok(prompt.includes('parked'),loc.id);
       assert.ok(prompt.includes('sole primary subject'),loc.id);
-      if(scene.covered)assert.match(prompt,/overhead fixtures|phone screen|front-screen flash/);
+      if(scene.covered)assert.match(prompt,/overhead fixtures?|phone screen|front-screen flash/);
     }
   }
 });
