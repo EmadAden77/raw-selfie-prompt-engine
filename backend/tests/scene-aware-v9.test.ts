@@ -50,6 +50,6 @@ test('v9: tight crop hides external background and never forces a full cabin', (
   const prompt=buildConcisePrompt(choices);
   assert.match(prompt,/Framing: tight 9:16 face and shoulders/);
   assert.doesNotMatch(prompt,/Only at the existing frame edge/);
-  assert.match(prompt,/Never reveal off-frame details/);
+  assert.match(prompt,/No off-frame details/);
   assert.equal(validatePrompt(prompt,choices),true);
 });
