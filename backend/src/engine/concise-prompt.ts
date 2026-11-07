@@ -123,7 +123,9 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
       ? 'Visible droplets follow gravity.' : '';
   // Physical attributes for every selected option are mandatory. Only optional
   // atmosphere at a naturally visible frame edge can be omitted for brevity.
-  const surroundings = !inside && !close ? backgroundProse(choices,variation) : '';\n  const thobe=/thobe/i.test(choices.clothing.text);\n  const garmentFraming=thobe?'Show as much upper thobe as genuine arm-reach framing allows without reducing the face or pulling back.':'Keep the primary crop on the face and shoulders.';
+  const surroundings = !inside && !close ? backgroundProse(choices,variation) : '';
+  const thobe=/thobe/i.test(choices.clothing.text);
+  const garmentFraming=thobe?'Show as much upper thobe as genuine arm-reach framing allows without reducing the face or pulling back.':'Keep the primary crop on the face and shoulders.';
   const realism = 'Photographic realism: shared phone exposure, natural pores and folds; no beauty filters, wax, plastic skin, CGI, extra fingers or exaggerated HDR.';
   const mandatory = [identity, vehicle, cabin, scene, clothing,
     'Lighting: ' + lightingProse(choices, inside) + ' ' + lighting.kelvin + 'K.',
