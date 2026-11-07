@@ -21,8 +21,8 @@ test('v8: direct front-camera capture is not a rear-flash or third-party photogr
   assert.match(prompt,/21 mm-equivalent f\/2\.0 front-camera selfie/);
   assert.match(prompt,/phone is outside its own direct view/i);
   assert.doesNotMatch(prompt,/rear-camera reflection selfie/i);
-  assert.match(prompt,/193 cm/);
-  assert.match(prompt,/83 kg/);
+  assert.match(prompt,/195 cm/);
+  assert.match(prompt,/88 kg/);
   assert.match(prompt,/no reshaping, beautification or invented marks/i);
   assert.equal(validatePrompt(prompt,choices),true);
   assert.ok(promptWordCount(prompt)<=500);

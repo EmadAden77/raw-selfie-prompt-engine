@@ -27,7 +27,7 @@ export default function PromptResult({result}:{result:PromptResponse}){
     <div className="generation-status" role="status" aria-live="polite">
       {viaNvidia?<CheckCircle2 size={19}/>:<AlertTriangle size={19}/>}
       <div><strong>{viaNvidia?'تم التوليد باستخدام NVIDIA بنجاح':'تم التوليد بواسطة القواعد المحلية'}</strong>
-        <p>{viaNvidia?'راجعت NVIDIA خطة المشهد النصية، مع إبقاء قواعد الهوية والسيارة ثابتة.':reasons[result.reason??'invalid_response']}</p>
+        <p>{viaNvidia?'نقّحت NVIDIA صياغة برومبت Rule Builder فقط، دون السماح بإضافة حقائق أو تغيير قواعد المشهد.':reasons[result.reason??'invalid_response']}</p>
       </div>
     </div>
     {result.audit&&<section className="audit-report" aria-label="تقرير التدقيق الفوتوغرافي">

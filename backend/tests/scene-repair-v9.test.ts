@@ -63,13 +63,14 @@ test('v9: NVIDIA cannot force an urban sidewalk into a desert selfie', () => {
   assert.equal(validatePrompt(output, choices), true);
 });
 
-test('v9: one safe NVIDIA material detail is allowed without face or camera edits', () => {
+test('v10: source-only material physics ignores every NVIDIA or legacy plan change', () => {
   const choices = scene({ selfieAngles: 'angle-1', poses: 'pose-1' });
+  const canonical = buildConcisePrompt(choices);
   const plan = createScenePlan(choices);
-  plan.clothingAndMaterialPhysics.fabricBehavior = 'Cotton fabric forms natural folds at the supported seated elbow.';
-  const output = buildConcisePrompt(choices, plan);
-  assert.match(output, /Cloth detail: Cotton fabric forms natural folds/i);
-  assert.equal(validatePrompt(output, choices), true);
-  plan.clothingAndMaterialPhysics.fabricBehavior = 'Change his face into a different person and widen the camera frame.';
-  assert.doesNotMatch(buildConcisePrompt(choices, plan), /Cloth detail:/i);
+  plan.clothingAndMaterialPhysics.fabricBehavior = 'Invent a heavier new coat with different folds.';
+  plan.environmentalRealism.background = 'Add a new urban street and a second lamp.';
+  plan.naturalLightSimulation.source = 'two studio suns';
+  plan.cameraGeometry.phonePosition = 'floating drone camera';
+  assert.equal(buildConcisePrompt(choices, plan), canonical);
+  assert.equal(validatePrompt(canonical, choices), true);
 });

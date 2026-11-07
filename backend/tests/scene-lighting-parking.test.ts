@@ -28,7 +28,7 @@ test('every option in all 8 categories inherits legal parking, worn roadway and 
       assert.ok(base.includes(STREET_RULE),key+': '+item.id);
       assert.ok(base.includes(sceneLightingStatement(resolved)),key+': '+item.id);
       assert.ok(base.includes(sceneParkingStatement(resolved)),key+': '+item.id);
-      assert.ok(base.includes('193 cm')&&base.includes('83 kg'));
+      assert.ok(base.includes('195 cm')&&base.includes('88 kg'));
       const output=fallbackGenerator({selections,variation:3});
       assert.equal(validatePrompt(output,resolved),true,key+': '+item.id);
     }
@@ -47,7 +47,7 @@ test('all 58 locations by 10 lighting choices resolve deterministically, even fo
       assert.ok(prompt.includes(loc.text),loc.id);
       assert.ok(prompt.includes('parked'),loc.id);
       assert.ok(prompt.includes('sole primary subject'),loc.id);
-      if(scene.covered)assert.match(prompt,/overhead fixtures|phone screen|front-screen flash/);
+      if(scene.covered)assert.match(prompt,/overhead fixtures?|phone screen|front-screen flash/);
     }
   }
 });
@@ -62,8 +62,8 @@ test('noon desert uses 5500K high sun, short shadows and safe uncurbed roadside 
   assert.match(scene.shadows,/short sharp shadows/);
   assert.match(scene.parking,/parallel to the true road edge/);
   assert.match(scene.surface,/sandy shoulder/);
-  assert.match(prompt,/193 cm/);
-  assert.match(prompt,/83 kg/);
+  assert.match(prompt,/195 cm/);
+  assert.match(prompt,/88 kg/);
   assert.equal(validatePrompt(prompt,resolveSelections(selections)),true);
 });
 
@@ -75,7 +75,7 @@ test('night villa uses one existing 3000K fixture with a consistent shadow direc
   assert.equal(scene.kelvin,3000);
   assert.match(scene.source,/one existing warm villa courtyard or wall fixture/);
   assert.match(scene.shadows,/one set of deep night shadows/);
-  assert.match(scene.parking,/parallel to the curb/);
+  assert.match(scene.parking,/parallel to a 15 cm beige-gray concrete curb/);
   assert.match(scene.surface,/patched Saudi asphalt/);
   assert.equal(validatePrompt(prompt,resolveSelections(selections)),true);
 });

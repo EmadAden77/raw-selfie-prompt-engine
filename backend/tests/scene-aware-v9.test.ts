@@ -19,8 +19,8 @@ test('v9: reported neutral driver selfie is face-first, physically lit and conci
   assert.match(prompt,/No smile or posed grin/);
   assert.match(prompt,/face and shoulders dominate 9:16, chest crop/);
   assert.match(prompt,/wheel hand at edge only, no lap or console/);
-  assert.match(prompt,/Morning sun through real glazing/);
-  assert.match(prompt,/face and cabin shadows follow its path/);
+  assert.match(prompt,/Morning sun from camera-left through real glazing/);
+  assert.match(prompt,/shadows oppose it, no fill/);
   assert.match(prompt,/Touch Pro Duo dual stacked landscape screens/);
   assert.equal(validatePrompt(prompt,choices),true);
   assert.ok(promptWordCount(prompt)<=300,'driver selfie words: '+promptWordCount(prompt));
@@ -40,7 +40,7 @@ test('v9: exterior variation is localized and does not widen the selfie', () => 
   const b=buildConcisePrompt(choices,undefined,1);
   assert.notEqual(a,b);
   assert.match(a,/face and upper torso dominate 9:16/);
-  assert.match(a,/Only at the existing frame edge, if visible/);
+  assert.match(a,/At the visible frame edge only/);
   assert.equal(validatePrompt(a,choices),true);
   assert.ok(promptWordCount(a)<=260,'exterior words: '+promptWordCount(a));
 });

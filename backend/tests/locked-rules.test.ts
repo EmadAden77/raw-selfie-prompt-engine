@@ -4,7 +4,7 @@ import { optionCatalogue, resolveSelections } from '../src/data/option-mappings.
 import { buildRulePrompt } from '../src/engine/rule-builder.js';
 import { fallbackGenerator } from '../src/engine/fallback-generator.js';
 import { validatePrompt } from '../src/engine/prompt-validator.js';
-import { validateCreativeAddition } from '../src/services/prompt.service.js';
+import { validateEditorialRewrite } from '../src/engine/editor-validator.js';
 import { BODY_RULE } from '../src/rules/body.rules.js';
 import { COMPOSITION_RULE } from '../src/rules/composition.rules.js';
 import { INTERIOR_RULE } from '../src/rules/cabin.rules.js';
@@ -22,8 +22,8 @@ test('long-form rules remain protected while final prompts preserve identity, ph
     const prompt=fallbackGenerator({selections:choices,variation:7});
     assert.ok(prompt.includes(IDENTITY_CORE));
     assert.ok(prompt.includes(SUBJECT_CORE));
-    assert.match(prompt,/193 cm/);
-    assert.match(prompt,/83 kg/);
+    assert.match(prompt,/195 cm/);
+    assert.match(prompt,/88 kg/);
     assert.match(prompt,/lean athletic/);
     assert.doesNotMatch(prompt,/beige steering wheel/i);
     assert.ok(promptWordCount(prompt)<=500);
@@ -46,8 +46,8 @@ test('validator rejects missing protected terms and contradictory geometry or ma
   const base=fallbackGenerator({selections,variation:2});
   const choices=resolveSelections(selections);
   assert.equal(validatePrompt(base,choices),true);
-  assert.equal(validatePrompt(base.replace('193 cm','195 cm'),choices),false);
-  assert.equal(validatePrompt(base.replace('83 kg','88 kg'),choices),false);
+  assert.equal(validatePrompt(base.replace('195 cm','193 cm'),choices),false);
+  assert.equal(validatePrompt(base.replace('88 kg','83 kg'),choices),false);
   assert.equal(validatePrompt(base.replace(IDENTITY_CORE,''),choices),false);
   assert.equal(validatePrompt(base.replace(SUBJECT_CORE,''),choices),false);
   assert.equal(validatePrompt(base.replace(LHD_GEOMETRY,''),choices),false);
@@ -58,16 +58,16 @@ test('validator rejects missing protected terms and contradictory geometry or ma
   assert.equal(validatePrompt(base+' An incompatible portrait infotainment screen replaces the original displays.',choices),false);
 });
 
-test('NVIDIA creative additions may only describe natural visible details',()=>{
-  const good='Soft naturally occurring daylight falls across the existing leather edge, with slight phone sensor noise and a distant pedestrian seen through an already visible side window.';
-  assert.equal(validateCreativeAddition(good),true);
-  for(const bad of [
-    'The person is 190 cm tall with a very bulky physique.',
-    'The person weighs 95 kg and has bodybuilding muscles.',
-    'The beige leather steering wheel now fills the shot.',
-    'Widen the frame to reveal the complete interior and full body.',
-    'Move the camera away to showcase the vehicle.',
-    'Reveal the entire cabin regardless of the natural selfie frame.',
+test('NVIDIA cannot append creative details, even plausible ones', () => {
+  const base = fallbackGenerator({ selections, variation: 2 });
+  const additions = [
+    'Soft sunlight falls across leather with slight phone sensor noise.',
+    'The person is 190 cm tall with a bulky physique.',
+    'The beige leather steering wheel fills the shot.',
+    'Widen the frame to reveal the entire car.',
     'Replace the dashboard with a new layout.'
-  ]) assert.equal(validateCreativeAddition(bad),false,bad);
+  ];
+  for (const text of additions) {
+    assert.equal(validateEditorialRewrite(base, base + ' ' + text), false, text);
+  }
 });

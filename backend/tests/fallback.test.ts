@@ -15,8 +15,8 @@ test('interior selfie ignores irrelevant variation; exterior variation remains s
   assert.notEqual(a,b);
   for(const output of [first,second,a,b]){
     assert.match(output,/2022 Range Rover Sport/);
-    assert.match(output,/193 cm/);
-    assert.match(output,/83 kg/);
+    assert.match(output,/195 cm/);
+    assert.match(output,/88 kg/);
   }
 });
 test('backend produces local fallback when request has no NVIDIA key',async()=>{
