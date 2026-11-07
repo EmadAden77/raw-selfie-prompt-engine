@@ -51,24 +51,21 @@ test('navy thobe always has medium cotton drape and correct gravity-dependent fo
   assert.deepEqual(resolvePhysicalOptions(resolved(sample)).clothing.physics,a);
 });
 
-test('each angle fixes physically attainable camera distance, FOV and visible parts',()=>{
-  const driver=resolvePhysicalOptions(resolved(sample)).selfieAngles.physics;
-  const passenger=resolvePhysicalOptions(resolved({...sample,selfieAngles:'angle-6'})).selfieAngles.physics;
-  assert.equal(driver.cameraDistanceCm,48);
-  assert.equal(driver.effectiveHorizontalFovDeg,77);
-  assert.equal(driver.visibleVehicle,'wheel edge');
-  assert.equal(driver.wheelMayAppear,true);
-  assert.equal(driver.dashboardMayAppear,false);
-  assert.equal(passenger.cameraDistanceCm,49);
-  assert.equal(passenger.wheelMayAppear,false);
-  assert.equal(passenger.dashboardMayAppear,false);
-  const nearWheel=resolvePhysicalOptions(resolved({...sample,selfieAngles:'angle-5'})).selfieAngles.physics;
-  assert.equal(nearWheel.dashboardMayAppear,true);
-  for(const option of physicsCatalogue.selfieAngles){
-    assert.ok(option.physics.cameraDistanceCm>=25&&option.physics.cameraDistanceCm<=80);
-    assert.ok(option.physics.effectiveHorizontalFovDeg>=60&&option.physics.effectiveHorizontalFovDeg<=85);
-    assert.equal(option.physics.realCameraOriginRequired,true);
-  }
+test('each of the 30 selfie angles has physical camera origin without fabricated lens values',()=>{
+ const driver=resolvePhysicalOptions(resolved(sample)).selfieAngles.physics;
+ const passenger=resolvePhysicalOptions(resolved({...sample,selfieAngles:'angle-6'})).selfieAngles.physics;
+ assert.equal(driver.visibleVehicle,'wheel edge');
+ assert.equal(driver.wheelMayAppear,true);
+ assert.equal(driver.dashboardMayAppear,false);
+ assert.equal(passenger.wheelMayAppear,false);
+ const nearWheel=resolvePhysicalOptions(resolved({...sample,selfieAngles:'angle-5'})).selfieAngles.physics;
+ assert.equal(nearWheel.dashboardMayAppear,true);
+ for(const option of physicsCatalogue.selfieAngles){
+  assert.ok(!('cameraDistanceCm' in option.physics));
+  assert.ok(!('effectiveHorizontalFovDeg' in option.physics));
+  assert.equal(option.physics.realCameraOriginRequired,true);
+  assert.match(option.physics.handheldReach,/reachable/);
+ }
 });
 
 test('all 30 poses use qualitative load support, contact and motion without joint angles',()=>{
