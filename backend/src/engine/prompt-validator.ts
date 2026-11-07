@@ -121,7 +121,10 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if (/\b(?:phone|camera)\s+(?:at|from|held at|distance of|is)\s+\d+\s*cm\b/i.test(prompt)) return false;
   if (/\b(?:light|lighting)\s+intensity\s*[:=]?\s*(?:0?\.)?\d+(?:\.\d+)?/i.test(prompt)) return false;
   // Unchosen additional illumination can never be created by an editor.
-  if (/\b(?:second|another|additional|extra|new)\s+(?:\w+\s+){0,2}(?:lamp|streetlight|light source|spotlight|flash)\b/i.test(prompt)) return false;
+  for (const match of prompt.matchAll(/\b(?:second|another|additional|extra|new)\s+(?:\w+\s+){0,2}(?:lamp|streetlight|light source|spotlight|flash)\b/gi)) {
+    const preceding=prompt.slice(Math.max(0,match.index-45),match.index);
+    if (!/\b(?:no|never|without|avoid)\b[^.!?;]{0,35}$/i.test(preceding)) return false;
+  }
   // Shared guards apply to both historical exhaustive templates and the
   // modern concise format. Never let the early concise branch bypass them.
   if(/\b(?:burj khalifa|kingdom cent(?:re|er)|al faisaliah|dubai mall|riyadh park|red sea mall)\b/i.test(prompt))return false;
