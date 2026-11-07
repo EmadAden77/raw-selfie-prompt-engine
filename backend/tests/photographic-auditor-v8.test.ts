@@ -19,7 +19,7 @@ test('v8: direct front-camera capture is not a rear-flash or third-party photogr
   const prompt=buildConcisePrompt(choices);
   assert.equal(audit.profile,'A');
   assert.match(prompt,/generic smartphone front-camera selfie/);
-  assert.doesNotMatch(prompt,/Xiaomi|21 mm-equivalent|f/2.0/i);
+  assert.doesNotMatch(prompt,/Xiaomi|21 mm-equivalent|aperture f-number/i);
   assert.doesNotMatch(prompt,/rear-camera reflection selfie/i);
   assert.match(prompt,/195 cm/);
   assert.match(prompt,/88 kg/);
