@@ -34,29 +34,29 @@ function lightingProse(choices: ResolvedSelections, inside: boolean): string {
       : 'Only enabled front-screen flash lights the near face, not the rear LED; rapid falloff, no extra fill.';
   if (scene.covered)
     return inside
-      ? 'Only existing overhead fixtures illuminate the covered area; their light reaches the cabin via real glazing, with grounded shadows.'
-      : 'Existing overhead fixtures cast grounded shadows in the covered space; no direct sun or studio fill.';
+      ? 'Existing overhead fixture from ' + scene.cameraSide + ' reaches cabin through glazing; shadows fall away, no fill.'
+      : 'Covered overhead fixture from ' + scene.cameraSide + ' casts grounded shadows; no sun or fill.';
   if (scene.time === 'night')
     return inside
-      ? 'Only actual nearby night fixtures or dim sky light the windows; real obstructions leave the inner cabin dark.'
+      ? 'Actual night fixture from ' + scene.cameraSide + ' or dim sky through windows; cabin shade remains deep.'
       : location === 4
         ? 'Use dim night sky or an actually visible roadside fixture; keep real darkness and source-aligned shadows.'
-        : 'Light comes from the actual nearby street or building fixture; shadows fade naturally, with no studio fill.';
+        : 'Actual street or building fixture from ' + scene.cameraSide + ' casts one set of shadows, no fill.';
   if (scene.time === 'sunset' || scene.time === 'afternoon')
     return inside
-      ? 'Low warm sun enters only through unobstructed vehicle glazing; facial highlights and cabin shade follow its actual direction.'
-      : 'Low warm sun creates long compatible shadows across the visible face and ground; natural reflections only.';
+      ? 'Low sun from ' + scene.cameraSide + ' enters unobstructed glazing; facial and cabin shadows follow its direction.'
+      : 'Low warm sun from ' + scene.cameraSide + ' casts long opposite shadows; real reflections only.';
   if (scene.time === 'noon')
     return inside
-      ? 'Midday sunlight passes actual glazing; roof, pillars and seat cast source-aligned shade; white fabric retains highlights.'
-      : 'High sun creates short grounded shadows and natural highlight clipping; no artificial fill.';
+      ? 'Midday sun from ' + scene.cameraSide + ' enters glazing; pillars and roof cast aligned shade, natural highlights.'
+      : 'High sun toward ' + scene.cameraSide + ' casts short grounded shadows; natural highlight clipping, no fill.';
   if (scene.time === 'overcast daylight' || scene.time === 'daylight in shade')
     return inside
       ? 'Diffuse skylight through real windows gives soft facial contrast; the deeper cabin receives less light.'
       : 'Existing diffuse skylight makes soft contact shadows; no hidden fill.';
   return inside
-    ? 'Morning sun through real glazing; face and cabin shadows follow its path, no fill.'
-    : 'Existing morning sun lights the face; shadows agree with its direction, no fill.';
+    ? 'Morning sun from ' + scene.cameraSide + ' through real glazing; shadows oppose it, no fill.'
+    : 'Morning sun from ' + scene.cameraSide + ' lights the face; shadows fall away, no fill.';
 }
 
 function framingProse(inside: boolean, close: boolean, steeringHand: boolean): string {
@@ -85,7 +85,7 @@ function backgroundProse(choices: ResolvedSelections, variation: number): string
 }
 
 function parkingProse(choices: ResolvedSelections, inside: boolean): string {
-  if (inside) return '';
+  if (inside) return ';
   const d = deriveSceneLighting(choices);
   if (d.parking.includes('concrete curb'))
     return 'Visible roadside geometry only: straight wheels, parked parallel 20–30 cm from a 15 cm beige-gray concrete curb; worn dusty patched Saudi asphalt.';
@@ -103,7 +103,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
   const condition = numberOf(choices.carConditions.id);
   const identity = [REQUIRED_PREFIX + '.', IDENTITY_CORE, BODY_CORE, SUBJECT_CORE].join(' ');
   const expressionGuard = expression === 1 ? ' No smile or posed grin.'
-    : expression === 5 ? ' Do not turn this serious look into a smile.' : '';
+    : expression === 5 ? ' Do not turn this serious look into a smile.' : ';
   const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting.';
   const clothing = 'Clothing: ' + choices.clothing.text + '.';
   const personalDetails = 'Expression: ' + choices.expressions.text + '.' + expressionGuard +
@@ -133,8 +133,8 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
     ? 'No invented cabin grime.'
     : condition === 1 ? 'Freshly washed surfaces stay clean.'
       : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
-        : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
-  const surroundings = !inside && !close ? backgroundProse(choices, variation) : '';
+        : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : ';
+  const surroundings = !inside && !close ? backgroundProse(choices, variation) : ';
   const realism = 'Photographic realism: shared phone exposure, reference pores, real folds, coherent shadows and highlights. ' +
     support + ' ' + surface + ' ' + surroundings +
     ' No wax or plastic skin, beauty filters, CGI, invented marks, extra fingers, false reflections or exaggerated HDR.';
