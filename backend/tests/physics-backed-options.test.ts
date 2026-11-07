@@ -47,7 +47,7 @@ test('navy thobe always has medium cotton drape and correct gravity-dependent fo
   assert.match(a.standingFolds,/vertical folds/);
   assert.match(a.seatedFolds,/waist and knee compression/);
   assert.match(a.walkingFolds,/hem folds/);
-  assert.match(a.windResponse,/only if air is present/);
+  assert.match(a.windResponse,/only when explicitly selected/);
   assert.deepEqual(resolvePhysicalOptions(resolved(sample)).clothing.physics,a);
 });
 
@@ -124,7 +124,7 @@ test('Rule Builder and offline fallback include the exact eight-category physics
   assert.match(a,/generic smartphone front-camera selfie/);
   assert.doesNotMatch(a,/\d+gsm|FOV\d+/);
   assert.match(a,/seat cushion and backrest/);
-  assert.match(a,/gravity-consistent drape/);
+  assert.match(a,/under gravity/);
   assert.equal(validatePrompt(a,choices),true);
 });
 
