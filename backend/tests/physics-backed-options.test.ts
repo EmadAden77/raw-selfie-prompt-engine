@@ -61,11 +61,31 @@ test('each angle fixes physically attainable camera distance, FOV and visible pa
   assert.equal(passenger.cameraDistanceCm,49);
   assert.equal(passenger.wheelMayAppear,false);
   assert.equal(passenger.dashboardMayAppear,false);
+  const nearWheel=resolvePhysicalOptions(resolved({...sample,selfieAngles:'angle-5'})).selfieAngles.physics;
+  assert.equal(nearWheel.dashboardMayAppear,true);
   for(const option of physicsCatalogue.selfieAngles){
     assert.ok(option.physics.cameraDistanceCm>=25&&option.physics.cameraDistanceCm<=80);
     assert.ok(option.physics.effectiveHorizontalFovDeg>=60&&option.physics.effectiveHorizontalFovDeg<=85);
     assert.equal(option.physics.realCameraOriginRequired,true);
   }
+});
+
+test('all poses have load distribution summing to 100%, grounded support and contact',()=>{
+  for(const option of physicsCatalogue.poses){
+    const p=option.physics;
+    assert.equal(p.seatLoadPct+p.groundFeetLoadPct+p.curbLoadPct,100,option.id);
+    assert.ok(p.contactPoints.length>10);
+    assert.ok(p.hipAngleDeg>=60&&p.hipAngleDeg<=180);
+    assert.ok(p.elbowAngleDeg>=70&&p.elbowAngleDeg<=115);
+  }
+  const seated=resolvePhysicalOptions(resolved(sample)).poses.physics;
+  assert.equal(seated.seatLoadPct,75);
+  assert.equal(seated.groundFeetLoadPct,25);
+  const walking=resolvePhysicalOptions(resolved({...sample,poses:'pose-27'})).poses.physics;
+  assert.equal(walking.groundFeetLoadPct,100);
+  const unsafe=resolvePhysicalOptions(resolved({...sample,poses:'pose-19'})).poses.physics;
+  assert.equal(unsafe.mechanicallySafe,false);
+  assert.equal(unsafe.groundFeetLoadPct,100);
 });
 
 test('places fix 15cm concrete curb and 20-30cm car clearance only when a curb exists',()=>{
@@ -111,6 +131,8 @@ test('Rule Builder and offline fallback include the exact eight-category physics
   assert.match(a,/curb 15 cm gap 20–30 cm/);
   assert.match(a,/phone 48cm FOV77°/);
   assert.match(a,/fabric cotton ~175gsm\/0.4mm/);
+  assert.match(a,/body load seat75% feet25% curb0%/);
+  assert.match(a,/contact seat cushion and backrest/);
   assert.equal(validatePrompt(a,choices),true);
 });
 
@@ -124,6 +146,8 @@ test('validator rejects changed physics and NVIDIA fails closed on new measureme
     original.replace('curb 15 cm','curb 20 cm'),
     original.replace('gap 20–30 cm','gap 5–10 cm'),
     original.replace('light 5000K','light 3200K'),
+    original.replace('body load seat75%', 'body load seat0%'),
+    original.replace('wheels0°','wheels25°'),
     original+' The camera is 90 cm away.',
     original+' Brow 35° and fabric 600gsm.',
   ]){
