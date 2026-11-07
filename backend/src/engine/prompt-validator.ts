@@ -24,8 +24,8 @@ function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
     // A model may polish surrounding English, but not any physical parameter.
     if(!prompt.includes(fixedPhysics))return false;
     const outside=prompt.replace(fixedPhysics,'');
-    if(/(?:camera|phone)\s+(?:distance\s+|at\s+)?\d{2,3}\s*cm\b|\b(?:fabric|cloth)\s+\S{0,25}\s*\d{2,4}\s*gsm\b/i.test(outside))return false;
-    if(/\b(?:FOV|brow|mouth|pitch|roll)\s*[:=]?\s*[-+]?\d+(?:\\.\d+)?\s*°/i.test(outside))return false;
+    if(/\b(?:camera|phone)\s+(?:(?:is|at|distance|held|from|away|approximately?)\s+){0,3}\d{2,3}\s*cm\b|\b\d{2,4}\s*gsm\b|\b(?:curb|kerb|gap|clearance)\s+(?:(?:is|height|from|of)\s+){0,2}\d{1,3}\s*cm\b/i.test(outside))return false;
+    if(/\b(?:FOV|brow|mouth|pitch|roll)\s*[:=]?\s*[-+]?\d+(?:\.\d+)?\s*°/i.test(outside))return false;
     if([...prompt.matchAll(/\b(\d{4})K\b/g)].some(m=>Number(m[1])!==light.kelvin))return false;
     const reflection=[4,29].includes(Number(choices.selfieAngles.id.split('-').at(-1)));
     if(reflection&&!/rear-camera reflection selfie/i.test(prompt))return false;
