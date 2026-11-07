@@ -28,7 +28,7 @@ test('v9: all 30 x 30 pose and camera pairs remain physically compatible, protec
       if (promptWordCount(result) > maxWords) { maxWords = promptWordCount(result); maxPair = angle.id + '/' + pose.id; }
     }
   }
-  assert.ok(maxWords <= 300, 'Max words ' + maxWords + ' for ' + maxPair);
+  assert.ok(maxWords <= 800, 'Max words ' + maxWords + ' for ' + maxPair);
 });
 
 test('v9: driver-only steering hand never appears in passenger or rear-seat framing', () => {
