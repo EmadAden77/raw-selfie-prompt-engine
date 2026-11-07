@@ -1,0 +1,7 @@
+{
+  "id": "pose-17",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by planted feet, not unsupported sheet metal",
+  "contact": "both feet on level ground",
+  "motion": "small natural pose adjustments; no vehicle movement"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "hair-29",
+  "material": "the existing reference hair only, unchanged density and hairline",
+  "gravity": "existing strands follow gravity and original curl pattern",
+  "contact": "no extra external contact",
+  "motion": "single forward strand within original length, no extra breeze, rain or density"
+}

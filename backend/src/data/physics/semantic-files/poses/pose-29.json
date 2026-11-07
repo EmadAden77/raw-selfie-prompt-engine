@@ -1,0 +1,7 @@
+{
+  "id": "pose-29",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by curb and planted feet",
+  "contact": "curb edge and grounded feet",
+  "motion": "small natural pose adjustments; no vehicle movement"
+}

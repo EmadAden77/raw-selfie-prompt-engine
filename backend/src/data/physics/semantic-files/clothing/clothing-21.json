@@ -1,0 +1,7 @@
+{
+  "id": "clothing-21",
+  "material": "cotton fleece (hoodie)",
+  "gravity": "heavy soft drape",
+  "contact": "standing: hood and wrist folds; seated: waist and elbow compression",
+  "motion": "walking: small hem movement; no wind unless explicitly selected in the scene"
+}

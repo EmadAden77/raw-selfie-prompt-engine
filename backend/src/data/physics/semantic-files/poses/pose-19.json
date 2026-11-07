@@ -1,0 +1,7 @@
+{
+  "id": "pose-19",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by planted feet, not unsupported sheet metal",
+  "contact": "repair unsupported hood seating to planted feet and light hand contact",
+  "motion": "small natural pose adjustments; no vehicle movement"
+}

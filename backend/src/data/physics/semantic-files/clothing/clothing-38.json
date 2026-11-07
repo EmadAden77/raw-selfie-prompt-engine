@@ -1,0 +1,7 @@
+{
+  "id": "clothing-38",
+  "material": "wool fur blend (coat)",
+  "gravity": "heavy gravitational drape",
+  "contact": "standing: weight-held vertical panel folds; seated: thick seat and elbow folds",
+  "motion": "walking: low outer-hem movement; no wind unless explicitly selected in the scene"
+}

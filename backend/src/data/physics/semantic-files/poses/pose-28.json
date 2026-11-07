@@ -1,0 +1,7 @@
+{
+  "id": "pose-28",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by planted feet, not unsupported sheet metal",
+  "contact": "feet with light rear body contact",
+  "motion": "small natural pose adjustments; no vehicle movement"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "clothing-32",
+  "material": "cotton jersey (trousers)",
+  "gravity": "leg-weighted drape",
+  "contact": "standing: knee and hem vertical creases; seated: hip and knee compression",
+  "motion": "walking: knee flexion folds; no wind unless explicitly selected in the scene"
+}

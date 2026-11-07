@@ -1,0 +1,7 @@
+{
+  "id": "pose-8",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by a real seat",
+  "contact": "seat cushion, backrest and both steering-wheel hands",
+  "motion": "stationary, with subject-activated supported smartphone timer"
+}

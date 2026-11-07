@@ -1,0 +1,7 @@
+{
+  "id": "clothing-29",
+  "material": "denim and jersey (layered)",
+  "gravity": "independent layered drape",
+  "contact": "standing: overlapping fabric creases; seated: seat and elbow layer folds",
+  "motion": "walking: separate hem movement; no wind unless explicitly selected in the scene"
+}
