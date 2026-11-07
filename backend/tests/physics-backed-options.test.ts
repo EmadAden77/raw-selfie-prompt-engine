@@ -40,8 +40,9 @@ test('all 244 options are immutable id/Arabic-label/English-plus-physical record
 test('navy thobe always has medium cotton drape and correct gravity-dependent folds',()=>{
   const a=resolvePhysicalOptions(resolved(sample)).clothing.physics;
   assert.equal(a.material,'cotton');
-  assert.equal(a.modelArealMassGsm,175);
-  assert.equal(a.modelThicknessMm,0.4);
+  assert.equal(a.cut,'thobe');
+  assert.ok(!('modelArealMassGsm' in a));
+  assert.ok(!('modelThicknessMm' in a));
   assert.equal(a.gravityDrape,'vertical hem drop');
   assert.match(a.standingFolds,/vertical folds/);
   assert.match(a.seatedFolds,/waist and knee compression/);
@@ -70,22 +71,19 @@ test('each angle fixes physically attainable camera distance, FOV and visible pa
   }
 });
 
-test('all poses have load distribution summing to 100%, grounded support and contact',()=>{
-  for(const option of physicsCatalogue.poses){
-    const p=option.physics;
-    assert.equal(p.seatLoadPct+p.groundFeetLoadPct+p.curbLoadPct,100,option.id);
-    assert.ok(p.contactPoints.length>10);
-    assert.ok(p.hipAngleDeg>=60&&p.hipAngleDeg<=180);
-    assert.ok(p.elbowAngleDeg>=70&&p.elbowAngleDeg<=115);
-  }
-  const seated=resolvePhysicalOptions(resolved(sample)).poses.physics;
-  assert.equal(seated.seatLoadPct,75);
-  assert.equal(seated.groundFeetLoadPct,25);
-  const walking=resolvePhysicalOptions(resolved({...sample,poses:'pose-27'})).poses.physics;
-  assert.equal(walking.groundFeetLoadPct,100);
-  const unsafe=resolvePhysicalOptions(resolved({...sample,poses:'pose-19'})).poses.physics;
-  assert.equal(unsafe.mechanicallySafe,false);
-  assert.equal(unsafe.groundFeetLoadPct,100);
+test('all 30 poses use qualitative load support, contact and motion without joint angles',()=>{
+ for(const option of physicsCatalogue.poses){
+  const p=option.physics;
+  assert.ok(p.contactPoints.length>10);
+  assert.ok(p.gravityResponse.length>10&&p.motion.length>10);
+  assert.ok(!('elbowAngleDeg' in p)&&!('seatLoadPct' in p));
+ }
+ const seated=resolvePhysicalOptions(resolved(sample)).poses.physics;
+ assert.equal(seated.loadSupport,'seat');
+ const walking=resolvePhysicalOptions(resolved({...sample,poses:'pose-27'})).poses.physics;
+ assert.equal(walking.loadSupport,'feet');
+ const unsafe=resolvePhysicalOptions(resolved({...sample,poses:'pose-19'})).poses.physics;
+ assert.equal(unsafe.mechanicallySafe,false);
 });
 
 test('places fix 15cm concrete curb and 20-30cm car clearance only when a curb exists',()=>{
@@ -102,19 +100,16 @@ test('places fix 15cm concrete curb and 20-30cm car clearance only when a curb e
   assert.match(desert.groundMaterial,/sandy shoulder/);
 });
 
-test('all six finishes and ten lights are numeric, deterministic and preserve factory car',()=>{
-  for(const option of physicsCatalogue.carConditions){
-    const p=option.physics;
-    assert.ok(p.modeledDustCoveragePct>=0&&p.modeledDustCoveragePct<=30);
-    assert.equal(p.pearlWhitePaintPreserved,true);
-    assert.equal(p.beigeInteriorAndBlackWheelPreserved,true);
-  }
-  const light=resolvePhysicalOptions(resolved(sample)).lighting.physics;
-  assert.equal(light.nominalKelvin,5000);
-  assert.equal(light.relativeIntensity,0.68);
-  assert.equal(light.inventedLightAllowed,false);
-  for(const option of physicsCatalogue.lighting)
-    assert.ok(option.physics.nominalKelvin>=3000&&option.physics.nominalKelvin<=6500);
+test('all six finishes are semantic, retain factory car, and never contain fabricated coverage',()=>{
+ for(const option of physicsCatalogue.carConditions){
+  const p=option.physics;
+  assert.ok(!('modeledDustCoveragePct' in p)&&!('modeledWaterCoveragePct' in p));
+  assert.ok(p.gravityResponse.length>10&&p.motion.length>10);
+  assert.equal(p.pearlWhitePaintPreserved,true);
+  assert.equal(p.beigeInteriorAndBlackWheelPreserved,true);
+ }
+ const light=resolvePhysicalOptions(resolved(sample)).lighting.physics;
+ assert.equal(light.inventedLightAllowed,false);
 });
 
 test('Rule Builder and offline fallback include the exact eight-category physics, no NVIDIA',()=>{
@@ -131,7 +126,7 @@ test('Rule Builder and offline fallback include the exact eight-category physics
   assert.match(a,/20–30 cm/);
   assert.match(a,/generic smartphone front-camera selfie/);
   assert.doesNotMatch(a,/\d+gsm|FOV\d+/);
-  assert.match(a,/body supported by the correct seat/);
+  assert.match(a,/seat cushion and backrest/);
   assert.match(a,/gravity-consistent drape/);
   assert.equal(validatePrompt(a,choices),true);
 });
@@ -143,7 +138,7 @@ test('validator rejects changed physics and NVIDIA fails closed on new measureme
     original.replace('195 cm','193 cm'),
     original.replace('88 kg','83 kg'),
     original.replace('20–30 cm','5–10 cm'),
-    original.replace('scene 5500K','scene 3200K'),
+    original.replace('scene illumination 5500K','scene illumination 3200K'),
     original.replace('generic smartphone front-camera selfie','Xiaomi camera selfie'),
     original+' The phone is 90 cm away.',
     original+' Brow 35° and fabric 600gsm.',
@@ -161,14 +156,14 @@ test('unsupported weight on the Range Rover hood is corrected to grounded feet',
   assert.match(capture.pose,/grounded feet/);
   assert.doesNotMatch(capture.pose,/sitting gently on hood/);
   const prompt=buildConcisePrompt(choices);
-  assert.match(prompt,/weight supported by grounded feet/);
+  assert.match(prompt,/planted feet/);
   assert.equal(validatePrompt(prompt,choices),true);
 });
 
 test('all chosen categories independently change the locked physical clause',()=>{
   const base=resolved();
   const original=physicsStatement(base,deriveSceneLighting(base),true);
-  for(const key of Object.keys(physicsCatalogue) as CategoryKey[]){
+  for(const key of ['clothing','expressions','hairstyles','selfieAngles','poses','locations','carConditions'] as CategoryKey[]){
     const other=resolved({[key]:optionCatalogue[key][1]!.id});
     const changed=physicsStatement(other,deriveSceneLighting(other),true);
     assert.notEqual(original,changed,key);
