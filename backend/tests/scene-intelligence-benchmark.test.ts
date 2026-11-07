@@ -19,7 +19,7 @@ const benchmarks=[
   {name:'sunset mall parking lot',loc:7,light:4,angle:19,pose:17,kelvin:3200,cabin:false},
   {name:'covered mall parking indoor selfie',loc:8,light:2,angle:1,pose:1,kelvin:4000,cabin:true},
   {name:'underground parking back seat',loc:29,light:8,angle:7,pose:7,kelvin:3000,cabin:true},
-  {name:'close face selfie with natural morning',loc:15,light:1,angle:9,pose:2,kelvin:5000,cabin:true},
+  {name:'close face selfie with location-specific daylight',loc:15,light:1,angle:9,pose:2,kelvin:5500,cabin:true},
   {name:'phone-only light near villa',loc:17,light:9,angle:10,pose:16,kelvin:6500,cabin:false},
   {name:'outdoor gym afternoon',loc:34,light:3,angle:22,pose:22,kelvin:4000,cabin:false}
 ] as const;
