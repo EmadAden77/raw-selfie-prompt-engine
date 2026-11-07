@@ -7,7 +7,7 @@
 - `backend/src/routes` و`controllers`: نقطة استقبال `/api/prompt`.
 - `backend/src/schemas`: فحص JSON وقيم معرفات الاختيارات قبل التوليد.
 - `backend/src/data/option-mappings.ts`: ربط المعرفات `location-1` وغيرها بنصوص إنجليزية آمنة.
-- `backend/src/rules`: القواعد الثابتة؛ `engine`: بناء القاعدة، التوسيع، تجميع البرومبت، التحقق والتوليد الاحتياطي.
+- `backend/src/rules`: القواعد الثابتة؛ `engine`: بناء القاعدة، تجميع البرومبت، التحرير اللغوي والتحقق والتوليد الاحتياطي.
 - `backend/src/services/nvidia.service.ts`: استدعاء NVIDIA على الخادم باستخدام المفتاح السري؛ `prompt.service.ts`: اختيار الاستجابة المقبولة أو fallback.
 - `backend/src/config`: إعدادات البيئة؛ `middleware`: CORS وتحديد المعدل ومعالجة الأخطاء.
 
@@ -18,7 +18,7 @@ Frontend (React + TypeScript + Vite, Arabic RTL)
   → JSON: { selections, variation }
   → POST /api/prompt
 Backend (Node.js + TypeScript + Express)
-  → Validation → Rule Builder → Creative Expander
+  → Validation → Rule Builder (complete physics and English prompt) → NVIDIA editor → fact validator
   → NVIDIA API (deepseek-ai/deepseek-v4.1-flash)
   → Prompt Validator → English ChatGPT prompt
   ↳ NVIDIA missing/unavailable/invalid → Backend Fallback Generator
