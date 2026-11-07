@@ -44,8 +44,8 @@ export interface ResolvedLightForPhysics {
 // internal and must never be asserted as camera EXIF or real-world measurements.
 export function physicsStatement(selections: ResolvedSelections, scene: ResolvedLightForPhysics, inside: boolean): string {
   const p=resolvePhysicalOptions(selections);
-  const garment=p.clothing.physics, expression=p.expressions.physics, hair=p.hairstyles.physics;
-  const angle=p.selfieAngles.physics, pose=p.poses.physics, place=p.locations.physics;
+  const garment=p.clothing.physics, hair=p.hairstyles.physics;
+  const angle=p.selfieAngles.physics, place=p.locations.physics;
   const finish=p.carConditions.physics;
   const fabricFold=inside ? garment.seatedFolds : garment.standingFolds;
   const ground=place.curbHeightCm===15
@@ -56,10 +56,10 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
     'medium-weight '+garment.material+' fabric with gravity-consistent drape: '+fabricFold+';',
     'natural expression: '+selections.expressions.text+', original facial asymmetry and eye shapes maintained;',
     'original hair density and hairline: '+hair.strandDirection+', natural gravity'+(hair.airflowOrContact==='none'?'':', '+hair.airflowOrContact)+';',
-    'generic smartphone front camera at reachable selfie arm length, slight handheld perspective and mild edge stretch; framing '+angle.visibleBody+', vehicle edge only if naturally visible;',
+    'generic smartphone camera at reachable selfie arm length, slight handheld perspective and mild edge stretch; framing '+angle.visibleBody+', vehicle edge only if naturally visible;',
     'anatomy: grounded seated or standing support and plausible joints, '+(inside?'body supported by the correct seat and backrest':'weight supported by grounded feet')+', no impossible contact;',
     'ground if seen: '+place.groundMaterial+', '+ground+';',
     'surface if seen: '+finish.contamination+', '+finish.opticalReflection+', realistic dust or water only where the selected condition permits;',
     'light '+scene.kelvin+'K from '+scene.source+', shadows '+scene.shadows+', realistic subtle glass and bodywork reflections.'
-  ].join(' ').replace(/\\s+/g,' ').trim();
+  ].join(' ').replace(/\s+/g,' ').trim();
 }
