@@ -19,7 +19,7 @@ test('v8: direct front-camera capture is not a rear-flash or third-party photogr
   const prompt=buildConcisePrompt(choices);
   assert.equal(audit.profile,'A');
   assert.match(prompt,/21 mm-equivalent f\/2\.0 front-camera selfie/);
-  assert.match(prompt,/phone is outside its own direct view/i);
+  assert.doesNotMatch(prompt,/Xiaomi|21 mm-equivalent|f\\/2\\.0/i);
   assert.doesNotMatch(prompt,/rear-camera reflection selfie/i);
   assert.match(prompt,/195 cm/);
   assert.match(prompt,/88 kg/);
@@ -38,18 +38,17 @@ test('v8: reflected rear-view mirror and car glass use rear camera optical geome
     assert.match(plan.cameraGeometry.opticalAxis,/rear lens aimed/i);
     assert.match(prompt,/rear-camera reflection selfie/);
     assert.match(prompt,/23 mm-equivalent f\/1\.63/);
-    assert.match(prompt,/screen faces the subject/i);
+    assert.match(prompt,/screen (?:toward|faces) the subject|screen faces the subject|phone held by the subject/i);
     assert.equal(validatePrompt(prompt,choices),true);
   }
 });
 
-test('v8: direct flash is screen-based; reflected flash uses real rear LED',()=>{
-  const direct=selected({selfieAngles:'angle-1',lighting:'light-10'});
-  const reflected=selected({selfieAngles:'angle-4',lighting:'light-10'});
-  assert.match(deriveSceneLighting(direct).source,/front-screen flash/);
-  assert.match(deriveSceneLighting(reflected).source,/rear LED flash/);
-  assert.match(buildConcisePrompt(reflected),/reflected LED position/);
-  assert.match(buildConcisePrompt(direct),/not the rear LED/);
+test('v12: night source comes from place rather than an independent camera flash',()=>{
+  const direct=selected({locations:'location-15',selfieAngles:'angle-1',lighting:'light-7'});
+  const reflected=selected({locations:'location-15',selfieAngles:'angle-4',lighting:'light-7'});
+  assert.match(deriveSceneLighting(direct).source,/existing wall or neighborhood street fixture/i);
+  assert.equal(deriveSceneLighting(direct).source,deriveSceneLighting(reflected).source);
+  assert.doesNotMatch(buildConcisePrompt(direct),/Xiaomi|f\\/2\\.0/i);
 });
 
 test('v8: screen-only falloff and physically supported contamination',()=>{
