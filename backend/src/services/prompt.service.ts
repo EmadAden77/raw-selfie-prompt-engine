@@ -6,7 +6,7 @@ import { validateEditorialRewrite } from '../engine/editor-validator.js';
 import { editWithNvidia, NvidiaFailure } from './nvidia.service.js';
 import { auditPhotographicScene } from '../engine/photographic-auditor-v8.js';
 
-export async function generatePrompt(request: PromptRequest): Promise<PromptResponse> {
+export async function generatePrompt(request: PromptRequest, ownerAuthorized = false): Promise<PromptResponse> {
   const choices = resolveSelections(request.selections);
   const { repairNotes, sceneCameraSurface } = auditPhotographicScene(choices);
   const audit = { repairNotes, sceneCameraSurface };
@@ -19,6 +19,7 @@ export async function generatePrompt(request: PromptRequest): Promise<PromptResp
   if (!nvidiaKey) return { prompt: canonical, source: 'local', reason: 'no_key', audit };
   if (!/^nvapi-[a-zA-Z0-9_-]{10,512}$/.test(nvidiaKey))
     return { prompt: canonical, source: 'local', reason: 'invalid_key', audit };
+  if (!ownerAuthorized) return { prompt: canonical, source: 'local', reason: 'owner_only', audit };
   try {
     // NVIDIA receives complete English text, not a planning schema, scene
     // options, camera rules or image. Even plausible added details are rejected.
