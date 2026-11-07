@@ -1,4 +1,4 @@
-import test from 'node:test';
+import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
 import { generatePrompt, validateCreativeAddition } from '../src/services/prompt.service.js';
 import { optionCatalogue, resolveSelections } from '../src/data/option-mappings.js';
@@ -8,7 +8,10 @@ import type { Selections } from '../src/types/engine.types.js';
 
 const selections=Object.fromEntries(Object.entries(optionCatalogue).map(([key,options])=>[key,options[0]!.id])) as Selections;
 const key='nvapi-'+'a'.repeat(30);
-const request={selections,variation:2,nvidiaApiKey:key};
+const request={selections,variation:2};
+const priorKey=process.env.NVIDIA_API_KEY;
+process.env.NVIDIA_API_KEY=key;
+after(()=>{if(priorKey===undefined)delete process.env.NVIDIA_API_KEY;else process.env.NVIDIA_API_KEY=priorKey;});
 const original=globalThis.fetch;
 const choices=resolveSelections(selections);
 const baseline=createScenePlan(choices);
@@ -48,12 +51,12 @@ test('DeepSeek JSON scene planner uses 0.3 and leaves protected prompt text unch
 test('NVIDIA adds bounded environment detail only for a naturally visible outdoor selfie',async()=>{
   const outside={...selections,selfieAngles:'angle-19',poses:'pose-17'};
   const reference=createScenePlan(resolveSelections(outside));
-  const approved='A distant passerby crosses an existing sidewalk beyond the parked car.';
+  const approved='A distant passerby walks beside the dusty roadside beyond the parked car.';
   try{
     globalThis.fetch=async()=>nvidiaJson({
       ...reference,environmentalRealism:{...reference.environmentalRealism,background:approved}
     });
-    const result=await generatePrompt({selections:outside,variation:2,nvidiaApiKey:key});
+    const result=await generatePrompt({selections:outside,variation:2});
     assert.equal(result.source,'server',result.reason);
     assert.ok(result.prompt.includes(approved));
     assert.match(result.prompt,/193 cm/);

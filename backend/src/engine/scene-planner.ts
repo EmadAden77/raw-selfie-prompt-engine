@@ -3,6 +3,7 @@ import type { ResolvedSelections } from '../types/engine.types.js';
 import { cabinMayBeVisible } from '../rules/cabin.rules.js';
 import { deriveSceneLighting } from './rule-builder.js';
 import { isReflectionSelfie } from './photographic-auditor-v8.js';
+import { resolveCapture } from './scene-geometry.js';
 
 // No image is transmitted. This is a textual plan grounded in validated option IDs.
 // Zod validates the complete model proposal before any value can affect the prompt.
@@ -36,25 +37,28 @@ export type ScenePlanCandidate=ScenePlan;
 const angleNumber=(id:string)=>Number(id.split('-').at(-1));
 export function createScenePlan(choices:ResolvedSelections):ScenePlan {
   const angle=angleNumber(choices.selfieAngles.id);
-  const close=[2,3,9,10,11].includes(angle);
-  const interior=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
+  const capture=resolveCapture(choices);
+  const {close,inside:interior}=capture;
   const mirror=isReflectionSelfie(choices.selfieAngles.id);
   const scene=deriveSceneLighting(choices);
-  const position=mirror?'the subject-held rear-camera phone reflected naturally in the selected mirror or glass':
+  const position=capture.mounted?'a physically secured phone with timer initiated by the subject':
+    mirror?'the subject-held rear-camera phone reflected naturally in the selected mirror or glass':
     interior?'the subject-held front camera at reachable arm length from the selected seat':
     'the subject-held front camera at reachable arm length beside the parked vehicle';
   const framing=close?'face':angle===10||angle===24?'torso':'upper-body';
   const candidate:ScenePlan={
     cameraGeometry:{
       phonePosition:position,
-      opticalAxis:mirror?'rear lens aimed at the selected reflective surface, with the phone screen toward the subject':'front camera pointed at the reference subject from a plausible handheld angle',
+      opticalAxis:mirror?'rear lens aimed at the selected reflective surface, with the phone screen toward the subject':
+        capture.mounted?'mounted front camera aimed at the subject along a physically supported optical axis':'front camera pointed at the reference subject from a plausible handheld angle',
       armReachCm:close?38:angle===10?83:65,framing,
       visibleBody:close?'face and only naturally included neck or shoulder':
         framing==='torso'?'face, shoulders and naturally framed torso':'face, shoulders and upper torso only where visible'
     },
     physicalPoseConsistency:{
-      support:'body weight and seating or standing support follow the selected pose: '+choices.poses.text,
-      handPlacement:mirror?'one reachable phone hand grips a correctly oriented rear-camera phone in one coherent reflection':
+      support:'body weight and seating or standing support follow the physically compatible pose: '+capture.pose,
+      handPlacement:capture.mounted?'both hands remain on the wheel; phone stays in a fixed, supported mount':
+        mirror?'one reachable phone hand grips a correctly oriented rear-camera phone in one coherent reflection':
         'one hand holds the front-facing phone at reachable arm length; the other follows the selected pose'
     },
     naturalLightSimulation:{

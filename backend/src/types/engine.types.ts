@@ -3,7 +3,7 @@ export const categoryKeys = [
 ] as const;
 export type CategoryKey = typeof categoryKeys[number];
 export type Selections = Record<CategoryKey, string>;
-export interface PromptRequest { selections: Selections; variation: number; nvidiaApiKey?: string }
+export interface PromptRequest { selections: Selections; variation: number }
 export type FallbackReason =
   | 'no_key' | 'invalid_key' | 'unauthorized' | 'forbidden' | 'quota'
   | 'rate_limited' | 'model_unavailable' | 'nvidia_timeout'

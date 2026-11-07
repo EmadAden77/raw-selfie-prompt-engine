@@ -39,11 +39,15 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
   const baseline=createScenePlan(resolved);
   const fallback=fallbackGenerator(request);
   if(!validatePrompt(fallback,resolved))throw new Error('Internal prompt rules failed validation');
-  if(!request.nvidiaApiKey)return {prompt:fallback,source:'local',reason:'no_key',audit};
+  // Credentials are exclusively server-side; never accept or persist browser keys.
+  const nvidiaKey=process.env.NVIDIA_API_KEY?.trim()??'';
+  if(!nvidiaKey)return {prompt:fallback,source:'local',reason:'no_key',audit};
+  if(!/^nvapi-[a-zA-Z0-9_-]{10,512}$/.test(nvidiaKey))
+    return {prompt:fallback,source:'local',reason:'invalid_key',audit};
   try {
     // One structured response. Only validated selections and a textual baseline
     // are sent; the reference image is never sent to NVIDIA.
-    const proposal=await planWithNvidia(scenePlanInput(resolved,baseline),request.nvidiaApiKey);
+    const proposal=await planWithNvidia(scenePlanInput(resolved,baseline),nvidiaKey);
     const reviewed=reviewScenePlan(proposal,baseline);
     if(!reviewed)return {prompt:fallback,source:'local',reason:'unsafe_output',audit};
     const generated=assembleConcisePrompt(resolved,reviewed.plan);

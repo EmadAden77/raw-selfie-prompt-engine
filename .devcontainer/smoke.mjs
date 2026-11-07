@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const origin='https://private-smoke-test-5173.app.github.dev';
-const env={...process.env,CODESPACES:'true',CODESPACE_NAME:'private-smoke-test'};
+const env={...process.env,NVIDIA_API_KEY:'',CODESPACES:'true',CODESPACE_NAME:'private-smoke-test'};
 const children=[];
 function run(script) {
   const processRef=spawn('npm',['run',script],{
@@ -33,11 +33,9 @@ function stop(){
   }
 }
 try {
-  const keyField=await readFile(new URL('../frontend/src/components/layout/NvidiaKeyField.tsx',import.meta.url),'utf8');
-  const rtl=await readFile(new URL('../frontend/src/styles/rtl.css',import.meta.url),'utf8');
-  assert.match(keyField,/dir="ltr"/);
-  assert.match(keyField,/onPaste=\{paste\}/);
-  assert.match(rtl,/key-input.*direction:ltr/);
+  const app=await readFile(new URL('../frontend/src/app/App.tsx',import.meta.url),'utf8');
+  assert.doesNotMatch(app,/NvidiaKeyField|readKey/);
+  assert.match(app,/localStorage\.removeItem\('raw-selfie-nvidia-key'\)/);
   run('dev:backend');
   await waitFor('http://127.0.0.1:3001/health');
   run('dev:frontend');
@@ -61,5 +59,10 @@ try {
   assert.match(data.prompt,/^ChatGPT, using the reference image I uploaded/);
   assert.match(data.prompt,/2022 Range Rover Sport/);
   assert.doesNotMatch(data.prompt,/[\u0600-\u06ff]/);
-  console.log('Codespaces private-port proxy smoke test passed (simulated origin, no NVIDIA key).');
+  const rejected=await fetch('http://127.0.0.1:5173/api/prompt',{
+    method:'POST',headers:{'Content-Type':'application/json',Origin:origin},
+    body:JSON.stringify({selections:selectionKeys,variation:1,nvidiaApiKey:'nvapi-'+'a'.repeat(30)})
+  });
+  assert.equal(rejected.status,400,'Client keys must not be accepted by the backend');
+  console.log('Codespaces proxy and server-only NVIDIA credentials smoke test passed.');
 }finally{stop();}

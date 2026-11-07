@@ -1,5 +1,5 @@
 import type { Selections } from './options';
-export type PromptRequest = { selections: Selections; variation: number; nvidiaApiKey?: string };
+export type PromptRequest = { selections: Selections; variation: number };
 export type FallbackReason =
   | 'no_key' | 'invalid_key' | 'unauthorized' | 'forbidden' | 'quota'
   | 'rate_limited' | 'model_unavailable' | 'nvidia_timeout'

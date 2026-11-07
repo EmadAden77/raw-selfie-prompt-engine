@@ -3,7 +3,7 @@ import type { FallbackReason, PromptResponse } from '../../types/prompt';
 import CopyButton from './CopyButton';
 
 const reasons:Record<FallbackReason,string>={
-  no_key:'لم تُدخل مفتاح NVIDIA؛ استُخدمت القواعد المحلية.',
+  no_key:'لم يُضبط مفتاح NVIDIA في إعدادات الخادم؛ استُخدم المولّد المحلي.',
   invalid_key:'صيغة مفتاح NVIDIA غير صالحة. تأكد أنه يبدأ بـ nvapi-.',
   unauthorized:'رفضت NVIDIA المفتاح (رمز 401). تأكد من صلاحية المفتاح أو أنشئ مفتاحًا جديدًا.',
   forbidden:'ليس لهذا المفتاح إذن باستخدام الخدمة (رمز 403). راجع صلاحيات حساب NVIDIA.',
@@ -27,7 +27,7 @@ export default function PromptResult({result}:{result:PromptResponse}){
     <div className="generation-status" role="status" aria-live="polite">
       {viaNvidia?<CheckCircle2 size={19}/>:<AlertTriangle size={19}/>}
       <div><strong>{viaNvidia?'تم التوليد باستخدام NVIDIA بنجاح':'تم التوليد بواسطة القواعد المحلية'}</strong>
-        <p>{viaNvidia?'استُخدمت NVIDIA لإضافة تفاصيل واقعية، مع إبقاء قواعد الهوية والسيارة ثابتة.':reasons[result.reason??'invalid_response']}</p>
+        <p>{viaNvidia?'راجعت NVIDIA خطة المشهد النصية، مع إبقاء قواعد الهوية والسيارة ثابتة.':reasons[result.reason??'invalid_response']}</p>
       </div>
     </div>
     {result.audit&&<section className="audit-report" aria-label="تقرير التدقيق الفوتوغرافي">

@@ -1,7 +1,8 @@
 import { promptWordCount, LHD_GEOMETRY, FACTORY_DASHBOARD, IDENTITY_CORE, BODY_CORE, SUBJECT_CORE } from './concise-prompt.js';
+import { resolveCapture } from './scene-geometry.js';
 function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   const count=promptWordCount(prompt);
-  if(count<105||count>500) return false;
+  if(count<105||count>300) return false;
   if(!prompt.includes(IDENTITY_CORE)||!prompt.includes(BODY_CORE)||!prompt.includes(SUBJECT_CORE))return false;
   if(!/\b193 cm\b/.test(prompt)||!/\b83 kg\b/.test(prompt)||!/lean athletic/.test(prompt))return false;
   if(!prompt.includes('Scene:')||!prompt.includes('Camera:')||!prompt.includes('Lighting:')||
@@ -22,8 +23,8 @@ function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
     if(cabin&&(!prompt.includes(LHD_GEOMETRY)||!prompt.includes(FACTORY_DASHBOARD)))return false;
     if(cabin&&!/black leather three.spoke wheel/i.test(prompt))return false;
     if(!prompt.includes(choices.locations.text)||!prompt.includes(choices.clothing.text)||
-       !prompt.includes(choices.expressions.text)||!prompt.includes(choices.poses.text)||
-       !prompt.includes(choices.selfieAngles.text))return false;
+       !prompt.includes(choices.expressions.text)||!prompt.includes(resolveCapture(choices).pose)||
+       !prompt.includes(resolveCapture(choices).angleText))return false;
     // A close interior selfie should not invent outdoor road surfaces or full dashboard framing.
     const angle=Number(choices.selfieAngles.id.split('-').at(-1));
     if([2,3,9,10,11].includes(angle)&&/\bfull.body view|entire dashboard visible\b/i.test(prompt))return false;

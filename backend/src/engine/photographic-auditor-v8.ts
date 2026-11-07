@@ -1,5 +1,6 @@
 import type { ResolvedSelections } from '../types/engine.types.js';
 import { cabinMayBeVisible } from '../rules/cabin.rules.js';
+import { resolveCapture } from './scene-geometry.js';
 
 // v8 audits selected text, not pixels: reference photos never reach this engine.
 // All additions must fit the chosen field of view and have a physical cause.
@@ -24,8 +25,8 @@ export function auditPhotographicScene(choices: ResolvedSelections): Photographi
   const light = numberOf(choices.lighting.id);
   const condition = numberOf(choices.carConditions.id);
   const mirror = isReflectionSelfie(choices.selfieAngles.id);
-  const close = [2, 3, 9, 10, 11].includes(angle);
-  const interior = cabinMayBeVisible(choices.selfieAngles.id, choices.poses.id);
+  const capture = resolveCapture(choices);
+  const { close, inside: interior } = capture;
   const covered = [8, 10, 11, 12, 13, 29, 46].includes(location);
   const desert = [1, 2, 3, 4, 5, 53, 55, 56].includes(location);
   const screenOnly = light === 9;
@@ -69,6 +70,10 @@ export function auditPhotographicScene(choices: ResolvedSelections): Photographi
   }
 
   const repairNotes: string[] = [];
+  if (capture.poseRepaired)
+    repairNotes.push('تعارض موضع الجلوس مع زاوية الكاميرا → لا يمكن نقل الشخص بين مقعدين في لقطة واحدة → تم تعديل الوضعية لتوافق موضع التصوير المختار.');
+  if (capture.mounted)
+    repairNotes.push('اختيار اليدين على الدركسون → لا توجد يد تحمل الهاتف → اعتماد حامل ثابت ومؤقت يبدأه الشخص بدل منظور يدوي مستحيل.');
   if (mirror) repairNotes.push('زاوية انعكاس مع وصف كاميرا أمامية محتمل → العدسة يجب أن تواجه المرآة أو الزجاج → اعتماد الكاميرا الخلفية ومسار انعكاس واحد صحيح.');
   if (covered && [1, 2, 3, 4, 7, 8].includes(light))
     repairNotes.push('إضاءة خارجية مختارة داخل مكان مسقوف → السقف يحجب مصدرها المباشر → الاعتماد على الإنارة الموجودة داخل المكان وانعكاساتها.');
