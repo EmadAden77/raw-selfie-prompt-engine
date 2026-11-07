@@ -9,7 +9,7 @@ import { resolveCapture } from './scene-geometry.js';
 export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right, wheel left, console right; no mirroring.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, natural asymmetry, apparent age, skin tone and texture, eyes, brows, nose, lips, jaw, hairline, thinning, hair density, curl pattern and facial-hair gaps; no reshaping, beautification or invented marks.';
-export const BODY_CORE = 'Height 193 cm, weight 83 kg; natural lean athletic physique and proportions.';
+export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique and proportions.';
 export const SUBJECT_CORE = 'Reference person remains the sole primary subject; no scenery-driven pullback.';
 export const promptWordCount = (text: string): number => text.trim().split(/\s+/).filter(Boolean).length;
 const numberOf = (id: string): number => Number(id.split('-').at(-1));
