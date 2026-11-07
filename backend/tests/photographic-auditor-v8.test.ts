@@ -48,7 +48,7 @@ test('v12: night source comes from place rather than an independent camera flash
   const reflected=selected({locations:'location-15',selfieAngles:'angle-4',lighting:'light-7'});
   assert.match(deriveSceneLighting(direct).source,/existing wall or neighborhood street fixture/i);
   assert.equal(deriveSceneLighting(direct).source,deriveSceneLighting(reflected).source);
-  assert.doesNotMatch(buildConcisePrompt(direct),/Xiaomi|f/2.0/i);
+  assert.doesNotMatch(buildConcisePrompt(direct),/Xiaomi|camera brand/i);
 });
 
 test('v8: screen-only falloff and physically supported contamination',()=>{
