@@ -62,3 +62,24 @@ test('factory LHD, no branded phone, no fabricated visual parameters',()=>{
  assert.doesNotMatch(p,/Xiaomi|iPhone|portrait screen|21mm|FOV\d+|\d+gsm|brow\d|mouth\d|eyes\d|elbow\d|knee\d|intensity\d/i);
  assert.match(p,/195 cm/); assert.match(p,/88 kg/); assert.match(p,/20–30 cm/);
 });
+
+
+test('all 58 locations render safe automatic selfies for day/night, seated/standing and both clothing crops',()=>{
+ for(const profile of placeProfiles){
+  for(const lighting of ['light-1','light-7']){
+   for(const poses of ['pose-1','pose-16']){
+    for(const clothing of ['clothing-1','clothing-28']){
+     const request=make({locations:profile.id,lighting,poses,clothing,selfieAngles:'angle-auto'});
+     const choices=resolveSelections(request);
+     const capture=resolveCapture(choices);
+     assert.equal(capture.seat,poses==='pose-1'?'driver':'outside',profile.id);
+     const output=fallbackGenerator({selections:request,variation:1});
+     assert.equal(validatePrompt(output,choices),true,profile.id+'/'+lighting+'/'+poses+'/'+clothing);
+     assert.ok(output.includes('Parking: '+profile.parking),profile.id);
+     assert.ok(output.includes((lighting==='light-7'?profile.night:profile.day).source),profile.id);
+     assert.doesNotMatch(output,/Xiaomi|iPhone|portrait screen|FOV\d+|\d+gsm/i);
+    }
+   }
+  }
+ }
+});
