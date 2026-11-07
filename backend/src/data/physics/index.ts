@@ -46,22 +46,29 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
   const poseId=Number(selections.poses.id.split('-').at(-1));
   const fold=poseId===27?clothing.walkingFolds:
     inside||[22,29].includes(poseId)?clothing.seatedFolds:clothing.standingFolds;
-  const support=pose.mechanicallySafe?pose.loadSupport:'feet, no hood seating';
+  const support=pose.mechanicallySafe?pose.loadSupport:'grounded feet';
   const ground=place.curbHeightCm===15
     ? 'curb 15 cm gap 20–30 cm, wheels straight'
     : place.parkingGeometry+', no fabricated curb';
+  const surface=place.parkingGeometry==='parallel-curb'?'worn Saudi asphalt':
+    place.parkingGeometry==='road-shoulder'?'sandy shoulder':
+    place.parkingGeometry==='farm-edge'?'firm soil/gravel':
+    place.parkingGeometry==='covered-bay'?'scuffed concrete':'faded parking asphalt';
   const wall=place.nearestWallClearanceMinCm===null?'':', wall ≥100cm if adjacent';
   const intensity=scene.covered?Math.min(light.relativeIntensity,0.35):light.relativeIntensity;
   const lens=angle.lensDistortion==='close-range perspective stretch'?'close lens stretch':'mild edge stretch';
+  const hairAir=hair.airflowOrContact==='none'?'':', '+hair.airflowOrContact;
+  const wind=clothing.modelArealMassGsm>=300?'resists breeze':'wind only if present';
+  const carZone=finish.modeledDustCoveragePct===0?'clean':finish.accumulationZones;
   return [
     'Physics:',
-    'fabric '+clothing.material+' ~'+clothing.modelArealMassGsm+'gsm/'+clothing.modelThicknessMm+'mm, '+fold+';',
-    'face brow'+face.browAngleDeg+'° mouth'+face.mouthCornerAngleDeg+'° eyes'+face.leftEyeOpeningPct+'/'+face.rightEyeOpeningPct+'%, identity fixed;',
-    'hair '+hair.strandDirection+' lift'+hair.strandLiftDeg+'°, original density;',
-    'phone '+angle.cameraDistanceCm+'cm FOV'+angle.effectiveHorizontalFovDeg+'° pitch'+angle.pitchDeg+'° roll'+angle.rollDeg+'°, '+angle.visibleBody+'/'+angle.visibleVehicle+', '+lens+';',
+    'fabric '+clothing.material+' ~'+clothing.modelArealMassGsm+'gsm/'+clothing.modelThicknessMm+'mm, '+clothing.gravityDrape+', '+fold+', '+wind+';',
+    'face '+face.activeMuscles+' brow'+face.browAngleDeg+'° mouth'+face.mouthCornerAngleDeg+'° eyes'+face.leftEyeOpeningPct+'/'+face.rightEyeOpeningPct+'%, identity fixed;',
+    'hair '+hair.strandDirection+' lift'+hair.strandLiftDeg+'°, gravity down'+hairAir+', original density;',
+    'phone '+angle.cameraDistanceCm+'cm FOV'+angle.effectiveHorizontalFovDeg+'° pitch'+angle.pitchDeg+'° roll'+angle.rollDeg+'° arm'+angle.armReachAngleDeg+'°, '+angle.visibleBody+'/'+angle.visibleVehicle+', '+lens+';',
     'joints elbow'+(pose.mechanicallySafe?pose.elbowAngleDeg:110)+'° knee'+(pose.mechanicallySafe?pose.kneeAngleDeg:170)+'° '+support+'-supported;',
-    'ground if visible: '+place.groundMaterial+', '+ground+wall+';',
-    'finish if visible: dust'+finish.modeledDustCoveragePct+'% water'+finish.modeledWaterCoveragePct+'%, '+(finish.glassAffected?'glass affected':'glass clear')+';',
-    'light '+scene.kelvin+'K '+scene.cameraSide+' relative-intensity'+intensity+'.'
+    'ground if seen: '+surface+', '+ground+wall+';',
+    'finish if seen: dust'+finish.modeledDustCoveragePct+'% water'+finish.modeledWaterCoveragePct+'%, '+carZone+';',
+    'light '+scene.kelvin+'K '+scene.cameraSide+' intensity'+intensity+'.'
   ].join(' ').replace(/\s+/g,' ').trim();
 }
