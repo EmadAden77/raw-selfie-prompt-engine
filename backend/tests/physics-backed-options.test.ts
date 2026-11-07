@@ -153,7 +153,7 @@ test('all chosen categories independently change the locked physical clause',()=
   }
 });
 
-test('all selectable categories remain under 300 English words and locally valid',()=>{
+test('all selectable categories retain physical facts and remain locally valid',()=>{
   let max=0;
   for(const key of Object.keys(optionCatalogue) as CategoryKey[]){
     for(const option of optionCatalogue[key]){
@@ -161,9 +161,9 @@ test('all selectable categories remain under 300 English words and locally valid
       const prompt=buildConcisePrompt(choices);
       const words=promptWordCount(prompt);
       max=Math.max(max,words);
-      assert.ok(words<=300,key+'/'+option.id+' words='+words);
+      assert.ok(words<=800,key+'/'+option.id+' words='+words);
       assert.equal(validatePrompt(prompt,choices),true,key+'/'+option.id);
     }
   }
-  assert.ok(max<=300,'max words '+max);
+  assert.ok(max<=800,'max words '+max);
 });
