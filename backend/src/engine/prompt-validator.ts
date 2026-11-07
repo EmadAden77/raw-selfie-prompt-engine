@@ -106,6 +106,20 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if (/\b(?:RHD|right-hand drive|right-side steering wheel|steering wheel on the right|wheel to his right|driver front-right)\b/i.test(prompt)) return false;
   if (/\b(?:portrait|vertical)\s+(?:infotainment\s+)?(?:screen|display)\b/i.test(prompt)) return false;
   if (choices && ['location-10','location-11'].includes(choices.locations.id) && !prompt.includes("pump on the DRIVER'S LEFT")) return false;
+  // Reject asserted weather that was never selected. An environment being
+  // Saudi, dusty or outdoors never grants permission to add wind or rain.
+  if (choices) {
+    const weatherSelections=[
+      choices.hairstyles.text,choices.carConditions.text,choices.poses.text
+    ].join(' ');
+    const windSelected=/\b(?:wind|blown|breeze|air from open window|air conditioning)\b/i.test(weatherSelections);
+    const rainSelected=/\b(?:rain|raindrops|drizzle)\b/i.test(weatherSelections);
+    if(!windSelected && /\b(?:wind|breeze|gusts?|windblown|windswept)\b/i.test(prompt)) return false;
+    if(!rainSelected && /\b(?:rain|raining|rainfall|raindrops|downpour|drizzle)\b/i.test(prompt)) return false;
+  }
+  if (/\b(?:elbow|knee|hip|brow|mouth|eyes|pitch|roll|FOV|arm|wrist)\s*[:=]?\s*-?\d+(?:\.\d+)?\s*(?:°|%|deg(?:rees)?|cm)/i.test(prompt)) return false;
+  if (/\b(?:phone|camera)\s+(?:at|from|held at|distance of|is)\s+\d+\s*cm\b/i.test(prompt)) return false;
+  if (/\b(?:light|lighting)\s+intensity\s*[:=]?\s*(?:0?\.)?\d+(?:\.\d+)?/i.test(prompt)) return false;
   // Shared guards apply to both historical exhaustive templates and the
   // modern concise format. Never let the early concise branch bypass them.
   if(/\b(?:burj khalifa|kingdom cent(?:re|er)|al faisaliah|dubai mall|riyadh park|red sea mall)\b/i.test(prompt))return false;
