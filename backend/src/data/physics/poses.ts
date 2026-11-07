@@ -6,6 +6,9 @@ export interface PosePhysical {
   readonly torsoLeanDeg: number;
   readonly contactPoints: string;
   readonly loadSupport: 'seat'|'feet'|'curb'|'hood';
+  readonly seatLoadPct: number;
+  readonly groundFeetLoadPct: number;
+  readonly curbLoadPct: number;
   readonly mechanicallySafe: boolean;
   readonly requiresFixedPhoneMount: boolean;
 }
@@ -17,6 +20,10 @@ export const posePhysics = fixedPhysicsOptions('poses',rows.map(
   ([elbowAngleDeg,kneeAngleDeg,hipAngleDeg,torsoLeanDeg,contactPoints,loadSupport,
     mechanicallySafe,requiresFixedPhoneMount]):PosePhysical=>({
       elbowAngleDeg,kneeAngleDeg,hipAngleDeg,torsoLeanDeg,contactPoints,
-      loadSupport,mechanicallySafe,requiresFixedPhoneMount
+      loadSupport,
+      seatLoadPct:loadSupport==='seat'?75:0,
+      curbLoadPct:loadSupport==='curb'?75:0,
+      groundFeetLoadPct:loadSupport==='seat'||loadSupport==='curb'?25:100,
+      mechanicallySafe,requiresFixedPhoneMount
   })),p=>
   `elbow ${p.elbowAngleDeg}°, knee ${p.kneeAngleDeg}°; support ${p.loadSupport}`);
