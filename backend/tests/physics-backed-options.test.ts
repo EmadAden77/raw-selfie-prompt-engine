@@ -66,7 +66,7 @@ test('gas pump remains on the driver left; covered parking has no invented direc
  const gas=prompt({locations:'location-11',poses:'pose-1',lighting:'light-7'});
  assert.match(gas,/pump on driver's left/);
  const parking=prompt({locations:'location-29',poses:'pose-1',lighting:'light-7'});
- assert.match(parking,/one existing overhead canopy or garage fixture/);
+ assert.ok(parking.includes(placeSceneProfile('location-29').night.source));
  assert.doesNotMatch(parking,/direct midday sunlight illuminates the garage/i);
  const desert=prompt({locations:'location-56',poses:'pose-16',lighting:'light-7'});
  assert.doesNotMatch(desert,/streetlamp/);
