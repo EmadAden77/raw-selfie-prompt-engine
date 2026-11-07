@@ -40,54 +40,26 @@ export interface ResolvedLightForPhysics {
   readonly source: string;
   readonly shadows: string;
 }
+// Only observable constraints are verbalized. Numeric simulation parameters stay
+// internal and must never be asserted as camera EXIF or real-world measurements.
 export function physicsStatement(selections: ResolvedSelections, scene: ResolvedLightForPhysics, inside: boolean): string {
   const p=resolvePhysicalOptions(selections);
-  const clothing=p.clothing.physics,face=p.expressions.physics,hair=p.hairstyles.physics;
-  const angle=p.selfieAngles.physics,pose=p.poses.physics,place=p.locations.physics;
-  const finish=p.carConditions.physics,light=p.lighting.physics;
-  const poseId=Number(selections.poses.id.split('-').at(-1));
-  const fold=poseId===27?clothing.walkingFolds:
-    inside||[22,29].includes(poseId)?clothing.seatedFolds:clothing.standingFolds;
-  const angleId=Number(selections.selfieAngles.id.split('-').at(-1));
-  const requestedOnSeat=pose.loadSupport==='seat';
-  const requestedOnCurb=pose.loadSupport==='curb';
-  const normalizedSupport=inside?'seat':requestedOnCurb?'curb':'feet';
-  const matches=pose.mechanicallySafe && (
-    (inside && requestedOnSeat) ||
-    (!inside && requestedOnCurb) ||
-    (!inside && pose.loadSupport==='feet'));
-  const support=normalizedSupport;
-  const elbow=matches?pose.elbowAngleDeg:inside?95:110;
-  const knee=matches?pose.kneeAngleDeg:inside?95:normalizedSupport==='curb'?80:170;
-  const hip=matches?pose.hipAngleDeg:inside?95:normalizedSupport==='curb'?90:170;
-  const lean=matches?pose.torsoLeanDeg:0;
-  const contacts=!matches
-    ? inside?'seat cushion and backrest'
-      : normalizedSupport==='curb'?'grounded feet and curb seat':'grounded feet; no hood seating'
-    : poseId===10 && angleId!==6?'selected seat cushion and backrest'
-    : pose.contactPoints;
-  const seatLoad=matches?pose.seatLoadPct:inside?75:0;
-  const curbLoad=matches?pose.curbLoadPct:normalizedSupport==='curb'?75:0;
-  const feetLoad=100-seatLoad-curbLoad;
+  const garment=p.clothing.physics, expression=p.expressions.physics, hair=p.hairstyles.physics;
+  const angle=p.selfieAngles.physics, pose=p.poses.physics, place=p.locations.physics;
+  const finish=p.carConditions.physics;
+  const fabricFold=inside ? garment.seatedFolds : garment.standingFolds;
   const ground=place.curbHeightCm===15
-    ? 'curb 15 cm gap 20–30 cm, wheels straight'
-    : place.parkingGeometry+', no fabricated curb';
-  const surface=place.groundMaterial;
-  const wall=place.nearestWallClearanceMinCm===null?'':', wall ≥100cm if adjacent';
-  const intensity=scene.covered?Math.min(light.relativeIntensity,0.35):light.relativeIntensity;
-  const lens=angle.lensDistortion==='close-range perspective stretch'?'close lens stretch':'mild edge stretch';
-  const hairAir=hair.airflowOrContact==='none'?'':', '+hair.airflowOrContact;
-  const wind=clothing.modelArealMassGsm>=300?'resists breeze':'wind only if present';
-  const carZone=finish.modeledDustCoveragePct===0?'clean':finish.accumulationZones;
+    ? 'real concrete curb about 15 cm tall, wheels straight 20–30 cm from its edge'
+    : 'wheels straight on the actual legal ground, no fabricated urban curb';
   return [
     'Physics:',
-    'fabric '+clothing.material+' ~'+clothing.modelArealMassGsm+'gsm/'+clothing.modelThicknessMm+'mm, '+clothing.gravityDrape+', '+fold+', '+wind+';',
-    'face '+face.activeMuscles+' brow'+face.browAngleDeg+'° mouth'+face.mouthCornerAngleDeg+'° eyes'+face.leftEyeOpeningPct+'/'+face.rightEyeOpeningPct+'% gaze'+face.eyeGazeAngleDeg+'°, identity fixed;',
-    'hair '+hair.strandDirection+' lift'+hair.strandLiftDeg+'°, gravity down'+hairAir+', original length/texture/density;',
-    'phone '+angle.cameraDistanceCm+'cm FOV'+angle.effectiveHorizontalFovDeg+'° pitch'+angle.pitchDeg+'° roll'+angle.rollDeg+'° '+(inside && pose.requiresFixedPhoneMount?'supported timer mount':'arm'+angle.armReachAngleDeg+'°')+', '+angle.visibleBody+'/'+angle.visibleVehicle+', '+lens+', '+(angle.wheelMayAppear?'wheel edge allowed':'wheel off-frame')+', '+(angle.dashboardMayAppear?'dash edge allowed':'dash off-frame')+';',
-    'joints elbow'+elbow+'° knee'+knee+'° hip'+hip+'° lean'+lean+'°, '+support+'-supported; contact '+contacts+'; body load seat'+seatLoad+'% feet'+feetLoad+'% curb'+curbLoad+'%;',
-    'ground if seen: '+surface+', '+ground+', wheels'+place.wheelOrientationDeg+'°'+wall+';',
-    'finish if seen: dust'+finish.modeledDustCoveragePct+'% water'+finish.modeledWaterCoveragePct+'%, '+carZone+', '+finish.opticalReflection+', '+(finish.glassAffected?'glass affected':'no invented glazing marks')+';',
-    'light '+scene.kelvin+'K '+scene.cameraSide+' intensity'+intensity+', source '+scene.source+', shadows '+scene.shadows+', '+(inside?light.cabinReflection:light.exteriorReflection)+'.'
-  ].join(' ').replace(/\s+/g,' ').trim();
+    'medium-weight '+garment.material+' fabric with gravity-consistent drape: '+fabricFold+';',
+    'natural expression: '+selections.expressions.text+', original facial asymmetry and eye shapes maintained;',
+    'original hair density and hairline: '+hair.strandDirection+', natural gravity'+(hair.airflowOrContact==='none'?'':', '+hair.airflowOrContact)+';',
+    'generic smartphone front camera at reachable selfie arm length, slight handheld perspective and mild edge stretch; framing '+angle.visibleBody+', vehicle edge only if naturally visible;',
+    'anatomy: grounded seated or standing support and plausible joints, '+(inside?'body supported by the correct seat and backrest':'weight supported by grounded feet')+', no impossible contact;',
+    'ground if seen: '+place.groundMaterial+', '+ground+';',
+    'surface if seen: '+finish.contamination+', '+finish.opticalReflection+', realistic dust or water only where the selected condition permits;',
+    'light '+scene.kelvin+'K from '+scene.source+', shadows '+scene.shadows+', realistic subtle glass and bodywork reflections.'
+  ].join(' ').replace(/\\s+/g,' ').trim();
 }
