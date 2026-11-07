@@ -103,10 +103,10 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
   const vehicle = inside
     ? 'The parked pearl-white 2022 Range Rover Sport has black rims; exterior off-frame.'
     : vehicleVisible(choices, false)
-      ? 'The parked pearl-white 2022 Range Rover Sport retains sport package, black rims and grille, LED headlights; ' + choices.carConditions.text + ' only where visible.'
-      : 'Pearl-white 2022 Range Rover Sport with sport package and black rims stays parked off-frame.';
+      ? 'The parked pearl-white 2022 Range Rover Sport has sport package, black rims/grille and LED headlights; visible surfaces only.'
+      : 'Parked pearl-white 2022 Range Rover Sport, black sport rims, off-frame.';
   const cabin = inside
-    ? LHD_GEOMETRY + ' Visible only: beige leather seats/dashboard, black leather three-spoke wheel, dark glossy wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. No off-frame details.'
+    ? LHD_GEOMETRY + ' Visible: beige leather seats/dashboard, black leather three-spoke wheel, glossy wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. No off-frame details.'
     : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = capture.mounted
     ? reflection
@@ -114,7 +114,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
       : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie on a physically supported cabin mount, timer started by the subject; no invented hand-held photographer.'
     : reflection
       ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
-      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; phone stays outside its own view; natural tilt, no portrait mode or beauty processing.';
+      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at arm reach; phone is outside its own direct view; natural tilt, no beauty processing.';
   const lighting = deriveSceneLighting(choices);
   const physical = physicsStatement(choices, lighting, inside);
   const surface = inside ? '' : condition === 1
@@ -123,7 +123,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
   // Physical attributes for every selected option are mandatory. Only optional
   // atmosphere at a naturally visible frame edge can be omitted for brevity.
   const surroundings = !inside && !close ? backgroundProse(choices,variation) : '';
-  const realism = 'Photographic realism: one shared phone exposure, natural pores and folds; no beauty filters, wax, plastic skin, CGI, extra fingers, false reflections or exaggerated HDR.';
+  const realism = 'Photographic realism: shared phone exposure, natural pores and folds; no beauty filters, wax, plastic skin, CGI, extra fingers or exaggerated HDR.';
   const mandatory = [identity, vehicle, cabin, scene, clothing,
     'Lighting: ' + lightingProse(choices, inside) + ' ' + lighting.kelvin + 'K.',
     personalDetails, camera, framingProse(inside, close, capture.steeringHand),
