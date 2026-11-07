@@ -11,3 +11,11 @@
 .audit-report ul{margin:0;padding-inline-start:21px;font-size:12px;line-height:1.95;color:#465850}
 .audit-report li{margin-bottom:5px}
 .audit-report p{margin:0;color:#53645a;font-size:12px;line-height:1.95}
+
+
+/* Optional owner-only NVIDIA access; no persistent secret storage. */
+.owner-nvidia-panel{margin-top:20px;box-shadow:none;background:#fafcfb}
+.owner-nvidia-panel summary{cursor:pointer;color:#235b40;font-size:13px;font-weight:700;list-style:revert}
+.owner-nvidia-panel label{display:block;font-size:12px;font-weight:700;margin:10px 0 7px;color:#334d40}
+.owner-nvidia-panel .key-input{width:100%;box-sizing:border-box}
+.owner-nvidia-panel summary:focus-visible{outline:2px solid #5b9979;outline-offset:4px;border-radius:4px}
