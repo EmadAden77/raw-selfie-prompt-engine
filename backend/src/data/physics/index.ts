@@ -45,12 +45,12 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
   const finish=p.carConditions.physics,light=p.lighting.physics;
   const poseId=Number(selections.poses.id.split('-').at(-1));
   const fold=poseId===27?clothing.walkingFolds:
-    poseId<=15||[19,22,29].includes(poseId)?clothing.seatedFolds:clothing.standingFolds;
+    inside||[22,29].includes(poseId)?clothing.seatedFolds:clothing.standingFolds;
   const support=pose.mechanicallySafe?pose.loadSupport:'feet, no hood seating';
   const ground=place.curbHeightCm===15
-    ? 'curb 15cm gap 20–30cm, wheels straight'
+    ? 'curb 15 cm gap 20–30 cm, wheels straight'
     : place.parkingGeometry+', no fabricated curb';
-  const wall=place.nearestWallClearanceMinCm===null?'':', wall >=100cm if adjacent';
+  const wall=place.nearestWallClearanceMinCm===null?'':', wall ≥100cm if adjacent';
   const intensity=scene.covered?Math.min(light.relativeIntensity,0.35):light.relativeIntensity;
   const lens=angle.lensDistortion==='close-range perspective stretch'?'close lens stretch':'mild edge stretch';
   return [
