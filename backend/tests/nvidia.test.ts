@@ -47,7 +47,7 @@ test('NVIDIA is editor only: receives complete Rule Builder text with temperatur
       // Safe editorial-only adjustment: an article, not a factual change.
       return response(canonical.replace('The parked pearl-white', 'A parked pearl-white'));
     };
-    const result = await generatePrompt(request);
+    const result = await generatePrompt(request, true);
     assert.equal(result.source, 'server', result.reason);
     assert.match(result.prompt, /195 cm/);
     assert.match(result.prompt, /88 kg/);
@@ -79,7 +79,7 @@ test('no new fact is accepted, including plausible added light, curb, road or fa
     for (const text of forbidden) {
       assert.equal(validateEditorialRewrite(canonical, text), false, text.slice(-75));
       globalThis.fetch = async () => response(text);
-      const result = await generatePrompt(request);
+      const result = await generatePrompt(request, true);
       assert.equal(result.source, 'local');
       assert.equal(result.reason, 'unsafe_output');
       assert.equal(result.prompt, canonical, 'Unsafe NVIDIA output must return exact Rule Builder text');
@@ -97,20 +97,20 @@ test('editor cannot remove any canonical fact or add a new object even if existi
 test('NVIDIA down gracefully: no env key, invalid JSON-like text, 401, and 404 retry', async () => {
   try {
     delete process.env.NVIDIA_API_KEY;
-    let result = await generatePrompt(request);
+    let result = await generatePrompt(request, true);
     assert.equal(result.source, 'local');
     assert.equal(result.reason, 'no_key');
     assert.equal(result.prompt, canonical);
 
     process.env.NVIDIA_API_KEY = key;
     globalThis.fetch = async () => response('{"cameraGeometry":{"invented":"light"}}');
-    result = await generatePrompt(request);
+    result = await generatePrompt(request, true);
     assert.equal(result.source, 'local');
     assert.equal(result.reason, 'unsafe_output');
     assert.equal(result.prompt, canonical);
 
     globalThis.fetch = async () => new Response('', { status: 401 });
-    result = await generatePrompt(request);
+    result = await generatePrompt(request, true);
     assert.equal(result.reason, 'unauthorized');
 
     const calls: string[] = [];
@@ -119,7 +119,7 @@ test('NVIDIA down gracefully: no env key, invalid JSON-like text, 401, and 404 r
       calls.push(payload.model);
       return new Response('', { status: 404 });
     };
-    result = await generatePrompt(request);
+    result = await generatePrompt(request, true);
     assert.equal(result.reason, 'model_unavailable');
     assert.deepEqual(calls, ['deepseek-ai/deepseek-v4.1-flash', 'nvidia/nemotron-3.5-lightning-30b-a3b']);
   } finally { globalThis.fetch = originalFetch; }
@@ -139,8 +139,24 @@ test('identical fallback facts for exterior roadside, selected light and vehicle
   assert.match(local, /4000K/);
   try {
     globalThis.fetch = async () => response(local);
-    const edited = await generatePrompt({ selections: outside, variation: 1 });
+    const edited = await generatePrompt({ selections: outside, variation: 1 }, true);
     assert.equal(edited.source, 'server', edited.reason);
     assert.equal(edited.prompt, local);
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+test('NVIDIA stays owner-only even with a valid server API key', async () => {
+  process.env.NVIDIA_API_KEY = key;
+  let outbound = 0;
+  try {
+    globalThis.fetch = async () => {
+      outbound++;
+      throw new Error('NVIDIA must not be called for unauthenticated visitors');
+    };
+    const result = await generatePrompt(request);
+    assert.equal(result.source, 'local');
+    assert.equal(result.reason, 'owner_only');
+    assert.equal(result.prompt, canonical);
+    assert.equal(outbound, 0);
   } finally { globalThis.fetch = originalFetch; }
 });
