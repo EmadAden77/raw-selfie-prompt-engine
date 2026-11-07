@@ -7,7 +7,7 @@ import { isReflectionSelfie } from './photographic-auditor-v8.js';
 import { resolveCapture } from './scene-geometry.js';
 import { physicsStatement } from '../data/physics/index.js';
 
-export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right, wheel left, console right; no mirroring.';
+export const LHD_GEOMETRY = 'Saudi LHD: the person sits in the front-left driver seat directly behind the steering wheel, passenger front-right, wheel directly in front of driver, center console to driver right; never mirror or swap sides.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, asymmetry, age, skin tone, pores, eyes, brows, nose, lips, jaw, original hairline, density, curls and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique and proportions.';
@@ -27,7 +27,7 @@ function lightingProse(choices: ResolvedSelections, inside: boolean): string {
   const scene = deriveSceneLighting(choices);
   const light = numberOf(choices.lighting.id);
   const location = numberOf(choices.locations.id);
-  const mirror = isReflectionSelfie(choices.selfieAngles.id);
+  const mirror = isReflectionSelfie(choices.selfieAngles.id);\n  if ([1,7].includes(light)) return scene.source+'; '+scene.shadows+'; '+(inside?'the cabin remains naturally darker than the openings':'paint and glass reflections match the single source')+'.';
   if (light === 9)
     return 'Only the phone screen lights the face; weak illumination fades sharply below chest, leaving cabin dark, no fill.';
   if (light === 10)
@@ -111,11 +111,11 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
     : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = capture.mounted
     ? reflection
-      ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; supported timer mount aimed at a real mirror; one reflection, no hand-held viewpoint.'
-      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie on a physically supported cabin mount, timer started by the subject; no invented hand-held photographer.'
+      ? 'Camera: generic smartphone rear-camera reflection selfie; supported timer mount aimed at a real mirror, one coherent reflection.'
+      : 'Camera: generic smartphone front-camera selfie on a physically supported cabin mount, timer started by the subject; no external photographer.'
     : reflection
-      ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
-      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at arm reach; phone is outside its own direct view; natural tilt, no beauty processing.';
+      ? 'Camera: generic smartphone rear-camera reflection selfie; one reflected phone and grip, screen toward subject, lens facing mirror or glass; correct occlusion.'
+      : 'Camera: generic smartphone front-camera selfie at arm reach; phone is outside its own direct view; natural tilt, no beauty processing.';
   const lighting = deriveSceneLighting(choices);
   const physical = physicsStatement(choices, lighting, inside);
   const surface = inside ? '' : condition === 1
@@ -123,11 +123,11 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
       ? 'Visible droplets follow gravity.' : '';
   // Physical attributes for every selected option are mandatory. Only optional
   // atmosphere at a naturally visible frame edge can be omitted for brevity.
-  const surroundings = !inside && !close ? backgroundProse(choices,variation) : '';
+  const surroundings = !inside && !close ? backgroundProse(choices,variation) : '';\n  const thobe=/thobe/i.test(choices.clothing.text);\n  const garmentFraming=thobe?'Show as much upper thobe as genuine arm-reach framing allows without reducing the face or pulling back.':'Keep the primary crop on the face and shoulders.';
   const realism = 'Photographic realism: shared phone exposure, natural pores and folds; no beauty filters, wax, plastic skin, CGI, extra fingers or exaggerated HDR.';
   const mandatory = [identity, vehicle, cabin, scene, clothing,
     'Lighting: ' + lightingProse(choices, inside) + ' ' + lighting.kelvin + 'K.',
-    personalDetails, camera, framingProse(inside, close, capture.steeringHand),
+    personalDetails, camera, framingProse(inside, close, capture.steeringHand), garmentFraming,
     physical, realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
   const result = [mandatory,surface,surroundings].filter(Boolean).join(' ');
 
