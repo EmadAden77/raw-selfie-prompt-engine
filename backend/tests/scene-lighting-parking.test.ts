@@ -73,8 +73,8 @@ test('night villa uses one existing 3000K fixture with a consistent shadow direc
   const prompt=fallbackGenerator({selections,variation:1});
   assert.equal(scene.time,'night');
   assert.equal(scene.kelvin,3000);
-  assert.match(scene.source,/one existing villa gate wall light/);
-  assert.match(scene.shadows,/one set of shadows away from the actual fixture/);
+  assert.match(scene.source,/one existing warm wall light beside the villa gate/);
+  assert.match(scene.shadows,/deep night shadows extending away from the selected real fixture/);
   assert.match(scene.parking,/parallel to a real beige-gray concrete curb/);
   assert.match(scene.surface,/patched dusty Saudi asphalt/);
   assert.equal(validatePrompt(prompt,resolveSelections(selections)),true);
