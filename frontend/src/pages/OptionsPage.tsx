@@ -28,7 +28,7 @@ export default function OptionsPage({
         dir="ltr" autoComplete="off" spellCheck={false} maxLength={256}
         value={ownerToken} onChange={event=>onOwnerTokenChange(event.currentTarget.value)}
         placeholder="رمز المالك السري"/>
-      <p className="key-help">لا تضع مفتاح NVIDIA الذي يبدأ بـ nvapi- هنا. لا نحفظ هذا الرمز في المتصفح أو داخل البرومبت.</p>
+      <p className="key-help">لا تضع مفتاح NVIDIA الذي يبدأ بـ nvapi- هنا. يبقى رمز المالك مؤقتًا في ذاكرة الصفحة فقط، ولا يُحفظ في التخزين المحلي أو البرومبت.</p>
     </details>
   </section>;
 }
