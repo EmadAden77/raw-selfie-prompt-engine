@@ -42,7 +42,7 @@ export function resolveCapture(choices: ResolvedSelections): ResolvedCapture {
     (seat === 'driver' && poseNumber === 10) || !poseSafe;
   let pose = choices.poses.text;
   if (mismatch) {
-    pose = !poseSafe
+    pose = !poseSafe && seat==='outside'
       ? 'standing on grounded feet with only light hand contact on the hood, never seated on its sheet metal'
       : seat === 'outside'
       ? 'naturally posed at the selected exterior spot, with supported balance'
