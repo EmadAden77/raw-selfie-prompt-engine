@@ -36,6 +36,12 @@ try {
   const app=await readFile(new URL('../frontend/src/app/App.tsx',import.meta.url),'utf8');
   assert.doesNotMatch(app,/NvidiaKeyField|readKey/);
   assert.match(app,/localStorage\.removeItem\('raw-selfie-nvidia-key'\)/);
+  const accessApi=await readFile(new URL('../frontend/src/services/promptApi.ts',import.meta.url),'utf8');
+  assert.match(accessApi,/X-Nvidia-Owner-Token/);
+  assert.match(accessApi,/!ownerToken/);
+  assert.doesNotMatch(accessApi,/localStorage\.setItem|sessionStorage\.setItem/);
+  const ownerOptions=await readFile(new URL('../frontend/src/pages/OptionsPage.tsx',import.meta.url),'utf8');
+  assert.match(ownerOptions,/type="password"/);
   run('dev:backend');
   await waitFor('http://127.0.0.1:3001/health');
   run('dev:frontend');
