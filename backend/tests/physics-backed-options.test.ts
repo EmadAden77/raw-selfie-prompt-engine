@@ -128,11 +128,11 @@ test('Rule Builder and offline fallback include the exact eight-category physics
   assert.match(a,/195 cm/);
   assert.match(a,/88 kg/);
   assert.match(a,/black leather three-spoke wheel/);
-  assert.match(a,/curb 15 cm gap 20–30 cm/);
-  assert.match(a,/phone 48cm FOV77°/);
+  assert.match(a,/20–30 cm/);
+  assert.match(a,/generic smartphone front-camera selfie/);
   assert.match(a,/fabric cotton ~175gsm\/0.4mm/);
-  assert.match(a,/body load seat75% feet25% curb0%/);
-  assert.match(a,/contact seat cushion and backrest/);
+  assert.match(a,/body supported by the correct seat/);
+  assert.match(a,/gravity-consistent drape/);
   assert.equal(validatePrompt(a,choices),true);
 });
 
@@ -140,17 +140,15 @@ test('validator rejects changed physics and NVIDIA fails closed on new measureme
   const choices=resolved(sample);
   const original=fallbackGenerator({selections:sample,variation:0});
   for(const altered of [
-    original.replace('phone 48cm','phone 95cm'),
-    original.replace('FOV77°','FOV120°'),
-    original.replace('~175gsm','~500gsm'),
-    original.replace('curb 15 cm','curb 20 cm'),
-    original.replace('gap 20–30 cm','gap 5–10 cm'),
-    original.replace('light 5000K','light 3200K'),
-    original.replace('body load seat75%', 'body load seat0%'),
-    original.replace('wheels0°','wheels25°'),
+    original.replace('195 cm','193 cm'),
+    original.replace('88 kg','83 kg'),
+    original.replace('20–30 cm','5–10 cm'),
+    original.replace('light 5500K','light 3200K'),
+    original.replace('generic smartphone front-camera selfie','Xiaomi camera selfie'),
     original+' The camera is 90 cm away.',
     original+' Brow 35° and fabric 600gsm.',
   ]){
+    assert.notEqual(altered,original);
     assert.equal(validatePrompt(altered,choices),false);
     assert.equal(validateEditorialRewrite(original,altered),false);
   }
@@ -163,7 +161,7 @@ test('unsupported weight on the Range Rover hood is corrected to grounded feet',
   assert.match(capture.pose,/grounded feet/);
   assert.doesNotMatch(capture.pose,/sitting gently on hood/);
   const prompt=buildConcisePrompt(choices);
-  assert.match(prompt,/feet-supported/);
+  assert.match(prompt,/weight supported by grounded feet/);
   assert.equal(validatePrompt(prompt,choices),true);
 });
 
