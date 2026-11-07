@@ -10,14 +10,16 @@ const PREFIX = 'ChatGPT, using the reference image I uploaded, generate an image
 
 const validReasons = new Set([
   'no_key','invalid_key','unauthorized','forbidden','quota','rate_limited',
-  'model_unavailable','nvidia_timeout','nvidia_network','nvidia_unavailable',
+  'owner_only','model_unavailable','nvidia_timeout','nvidia_network','nvidia_unavailable',
   'request_rejected','empty_response','unsafe_output'
 ]);
 
-export async function generatePrompt(request:PromptRequest):Promise<PromptResponse> {
+export async function generatePrompt(request:PromptRequest,ownerToken=''):Promise<PromptResponse> {
   const fallback=(reason:PromptResponse['reason']):PromptResponse => ({
     prompt:buildLocalPrompt(request),source:'local',reason,audit:buildLocalAudit(request)
   });
+  // Public visitors use local Rule Builder directly, making no paid API calls.
+  if (!ownerToken) return fallback('owner_only');
   const base=(import.meta.env.VITE_API_BASE_URL as string|undefined)?.trim()??'';
   const endpoint=base?base.replace(/\/$/,'')+'/api/prompt':'/api/prompt';
   const controller=new AbortController();
@@ -26,7 +28,7 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
   try {
     const response=await fetch(endpoint,{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','X-Nvidia-Owner-Token':ownerToken},
       body:JSON.stringify(request),
       signal:controller.signal,
       cache:'no-store',
