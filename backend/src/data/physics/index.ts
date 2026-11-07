@@ -50,6 +50,7 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
   const vehicleGround=place.curbHeightCm===15?'15 cm curb, 20–30 cm clearance, straight wheels':
     'straight wheels, parked on the existing ground without inventing a curb';
   const contact=inside?'the real seat cushion and backrest':'grounded feet with realistic weight distribution';
+  const reflection=[4,29].includes(Number(selections.selfieAngles.id.split('-').at(-1)));
   const visualBody=inside?'face and shoulders dominate, only natural torso portions visible':'face and upper body dominate at achievable arm reach';
   const surface=finish.modeledDustCoveragePct===0?'original clean paint':
     finish.accumulationZones+', '+finish.contamination;
@@ -58,7 +59,7 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
     'fabric '+clothing.material+' with natural medium-weight gravity folds, '+clothing.gravityDrape+', '+folds+';',
     'face '+face.activeMuscles+'; original asymmetry and expression, without invented facial measurements;',
     'hair '+hair.strandDirection+', original density, hairline, curls and any natural gaps;',
-    'generic smartphone front camera at reachable selfie arm length, '+visualBody+', natural minor lens distortion; no invented specifications;',
+    (reflection?'generic smartphone rear camera for one coherent reflection':'generic smartphone front camera at reachable selfie arm length')+', '+visualBody+', natural minor lens distortion; no invented specifications;',
     'pose '+pose.contactPoints+', '+contact+', plausible joints and clothing contact;',
     'parking '+place.sceneProfile.parking+', '+vehicleGround+'; ground '+place.sceneProfile.ground+';',
     'background when visible '+place.sceneProfile.background+', without inventing landmarks or widening the crop;',
