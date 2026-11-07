@@ -1,0 +1,24 @@
+{
+  "id": "location-46",
+  "label": "ورشة",
+  "setting": "outside a workshop",
+  "parking": "Park entirely in a clearly marked accessible parking space with straight wheels and usable adjacent clearance.",
+  "ground": "Scuffed concrete with tire marks and subdued reflectivity.",
+  "background": "Ordinary physical context of outside a workshop; nearby pedestrians, edges of parked cars and local surfaces only when actually in frame.",
+  "automaticAngle": "driver",
+  "angleReason": "Face-dominant driver-front-left selfie with wheel directly in front and console on the right.",
+  "preferredTime": "night",
+  "goldenPeriod": "after sunset when existing fixtures operate",
+  "day": {
+    "source": "Indirect real 5500K daylight through the entrance; no direct overhead sunshine indoors.",
+    "kelvin": 5500,
+    "shadows": "One direction away from available sun, softer where physically shaded.",
+    "reflections": "Restraint in pearl-white bodywork and glass reflections."
+  },
+  "night": {
+    "source": "A single existing ceiling fixture, 4000K, with shadow below the car and person.",
+    "kelvin": 4000,
+    "shadows": "Away from the existing dominant source; dim without strong fixture.",
+    "reflections": "Weak localized reflections from the established scene lighting."
+  }
+}
