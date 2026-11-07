@@ -51,8 +51,8 @@ export function deriveSceneLighting(s:ResolvedSelections):SceneLighting {
   const weather=condition===5?'rain-damp air and wet reflective surfaces':
     condition===6||desert?'light suspended desert dust and dry muted air':
     light===5?'overcast diffuse air':condition===3?'light road dust': 'ordinary clear Saudi air';
-  const surface=ground.groundMaterial;
-  const parking=ground.parkingGeometry==='marked-bay'||covered
+  let surface=ground.groundMaterial;
+  let parking=ground.parkingGeometry==='marked-bay'||covered
     ? 'properly within a legal marked parking or service bay, never blocking a pump or access lane'
     : desert?'safely parallel to the true road edge on a firm shoulder; no invented curb'
     : 'parked parallel to a 15 cm beige-gray concrete curb, straight wheels 20–30 cm from it in a legal roadside space';
