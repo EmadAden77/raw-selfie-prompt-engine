@@ -136,7 +136,7 @@ test('identical fallback facts for exterior roadside, selected light and vehicle
   assert.match(local, /88 kg/);
   assert.match(local, /20–30 cm/);
   assert.match(local, /15 cm/);
-  assert.match(local, /4000K/);
+  assert.match(local, /5500K/);
   try {
     globalThis.fetch = async () => response(local);
     const edited = await generatePrompt({ selections: outside, variation: 1 });
