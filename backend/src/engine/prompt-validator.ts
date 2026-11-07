@@ -103,7 +103,7 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(/\b(?:the car|the suv|the vehicle|range rover)\s+(?:is\s+)?(?:moving|driving|speeding|racing)\b/i.test(prompt))return false;
   if(/\b(?:steering wheel is\s+(?:beige|tan|cream)|beige leather steering wheel)\b/i.test(prompt))return false;
   if(/\b(?:he|person|subject)\s+weighs\s+(?!88\b)\d+\s*kg\b/i.test(prompt))return false;
-  if(/\b(?:cinematic lighting illuminates|opposing shadows fall|two dominant light sources)\b/i.test(prompt))return false;
+  if(/\b(?:cinematic lighting illuminates|opposing shadows fall|two dominant light sources|a second studio light|an additional light|another studio light)\b/i.test(prompt))return false;
   if(/\b(?:a|the)\s+(?:driving|moving|speeding)\s+(?:pearl-white\s+)?(?:2022\s+)?Range Rover Sport\b/i.test(prompt))return false;
   if(/\b(?:driving|moving|speeding)\s+(?:pearl-white\s+)?2022\s+Range Rover Sport\b/i.test(prompt))return false;
   if(/\b(?:red|blue|green|gray|grey)\s+(?:leather\s+)?(?:front\s+)?seats\b/i.test(prompt))return false;
