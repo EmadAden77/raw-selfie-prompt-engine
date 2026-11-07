@@ -1,0 +1,24 @@
+{
+  "id": "location-56",
+  "label": "خيمة بر",
+  "setting": "beside a camping tent",
+  "parking": "Stationary on level firm sand beside the tent, wheels straight, with no invented curb.",
+  "ground": "Dry compacted sand with localized tire tracks and no fabricated paving.",
+  "background": "The actual camping tent, nearby sand and optional distant activity only inside naturally composed frame.",
+  "automaticAngle": "exterior",
+  "angleReason": "Use a physically reachable front-camera selfie, placing the reference face first and keeping the real vehicle parking arrangement intact.",
+  "preferredTime": "day",
+  "goldenPeriod": "soft morning or late-afternoon daylight",
+  "day": {
+    "source": "Natural 5500K daylight from single sun/sky, with real dust and shade from actual structures only.",
+    "kelvin": 5500,
+    "shadows": "Away from actual daylight with small consistent contact shadows.",
+    "reflections": "Natural subdued glass and bodywork reflection."
+  },
+  "night": {
+    "source": "Dim natural sky only; vehicle headlights may illuminate nearby sand if actually enabled; no invented pole.",
+    "kelvin": 5500,
+    "shadows": "Only source-aligned shadows or weak dim sky contrast.",
+    "reflections": "Weak real reflections without studio fill."
+  }
+}
