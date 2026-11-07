@@ -63,9 +63,23 @@ export function resolveSelections(selections:Selections):ResolvedSelections {
       ? (() => {
           const profile=getPlaceProfile(selections.locations);
           const pose=Number(selections.poses.split('-').at(-1));
-          const seated=pose>=1 && pose<=15;
-          const angle=seated?'angle-1':profile.automaticAngle==='exterior'?'angle-16':'angle-16';
-          return angle;
+          const night=Number(selections.lighting.split('-').at(-1))>=7;
+          const outfit=optionCatalogue.clothing.find(x=>x.id===selections.clothing)?.text ?? '';
+          const thobe=/thobe/i.test(outfit);
+          // Pose compatibility wins over the preferred location angle.
+          // This camera choice never moves the driver to the right-hand seat.
+          if(pose>=1&&pose<=15){
+            if(pose===10) return 'angle-6'; // front-right passenger, only if selected pose requires it
+            if(night&&profile.automaticAngle==='driver'&&pose!==8) return 'angle-12'; // driver, near actual side window
+            return 'angle-1'; // front-left driver, behind steering wheel
+          }
+          if(pose===17) return 'angle-19'; // standing by vehicle front
+          if(pose===18) return 'angle-17'; // standing with light support on hood
+          if(pose===25) return 'angle-26'; // standing at rear hatch
+          if(pose===26) return 'angle-27'; // standing near side mirror
+          if(pose===16&&profile.automaticAngle==='exterior'&&!thobe&&!night)
+            return 'angle-27'; // subtle closer face/shoulder angle beside driver door
+          return 'angle-16'; // standing by driver door, no wider frame
         })()
       : selections[key];
     const entry=optionCatalogue[key].find(x=>x.id===requested);
