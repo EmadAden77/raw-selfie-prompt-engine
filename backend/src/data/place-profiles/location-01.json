@@ -1,0 +1,24 @@
+{
+  "id": "location-1",
+  "label": "جانب طريق صحراوي",
+  "setting": "on the side of a desert road",
+  "parking": "Stationary on a level firm sandy roadside pull-off, away from traffic, aligned with the road edge; never invent a curb.",
+  "ground": "Firm dusty sand or visibly weathered desert road margin; matte diffuse reflection and light localized dust.",
+  "background": "Distant ordinary roadside traffic, tire marks and dusty horizon only if actually inside the selfie framing.",
+  "automaticAngle": "exterior",
+  "angleReason": "A standing arm-length selfie by the legally parked vehicle retains face dominance without widening for the car.",
+  "preferredTime": "day",
+  "goldenPeriod": "soft morning or late-afternoon natural light",
+  "day": {
+    "source": "Single natural sun or diffuse sky, 5500K, shadows oriented consistently away from its actual position; natural muted paint and glass reflections.",
+    "kelvin": 5500,
+    "shadows": "Away from the physically present daylight source; natural contact shade.",
+    "reflections": "Limited realistic daylight reflections on pearl-white paint and automotive glass."
+  },
+  "night": {
+    "source": "Dim natural night sky; only headlights already established in the selected scene when physically visible, no fabricated streetlight.",
+    "kelvin": 5500,
+    "shadows": "Away from the one established dominant night source, or subdued when only sky is present.",
+    "reflections": "Localized weak highlights on pearl-white paint and glass, no studio fill."
+  }
+}
