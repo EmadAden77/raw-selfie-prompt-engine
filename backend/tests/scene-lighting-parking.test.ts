@@ -75,7 +75,7 @@ test('night villa uses one existing 3000K fixture with a consistent shadow direc
   assert.equal(scene.kelvin,3000);
   assert.match(scene.source,/one existing warm villa courtyard or wall fixture/);
   assert.match(scene.shadows,/one set of deep night shadows/);
-  assert.match(scene.parking,/parallel to the curb/);
+  assert.match(scene.parking,/parallel to a 15 cm beige-gray concrete curb/);
   assert.match(scene.surface,/patched Saudi asphalt/);
   assert.equal(validatePrompt(prompt,resolveSelections(selections)),true);
 });
