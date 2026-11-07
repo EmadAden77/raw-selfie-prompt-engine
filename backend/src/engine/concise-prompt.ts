@@ -27,7 +27,8 @@ function lightingProse(choices: ResolvedSelections, inside: boolean): string {
   const scene = deriveSceneLighting(choices);
   const light = numberOf(choices.lighting.id);
   const location = numberOf(choices.locations.id);
-  const mirror = isReflectionSelfie(choices.selfieAngles.id);\n  if ([1,7].includes(light)) return scene.source+'; '+scene.shadows+'; '+(inside?'the cabin remains naturally darker than the openings':'paint and glass reflections match the single source')+'.';
+  const mirror = isReflectionSelfie(choices.selfieAngles.id);
+  if ([1,7].includes(light)) return scene.source+'; '+scene.shadows+'; '+(inside?'the cabin remains naturally darker than the openings':'paint and glass reflections match the single source')+'.';
   if (light === 9)
     return 'Only the phone screen lights the face; weak illumination fades sharply below chest, leaving cabin dark, no fill.';
   if (light === 10)
