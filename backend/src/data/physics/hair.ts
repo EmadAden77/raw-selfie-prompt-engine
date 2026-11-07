@@ -16,4 +16,4 @@ export const hairPhysics=fixedPhysicsOptions('hairstyles',rows.map(([strandDirec
  contactPoints:airflowOrContact==='none'?'no extra external contact':airflowOrContact+' only when selected',
  motion:'natural limited rearrangement of existing strands; no new hair',
  gravityActsDownward:true,referenceLengthOnly:true,referenceTextureOnly:true,densityUnchanged:true
-})),p=>p.strandDirection+', '+p.contactPoints+'; original density and hairline);
+})),p=>p.strandDirection+', '+p.contactPoints+'; original density and hairline');
