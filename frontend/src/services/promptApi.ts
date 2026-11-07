@@ -2,6 +2,9 @@ import type { PromptRequest, PromptResponse } from '../types/prompt';
 import { cabinMayBeVisible } from '../data/fixedRules';
 import { buildLocalPrompt } from './localConcisePrompt';
 import { buildLocalAudit } from './localAudit';
+import { resolveSelections } from '../../../backend/src/data/option-mappings.js';
+import { deriveSceneLighting } from '../../../backend/src/engine/rule-builder.js';
+import { physicsStatement } from '../../../backend/src/data/physics/index.js';
 export { buildLocalPrompt } from './localConcisePrompt';
 const PREFIX = 'ChatGPT, using the reference image I uploaded, generate an image of the exact same person';
 
@@ -33,6 +36,14 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
     const data:unknown=await response.json();
     if (!data||typeof data!=='object'||!('prompt' in data)||typeof data.prompt!=='string')
       return fallback('invalid_response');
+    // A v10 backend can return valid identity and car facts while omitting all
+    // v11 physical option metadata. Never display that stale output as v11.
+    const choices = resolveSelections(request.selections);
+    const expectedPhysics = physicsStatement(
+      choices,deriveSceneLighting(choices),
+      cabinMayBeVisible(request.selections.selfieAngles,request.selections.poses)
+    );
+    if (!data.prompt.includes(expectedPhysics)) return fallback('invalid_response');
     if (!data.prompt.startsWith(PREFIX)||/[\u0600-\u06ff]/.test(data.prompt)||data.prompt.length<400||
         !/sole primary subject|sole primary/i.test(data.prompt)||
         !/195 cm/.test(data.prompt)||!/88 kg/.test(data.prompt)||!/lean athletic/.test(data.prompt)||
