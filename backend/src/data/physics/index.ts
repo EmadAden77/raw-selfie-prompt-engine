@@ -64,5 +64,5 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
     'background when visible '+place.sceneProfile.background+', without inventing landmarks or widening the crop;',
     'finish where visible '+surface+', '+finish.opticalReflection+';',
     'lighting '+scene.kelvin+'K, '+scene.source+', '+scene.shadows+'; shared physically consistent exposure and reflections.'
-  ].join(' ').replace(/\\s+/g,' ').trim();
+  ].join(' ').replace(/\s+/g,' ').trim();
 }
