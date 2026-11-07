@@ -1,15 +1,13 @@
-import { nvidiaScenePlanPrompt } from '../prompts/nvidia-scene-plan-prompt.js';
-import { scenePlanSchema, type ScenePlan } from '../engine/scene-planner.js';
 import { nvidiaConfig } from '../config/nvidia.config.js';
 import { nvidiaSystemPrompt } from '../prompts/nvidia-system-prompt.js';
 import type { FallbackReason } from '../types/engine.types.js';
 
 interface NvidiaResponse {
-  choices?: Array<{message?: {content?: string | null}; finish_reason?: string | null}>;
+  choices?: Array<{ message?: { content?: string | null }; finish_reason?: string | null }>;
 }
 export class NvidiaFailure extends Error {
   constructor(public readonly reason: FallbackReason) {
-    super('NVIDIA request unavailable');
+    super('NVIDIA editing unavailable');
     this.name = 'NvidiaFailure';
   }
 }
@@ -25,138 +23,61 @@ function httpReason(status: number): FallbackReason {
 
 const FAST_NVIDIA_MODEL = 'nvidia/nemotron-3.5-lightning-30b-a3b';
 
-async function requestExpansion(
-  url: string, model: string, apiKey: string,
-  details: string, timeoutMs: number
+async function requestEdit(
+  url: string, model: string, key: string, canonical: string, timeoutMs: number
 ): Promise<string> {
   let response: Response;
   try {
     response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: 'Bearer ' + apiKey,
+        Authorization: 'Bearer ' + key,
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
       signal: AbortSignal.timeout(timeoutMs),
       body: JSON.stringify({
         model,
-        temperature: 1,
-        top_p: 0.95,
-        max_tokens: 256,
+        temperature: 0.25,
+        top_p: 0.8,
+        max_tokens: 2000,
         stream: false,
-        // Supported on NVIDIA Nemotron; DeepSeek may ignore this optional field.
-        chat_template_kwargs: {enable_thinking: false},
+        chat_template_kwargs: { enable_thinking: false },
         messages: [
-          {role: 'system', content: nvidiaSystemPrompt},
-          {role: 'user', content: details}
+          { role: 'system', content: nvidiaSystemPrompt },
+          { role: 'user', content: canonical }
         ]
       })
     });
   } catch (error) {
-    if (error instanceof Error && ['TimeoutError', 'AbortError'].includes(error.name)) {
+    if (error instanceof Error && ['TimeoutError', 'AbortError'].includes(error.name))
       throw new NvidiaFailure('nvidia_timeout');
-    }
     throw new NvidiaFailure('nvidia_network');
   }
-  // Never include provider errors or credentials in logs or client-facing text.
   if (!response.ok) throw new NvidiaFailure(httpReason(response.status));
-  let data: NvidiaResponse;
-  try { data = await response.json() as NvidiaResponse; }
+  let payload: NvidiaResponse;
+  try { payload = await response.json() as NvidiaResponse; }
   catch { throw new NvidiaFailure('empty_response'); }
-  if (data.choices?.[0]?.finish_reason === 'length') throw new NvidiaFailure('empty_response');
-  const output = data.choices?.[0]?.message?.content?.trim();
-  if (!output) throw new NvidiaFailure('empty_response');
-  return output;
+  const choice = payload.choices?.[0];
+  if (choice?.finish_reason === 'length') throw new NvidiaFailure('empty_response');
+  const result = choice?.message?.content?.trim();
+  if (!result) throw new NvidiaFailure('empty_response');
+  return result;
 }
 
-export async function expandWithNvidia(
-  _basePrompt: string, creativeExpansion: string, apiKey: string
-): Promise<string> {
-  const {url, model, timeoutMs} = nvidiaConfig();
-  if (!apiKey) throw new NvidiaFailure('no_key');
-  // The server already owns all immutable identity/car constraints. Sending the
-  // full assembled prompt to NVIDIA increases latency for no benefit.
-  const detail = 'Add one original 35-70 word paragraph in English, limited to physically plausible distant background, natural light and smartphone camera texture. Existing scene detail: ' +
-    creativeExpansion.slice(0, 700) +
-    '. Preserve every fixed detail; never add a new person identity, car, outfit or light source.';
-  const primaryBudget = Math.min(9000, timeoutMs);
+// Receives the fully assembled text. NVIDIA never sees a partial scene plan or
+// reference image, and the caller verifies each fact against this exact text.
+export async function editWithNvidia(canonical: string, key: string): Promise<string> {
+  const { url, model, timeoutMs } = nvidiaConfig();
+  if (!key) throw new NvidiaFailure('no_key');
+  const firstBudget = Math.min(11000, timeoutMs);
   try {
-    return await requestExpansion(url, model, apiKey, detail, primaryBudget);
+    return await requestEdit(url, model, key, canonical, firstBudget);
   } catch (error) {
     if (!(error instanceof NvidiaFailure)) throw error;
-    // Do not retry invalid/revoked keys or credit/rate-limit errors.
-    const retryable: FallbackReason[] = [
-      'nvidia_timeout', 'model_unavailable', 'nvidia_unavailable',
-      'nvidia_network', 'empty_response', 'request_rejected'
-    ];
-    if (!retryable.includes(error.reason) || model === FAST_NVIDIA_MODEL ||
-        timeoutMs <= primaryBudget) throw error;
-    // Fast NVIDIA fallback, not the local rule engine, within the same request.
-    return await requestExpansion(
-      url, FAST_NVIDIA_MODEL, apiKey, detail,
-      Math.min(19000, timeoutMs - primaryBudget)
-    );
-  }
-}
-
-
-// The new planner is a separate one-call JSON path. No image data or user key
-// enters logs. The older text expansion export remains for compatibility.
-function plannerTemperature():number {
-  const raw=Number(process.env.NVIDIA_PLAN_TEMPERATURE??'0.3');
-  return Number.isFinite(raw)&&raw>=0&&raw<=1?raw:0.3;
-}
-async function requestPlan(
-  url:string,model:string,key:string,input:string,timeoutMs:number
-):Promise<ScenePlan>{
-  let response:Response;
-  try{
-    response=await fetch(url,{
-      method:'POST',
-      headers:{Authorization:'Bearer '+key,'Content-Type':'application/json',Accept:'application/json'},
-      signal:AbortSignal.timeout(timeoutMs),
-      body:JSON.stringify({
-        model,temperature:plannerTemperature(),top_p:0.9,max_tokens:1200,
-        stream:false,chat_template_kwargs:{enable_thinking:false},
-        messages:[
-          {role:'system',content:nvidiaScenePlanPrompt},
-          {role:'user',content:input}
-        ]
-      })
-    });
-  }catch(error){
-    if(error instanceof Error&&['TimeoutError','AbortError'].includes(error.name))
-      throw new NvidiaFailure('nvidia_timeout');
-    throw new NvidiaFailure('nvidia_network');
-  }
-  if(!response.ok)throw new NvidiaFailure(httpReason(response.status));
-  let payload:NvidiaResponse;
-  try{payload=await response.json() as NvidiaResponse;}
-  catch{throw new NvidiaFailure('empty_response');}
-  const raw=payload.choices?.[0]?.message?.content?.trim();
-  if(!raw||payload.choices?.[0]?.finish_reason==='length')throw new NvidiaFailure('empty_response');
-  // Plain JSON is used deliberately; provider-wide JSON schema enforcement is
-  // not assumed supported for this specific model.
-  const clean=raw.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'');
-  let value:unknown;
-  try{value=JSON.parse(clean);}
-  catch{throw new NvidiaFailure('unsafe_output');}
-  const parsed=scenePlanSchema.safeParse(value);
-  if(!parsed.success)throw new NvidiaFailure('unsafe_output');
-  return parsed.data;
-}
-
-export async function planWithNvidia(input:string,key:string):Promise<ScenePlan>{
-  const {url,model,timeoutMs}=nvidiaConfig();
-  if(!key)throw new NvidiaFailure('no_key');
-  const firstBudget=Math.min(11000,timeoutMs);
-  try{
-    return await requestPlan(url,model,key,input,firstBudget);
-  }catch(error){
-    if(!(error instanceof NvidiaFailure))throw error;
-    const retryable:FallbackReason[]=['nvidia_timeout','model_unavailable','nvidia_unavailable','nvidia_network'];
-    if(!retryable.includes(error.reason)||model===FAST_NVIDIA_MODEL||timeoutMs<=firstBudget)throw error;
-    return requestPlan(url,FAST_NVIDIA_MODEL,key,input,Math.min(16000,timeoutMs-firstBudget));
+    const retryable: FallbackReason[] = ['nvidia_timeout', 'model_unavailable', 'nvidia_unavailable', 'nvidia_network'];
+    if (!retryable.includes(error.reason) || model === FAST_NVIDIA_MODEL || timeoutMs <= firstBudget)
+      throw error;
+    return requestEdit(url, FAST_NVIDIA_MODEL, key, canonical, Math.min(16000, timeoutMs - firstBudget));
   }
 }
