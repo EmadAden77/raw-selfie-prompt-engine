@@ -1,3 +1,4 @@
+import { getPlaceProfile } from './place-profiles/index.js';
 import type { CategoryKey, OptionCatalogue, ResolvedSelections, Selections, SelectedOption } from '../types/engine.types.js';
 
 // IDs exactly match the frontend options. All values remain internal English prompts.
@@ -58,7 +59,16 @@ export const optionCatalogue:OptionCatalogue={
 export function resolveSelections(selections:Selections):ResolvedSelections {
   const result={} as ResolvedSelections;
   for(const key of Object.keys(optionCatalogue) as CategoryKey[]){
-    const entry=optionCatalogue[key].find(x=>x.id===selections[key]);
+    const requested = key === 'selfieAngles' && selections.selfieAngles === 'angle-auto'
+      ? (() => {
+          const profile=getPlaceProfile(selections.locations);
+          const pose=Number(selections.poses.split('-').at(-1));
+          const seated=pose>=1 && pose<=15;
+          const angle=seated?'angle-1':profile.automaticAngle==='exterior'?'angle-16':'angle-16';
+          return angle;
+        })()
+      : selections[key];
+    const entry=optionCatalogue[key].find(x=>x.id===requested);
     if(!entry) throw new Error('Invalid option: '+key);
     result[key]=entry;
   }
