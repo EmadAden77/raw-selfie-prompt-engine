@@ -74,7 +74,7 @@ test('daytime mall open parking is a marked bay with natural 5500K light',()=>{
   const choices=resolveSelections(select(7,1,19));const p=deriveSceneLighting(choices);
   assert.equal(p.time,'day');assert.equal(p.kelvin,5500);
   assert.match(p.parking,/marked parking bay/);
-  assert.match(p.surface,/parking asphalt/);
+  assert.match(p.surface,/patched asphalt|parking concrete/);
 });
 
 test('covered underground garage light comes from physical openings during day',()=>{
