@@ -21,16 +21,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "day",
     "goldenTime": "late afternoon before sunset",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "grounded shadows away from the unobstructed sun",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "actually illuminated vehicle headlights only when switched on; otherwise dim sky",
+      "source": "dim natural night sky alone, without an invented streetlamp",
       "kelvin": 4000,
-      "shadows": "deep darkness and only source-aligned local shadows",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "deep low-contrast darkness, only faint grounded contact shadowing",
+      "reflections": "very faint sky reflections on paint and glass, no illuminated empty background"
     }
   },
   {
@@ -44,16 +44,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "day",
     "goldenTime": "late afternoon before sunset",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "grounded shadows away from the unobstructed sun",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "actually illuminated vehicle headlights only when switched on; otherwise dim sky",
+      "source": "dim natural night sky alone, without an invented streetlamp",
       "kelvin": 4000,
-      "shadows": "deep darkness and only source-aligned local shadows",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "deep low-contrast darkness, only faint grounded contact shadowing",
+      "reflections": "very faint sky reflections on paint and glass, no illuminated empty background"
     }
   },
   {
@@ -67,16 +67,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon before sunset",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "grounded shadows away from the unobstructed sun",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "actually illuminated vehicle headlights only when switched on; otherwise dim sky",
+      "source": "dim natural night sky alone, without an invented streetlamp",
       "kelvin": 4000,
-      "shadows": "deep darkness and only source-aligned local shadows",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "deep low-contrast darkness, only faint grounded contact shadowing",
+      "reflections": "very faint sky reflections on paint and glass, no illuminated empty background"
     }
   },
   {
@@ -90,16 +90,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon before sunset",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "grounded shadows away from the unobstructed sun",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "actually illuminated vehicle headlights only when switched on; otherwise dim sky",
+      "source": "dim natural night sky alone, without an invented streetlamp",
       "kelvin": 4000,
-      "shadows": "deep darkness and only source-aligned local shadows",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "deep low-contrast darkness, only faint grounded contact shadowing",
+      "reflections": "very faint sky reflections on paint and glass, no illuminated empty background"
     }
   },
   {
@@ -113,16 +113,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "day",
     "goldenTime": "late afternoon before sunset",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "grounded shadows away from the unobstructed sun",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "actually illuminated vehicle headlights only when switched on; otherwise dim sky",
+      "source": "dim natural night sky alone, without an invented streetlamp",
       "kelvin": 4000,
-      "shadows": "deep darkness and only source-aligned local shadows",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "deep low-contrast darkness, only faint grounded contact shadowing",
+      "reflections": "very faint sky reflections on paint and glass, no illuminated empty background"
     }
   },
   {
@@ -136,16 +136,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing shopping-center entrance facade lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -159,16 +159,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing parking-lot pole fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -182,16 +182,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "soft daylight near the opening or early evening under existing canopy lights",
     "day": {
-      "source": "daylight entering through actual openings, or an existing ceiling fixture if daylight cannot reach",
-      "kelvin": 4000,
-      "shadows": "soft contact shadows in actual shade, no direct sun through opaque roof",
-      "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
+      "source": "directional diffuse skylight entering through the real parking-ramp opening",
+      "kelvin": 5500,
+      "shadows": "soft contact shadows aligned with daylight from the actual opening, never direct sun through the opaque roof",
+      "reflections": "reflections from the selected opening or ceiling lamp only, muted on pearl-white paint and glass"
     },
     "night": {
-      "source": "one existing overhead canopy or garage fixture",
+      "source": "one existing ceiling fixture over the parking ramp",
       "kelvin": 4000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one coherent set of downward and rearward shadows cast by the single ceiling fixture",
+      "reflections": "one restricted overhead highlight on real vehicle surfaces, with dark unlit surroundings"
     }
   },
   {
@@ -205,16 +205,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing coffee-kiosk service hatch light",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -228,16 +228,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "soft daylight near the opening or early evening under existing canopy lights",
     "day": {
-      "source": "daylight entering through actual openings, or an existing ceiling fixture if daylight cannot reach",
-      "kelvin": 4000,
-      "shadows": "soft contact shadows in actual shade, no direct sun through opaque roof",
-      "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
+      "source": "diffuse daylight entering through the open side of the petrol canopy",
+      "kelvin": 5500,
+      "shadows": "soft contact shadows aligned with daylight from the actual opening, never direct sun through the opaque roof",
+      "reflections": "reflections from the selected opening or ceiling lamp only, muted on pearl-white paint and glass"
     },
     "night": {
-      "source": "one existing overhead canopy or garage fixture",
+      "source": "one existing petrol-station canopy luminaire above the driver's side",
       "kelvin": 4000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one coherent set of downward and rearward shadows cast by the single ceiling fixture",
+      "reflections": "one restricted overhead highlight on real vehicle surfaces, with dark unlit surroundings"
     }
   },
   {
@@ -251,16 +251,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "soft daylight near the opening or early evening under existing canopy lights",
     "day": {
-      "source": "daylight entering through actual openings, or an existing ceiling fixture if daylight cannot reach",
-      "kelvin": 4000,
-      "shadows": "soft contact shadows in actual shade, no direct sun through opaque roof",
-      "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
+      "source": "diffuse daylight entering through the open side of the petrol pump canopy",
+      "kelvin": 5500,
+      "shadows": "soft contact shadows aligned with daylight from the actual opening, never direct sun through the opaque roof",
+      "reflections": "reflections from the selected opening or ceiling lamp only, muted on pearl-white paint and glass"
     },
     "night": {
-      "source": "one existing overhead canopy or garage fixture",
+      "source": "one existing petrol-pump canopy luminaire above the driver's side",
       "kelvin": 4000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one coherent set of downward and rearward shadows cast by the single ceiling fixture",
+      "reflections": "one restricted overhead highlight on real vehicle surfaces, with dark unlit surroundings"
     }
   },
   {
@@ -274,16 +274,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "soft daylight near the opening or early evening under existing canopy lights",
     "day": {
-      "source": "daylight entering through actual openings, or an existing ceiling fixture if daylight cannot reach",
+      "source": "one existing car-wash bay ceiling fixture",
       "kelvin": 4000,
-      "shadows": "soft contact shadows in actual shade, no direct sun through opaque roof",
-      "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
+      "shadows": "contact shadows directly below the single ceiling lamp",
+      "reflections": "reflections from the selected opening or ceiling lamp only, muted on pearl-white paint and glass"
     },
     "night": {
-      "source": "one existing overhead canopy or garage fixture",
+      "source": "one existing car-wash bay ceiling lamp",
       "kelvin": 4000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one coherent set of downward and rearward shadows cast by the single ceiling fixture",
+      "reflections": "one restricted overhead highlight on real vehicle surfaces, with dark unlit surroundings"
     }
   },
   {
@@ -297,16 +297,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "soft daylight near the opening or early evening under existing canopy lights",
     "day": {
-      "source": "daylight entering through actual openings, or an existing ceiling fixture if daylight cannot reach",
-      "kelvin": 4000,
-      "shadows": "soft contact shadows in actual shade, no direct sun through opaque roof",
-      "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
+      "source": "diffuse daylight entering through the open side of the charging canopy",
+      "kelvin": 5500,
+      "shadows": "soft contact shadows aligned with daylight from the actual opening, never direct sun through the opaque roof",
+      "reflections": "reflections from the selected opening or ceiling lamp only, muted on pearl-white paint and glass"
     },
     "night": {
-      "source": "one existing overhead canopy or garage fixture",
+      "source": "one existing charging-bay canopy luminaire",
       "kelvin": 4000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one coherent set of downward and rearward shadows cast by the single ceiling fixture",
+      "reflections": "one restricted overhead highlight on real vehicle surfaces, with dark unlit surroundings"
     }
   },
   {
@@ -320,16 +320,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing highway-service-area wall lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -343,16 +343,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing villa gate wall light",
+      "source": "one existing villa gate wall fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -366,16 +366,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing villa gate wall light",
+      "source": "one existing wall fixture by the villa gate",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -389,16 +389,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing villa gate wall light",
+      "source": "one existing warm wall light beside the villa gate",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -412,16 +412,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing apartment entrance wall lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -435,16 +435,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing residential entrance lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -458,16 +458,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing house gate wall lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -481,16 +481,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing supermarket entrance lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -504,16 +504,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing grocery-front wall lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -527,16 +527,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing bakery doorway lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -550,16 +550,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing market canopy luminaire",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -573,16 +573,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing butcher-shop entrance lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -596,16 +596,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing flower-shop front lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -619,16 +619,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing pharmacy frontage light",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -642,16 +642,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing open-parking pole light",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -665,16 +665,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "soft daylight near the opening or early evening under existing canopy lights",
     "day": {
-      "source": "daylight entering through actual openings, or an existing ceiling fixture if daylight cannot reach",
+      "source": "one existing underground garage ceiling fixture",
       "kelvin": 4000,
-      "shadows": "soft contact shadows in actual shade, no direct sun through opaque roof",
-      "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
+      "shadows": "contact shadows directly below the single ceiling lamp",
+      "reflections": "reflections from the selected opening or ceiling lamp only, muted on pearl-white paint and glass"
     },
     "night": {
-      "source": "one existing overhead canopy or garage fixture",
+      "source": "one existing underground garage ceiling fixture",
       "kelvin": 4000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one coherent set of downward and rearward shadows cast by the single ceiling fixture",
+      "reflections": "one restricted overhead highlight on real vehicle surfaces, with dark unlit surroundings"
     }
   },
   {
@@ -688,16 +688,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing upper-deck lighting fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -711,16 +711,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing bay overhead or nearby pole fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -734,16 +734,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing distant parking-lot pole fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -757,16 +757,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing hospital parking overhead lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -780,16 +780,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing gym-entrance wall fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -803,16 +803,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing gym parking pole fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -826,16 +826,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing gym frontage light",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -849,16 +849,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing neighborhood football pitch perimeter fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -872,16 +872,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing garden path lighting fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -895,16 +895,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing cafe entrance wall lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -918,16 +918,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing restaurant front wall lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -941,16 +941,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing mosque exterior walkway fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -964,16 +964,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing school gate lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -987,16 +987,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing university parking lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1010,16 +1010,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing barbershop doorway fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1033,16 +1033,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing laundry-shop wall lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1056,16 +1056,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "soft daylight near the opening or early evening under existing canopy lights",
     "day": {
-      "source": "daylight entering through actual openings, or an existing ceiling fixture if daylight cannot reach",
+      "source": "one existing workshop-bay ceiling fixture",
       "kelvin": 4000,
-      "shadows": "soft contact shadows in actual shade, no direct sun through opaque roof",
-      "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
+      "shadows": "contact shadows directly below the single ceiling lamp",
+      "reflections": "reflections from the selected opening or ceiling lamp only, muted on pearl-white paint and glass"
     },
     "night": {
-      "source": "one existing overhead canopy or garage fixture",
+      "source": "one existing workshop-bay ceiling fixture",
       "kelvin": 4000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one coherent set of downward and rearward shadows cast by the single ceiling fixture",
+      "reflections": "one restricted overhead highlight on real vehicle surfaces, with dark unlit surroundings"
     }
   },
   {
@@ -1079,16 +1079,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing mobile-shop storefront lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1102,16 +1102,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing clothing-store entrance lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1125,16 +1125,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing unnamed hotel entrance fixture",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1148,16 +1148,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing dental-clinic doorway lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1171,16 +1171,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing bookshop storefront light",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1194,16 +1194,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing ATM wall light",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1217,16 +1217,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "day",
     "goldenTime": "late afternoon before sunset",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "grounded shadows away from the unobstructed sun",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "actually illuminated vehicle headlights only when switched on; otherwise dim sky",
+      "source": "dim natural night sky alone, without an invented streetlamp",
       "kelvin": 4000,
-      "shadows": "deep darkness and only source-aligned local shadows",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "deep low-contrast darkness, only faint grounded contact shadowing",
+      "reflections": "very faint sky reflections on paint and glass, no illuminated empty background"
     }
   },
   {
@@ -1240,16 +1240,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing roundabout-adjacent legal-bay streetlight",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1263,16 +1263,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "day",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing farm entrance fixture if present, otherwise dim sky",
+      "source": "one existing farm-gate lamp",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1286,16 +1286,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "day",
     "goldenTime": "late afternoon before sunset",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "grounded shadows away from the unobstructed sun",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "actually illuminated vehicle headlights only when switched on; otherwise dim sky",
+      "source": "dim natural night sky alone, without an invented streetlamp",
       "kelvin": 4000,
-      "shadows": "deep darkness and only source-aligned local shadows",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "deep low-contrast darkness, only faint grounded contact shadowing",
+      "reflections": "very faint sky reflections on paint and glass, no illuminated empty background"
     }
   },
   {
@@ -1309,16 +1309,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing roadside-kiosk hatch light",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   },
   {
@@ -1332,16 +1332,16 @@ const rows:readonly PlaceSceneProfile[] = [
     "bestTime": "night",
     "goldenTime": "late afternoon with low natural sun",
     "day": {
-      "source": "one natural sun source, screened by real walls or canopy where present",
+      "source": "one natural sun from the actual open sky, with walls and roofs physically screening it where present",
       "kelvin": 5500,
-      "shadows": "shadows fall away from the single sun, with existing walls screening light",
+      "shadows": "one set of sun-opposed shadows altered only by existing building occlusion",
       "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
     },
     "night": {
-      "source": "one existing nearby street or building fixture",
+      "source": "one existing bus-shelter light",
       "kelvin": 3000,
-      "shadows": "one set of shadows away from the actual fixture",
-      "reflections": "weak localized source-aligned reflections on paint and glazing; no hidden fill"
+      "shadows": "one set of deep night shadows extending away from the selected real fixture",
+      "reflections": "a localized muted fixture reflection on pearl-white paint and side glass"
     }
   }
 ];
