@@ -1,3 +1,4 @@
+import { placeSceneProfile } from './physics/place-scene-profiles.js';
 import type { CategoryKey, OptionCatalogue, ResolvedSelections, Selections, SelectedOption } from '../types/engine.types.js';
 
 // IDs exactly match the frontend options. All values remain internal English prompts.
@@ -58,7 +59,19 @@ export const optionCatalogue:OptionCatalogue={
 export function resolveSelections(selections:Selections):ResolvedSelections {
   const result={} as ResolvedSelections;
   for(const key of Object.keys(optionCatalogue) as CategoryKey[]){
-    const entry=optionCatalogue[key].find(x=>x.id===selections[key]);
+    // Automatic angle is resolved deterministically from actual scene and pose.
+    // NVIDIA remains a language editor and cannot invent the physical viewpoint.
+    const isAuto=key==='selfieAngles' && selections.selfieAngles==='angle-auto';
+    const pose=Number(selections.poses.split('-').at(-1));
+    const profile=isAuto?placeSceneProfile(selections.locations):null;
+    const night=selections.lighting==='light-7';
+    // Prefer the actual location's camera side, then repair seat/pose
+    // conflicts before a non-existent viewpoint could be emitted.
+    const autoAngle=pose===10?'angle-6':
+      pose<=15?(night&&profile?.preferredAngle==='driver'?'angle-12':'angle-1'):
+      profile?.ground.includes('sand')?'angle-18':'angle-16';
+    const id=isAuto?autoAngle:selections[key];
+    const entry=optionCatalogue[key].find(x=>x.id===id);
     if(!entry) throw new Error('Invalid option: '+key);
     result[key]=entry;
   }

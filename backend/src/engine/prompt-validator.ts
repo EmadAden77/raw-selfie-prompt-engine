@@ -103,7 +103,7 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(/\b(?:the car|the suv|the vehicle|range rover)\s+(?:is\s+)?(?:moving|driving|speeding|racing)\b/i.test(prompt))return false;
   if(/\b(?:steering wheel is\s+(?:beige|tan|cream)|beige leather steering wheel)\b/i.test(prompt))return false;
   if(/\b(?:he|person|subject)\s+weighs\s+(?!88\b)\d+\s*kg\b/i.test(prompt))return false;
-  if(/\b(?:cinematic lighting illuminates|opposing shadows fall|two dominant light sources)\b/i.test(prompt))return false;
+  if(/\b(?:cinematic lighting illuminates|opposing shadows fall|two dominant light sources|a second studio light|an additional light|another studio light)\b/i.test(prompt))return false;
   if(/\b(?:a|the)\s+(?:driving|moving|speeding)\s+(?:pearl-white\s+)?(?:2022\s+)?Range Rover Sport\b/i.test(prompt))return false;
   if(/\b(?:driving|moving|speeding)\s+(?:pearl-white\s+)?2022\s+Range Rover Sport\b/i.test(prompt))return false;
   if(/\b(?:red|blue|green|gray|grey)\s+(?:leather\s+)?(?:front\s+)?seats\b/i.test(prompt))return false;
@@ -111,6 +111,10 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(/\b(?:replaces?|redesigns?|swaps?)\s+(?:the\s+)?(?:original|factory)\s+(?:dashboard|screen|steering wheel)\b/i.test(prompt))return false;
   if(/\b(?:new|hidden|studio)\s+fill\s+(?:illuminates|lights|brightens)\b/i.test(prompt))return false;
 
+  // Reject fabricated optical, garment and facial telemetry in all output formats.
+  if(/\b(?:Xiaomi|Samsung|iPhone|Pixel)\b/i.test(prompt))return false;
+  if(/\b\d+(?:\.\d+)?\s*(?:gsm|mm|degrees)\b|\b(?:FOV|brow|mouth|elbow|knee|pitch|roll|arm|seat|dust|water)\s*[-=:]?\s*\d+(?:\.\d+)?(?:°|%)?/i.test(prompt))return false;
+  if(/(?:steering wheel|wheel)\s+(?:is\s+)?(?:on|to)\s+(?:the\s+)?right\s+(?:of\s+the\s+)?driver/i.test(prompt))return false;
   if(!prompt.includes(BODY_RULE))return validateConcise(prompt,choices);
   if(!prompt.includes(BODY_RULE)||!prompt.includes(COMPOSITION_RULE)) return false;
   if(!prompt.includes(PARKING_RULE)||!prompt.includes(STREET_RULE)||!prompt.includes(LIGHTING_POLICY)) return false;

@@ -34,8 +34,8 @@ export function auditPhotographicScene(choices: ResolvedSelections): Photographi
   const profile: CameraProfile = mirror ? 'B' : 'A';
 
   const camera = mirror
-    ? 'Camera: Xiaomi 15 Ultra rear-camera reflection selfie, 23 mm-equivalent f/1.63 main camera. Its screen faces the subject and rear lens faces the chosen mirror or glass; the reflected phone, connected grip, optical path and occlusion remain coherent. Reflected scale and focus follow camera-to-surface-to-subject distance; no duplicate reflection or impossible lens viewpoint.'
-    : 'Camera: direct Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length. The phone is outside its own direct view; perspective follows the hand-held viewpoint, not a remote photographer. Portrait Mode and beauty processing are off; no artificial background separation.';
+    ? 'Camera: generic smartphone rear-camera reflection selfie. Its screen faces the subject and rear lens faces the chosen mirror or glass; the reflected phone, connected grip, optical path and occlusion remain coherent. Reflected scale and focus follow camera-to-surface-to-subject distance; no duplicate reflection or impossible lens viewpoint.'
+    : 'Camera: direct generic smartphone front-camera selfie at reachable arm length. The phone is outside its own direct view; perspective follows the hand-held viewpoint, not a remote photographer. Portrait Mode and beauty processing are off; no artificial background separation.';
   const physicalConsistency = 'Hands, grip, joints, weight support, seat compression and garment folds obey gravity and contact; show only anatomy and surfaces inside the selected crop.';
   const exposure = screenOnly
     ? 'Exposure: the actual nearby display is the only active light; weak illumination fades down the torso and cannot reveal a bright room or distant road. Deep shadows may lose detail and carry restrained sensor noise; catchlights exist only if that screen reflects at the correct eye angle.'

@@ -18,7 +18,7 @@ test('v8: direct front-camera capture is not a rear-flash or third-party photogr
   const audit=auditPhotographicScene(choices);
   const prompt=buildConcisePrompt(choices);
   assert.equal(audit.profile,'A');
-  assert.match(prompt,/21 mm-equivalent f\/2\.0 front-camera selfie/);
+  assert.match(prompt,/generic smartphone front-camera selfie/);
   assert.match(prompt,/phone is outside its own direct view/i);
   assert.doesNotMatch(prompt,/rear-camera reflection selfie/i);
   assert.match(prompt,/195 cm/);
@@ -37,8 +37,8 @@ test('v8: reflected rear-view mirror and car glass use rear camera optical geome
     assert.equal(audit.profile,'B');
     assert.match(plan.cameraGeometry.opticalAxis,/rear lens aimed/i);
     assert.match(prompt,/rear-camera reflection selfie/);
-    assert.match(prompt,/23 mm-equivalent f\/1\.63/);
-    assert.match(prompt,/screen faces the subject/i);
+    assert.match(prompt,/generic smartphone rear-camera reflection selfie/);
+    assert.match(prompt,/screen toward subject/i);
     assert.equal(validatePrompt(prompt,choices),true);
   }
 });

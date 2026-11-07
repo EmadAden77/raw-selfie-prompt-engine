@@ -12,6 +12,7 @@ import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 import type { ResolvedSelections } from '../types/engine.types.js';
 import { isReflectionSelfie } from './photographic-auditor-v8.js';
 import { resolvePhysicalOptions, physicsStatement } from '../data/physics/index.js';
+import { placeSceneProfile } from '../data/physics/place-scene-profiles.js';
 
 // Mandatory composition-independent constraints. These describe the physical
 // world; the subject remains the sole primary subject and nothing is widened
@@ -92,6 +93,15 @@ export function deriveSceneLighting(s:ResolvedSelections):SceneLighting {
       shadows='grounded overhead shadows and realistic confined reflections, without direct sun or streetlamp';
       time=night?'covered area at night':'covered area during '+time;
     }
+  }
+  // The two public choices are day (light-1) and night (light-7).
+  // Their location-specific immutable profiles override all generic lighting guesses.
+  if(light===1||light===7){
+    const profile=placeSceneProfile(s.locations.id);
+    const preset=light===7?profile.night:profile.day;
+    return {time:light===7?'night':'day',kelvin:preset.kelvin,source:preset.source,
+      shadows:preset.shadows+'; '+preset.reflections,weather,
+      surface:profile.ground,parking:profile.parking,cameraSide:side,covered};
   }
   return {time,kelvin,source,shadows,weather,surface,parking,cameraSide:side,covered};
 }

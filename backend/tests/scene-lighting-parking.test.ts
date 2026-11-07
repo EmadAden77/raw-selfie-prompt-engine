@@ -47,7 +47,7 @@ test('all 58 locations by 10 lighting choices resolve deterministically, even fo
       assert.ok(prompt.includes(loc.text),loc.id);
       assert.ok(prompt.includes('parked'),loc.id);
       assert.ok(prompt.includes('sole primary subject'),loc.id);
-      if(scene.covered)assert.match(prompt,/overhead fixtures?|phone screen|front-screen flash/);
+      if(scene.covered)assert.ok(prompt.includes(scene.source),'Covered-area light must match its locked scene source: '+loc.id+'/'+light.id);
     }
   }
 });
@@ -73,10 +73,10 @@ test('night villa uses one existing 3000K fixture with a consistent shadow direc
   const prompt=fallbackGenerator({selections,variation:1});
   assert.equal(scene.time,'night');
   assert.equal(scene.kelvin,3000);
-  assert.match(scene.source,/one existing warm villa courtyard or wall fixture/);
-  assert.match(scene.shadows,/one set of deep night shadows/);
-  assert.match(scene.parking,/parallel to a 15 cm beige-gray concrete curb/);
-  assert.match(scene.surface,/patched Saudi asphalt/);
+  assert.match(scene.source,/one existing warm wall light beside the villa gate/);
+  assert.match(scene.shadows,/deep night shadows extending away from the selected real fixture/);
+  assert.match(scene.parking,/parallel to a real beige-gray concrete curb/);
+  assert.match(scene.surface,/patched dusty Saudi asphalt/);
   assert.equal(validatePrompt(prompt,resolveSelections(selections)),true);
 });
 

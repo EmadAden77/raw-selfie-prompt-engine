@@ -1,4 +1,3 @@
 import { getOptions } from './canonical';
-
-// Arabic labels and English prompt text come from the same validated catalogue.
-export const selfieAngles = getOptions('selfieAngles');
+// Auto is the default; manual physical angles remain available for advanced users.
+export const selfieAngles = [{id:'angle-auto',label:'تلقائي (الأنسب للمكان والوضعية)',prompt:'automatic scene-safe selfie angle'},...getOptions('selfieAngles')];
