@@ -9,6 +9,14 @@ export interface PhysicsOption<T> extends SelectedOption {
 // The index of each frozen model spec corresponds exactly to the canonical
 // selectable ID. Throw on catalog mismatch instead of silently shifting physics
 // to a different Arabic option. No generated image or model may edit these data.
+function deepFreeze<T>(value:T):Readonly<T> {
+  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+    for (const item of Object.values(value)) deepFreeze(item);
+    Object.freeze(value);
+  }
+  return value;
+}
+
 export function fixedPhysicsOptions<T>(
   category: CategoryKey,
   specifications: readonly T[],
@@ -18,7 +26,7 @@ export function fixedPhysicsOptions<T>(
   if (canonical.length !== specifications.length)
     throw new Error('Physics catalogue length mismatch: ' + category);
   return Object.freeze(canonical.map((option, index) => {
-    const physics = Object.freeze(specifications[index]!);
+    const physics = deepFreeze(specifications[index]!);
     const english = describe(physics);
     if (!english.trim()) throw new Error('Empty physics text for ' + option.id);
     return Object.freeze({ ...option, physics, english });
