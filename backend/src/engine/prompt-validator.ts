@@ -64,8 +64,10 @@ const mustHave=[
   /CGI/i
 ];
 const contradictoryBody=[
-  /\b(?!195\b)\d{2,3}\s*(?:cm|centimeters?)\b/i,
-  /\b(?!88\b)\d{2,3}\s*(?:kg|kilograms?)\b/i,
+  // Curbs and wheel clearance legitimately use 15 cm and 20–30 cm;
+  // only measurements explicitly about the PERSON are conflicting body facts.
+  /\b(?:height(?:\s+of)?\s*(?::|is)?\s*|(?:person|subject|he)\s+(?:is|stands)\s*)(?!195\b)\d{2,3}\s*(?:cm|centimeters?)\b/i,
+  /\b(?:weight(?:\s+of)?\s*(?::|is)?\s*|(?:person|subject|he)\s+weighs\s*)(?!88\b)\d{2,3}\s*(?:kg|kilograms?)\b/i,
   /\b(?:bodybuilder|bodybuilding physique|extremely thin physique|massively muscular physique|extreme thinness as the actual physique)\b/i
 ];
 const contradictoryCar=[
