@@ -108,10 +108,12 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
     ? LHD_GEOMETRY + ' Visible: beige leather seats/dashboard, black leather three-spoke wheel, glossy wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. No off-frame details.'
     : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = capture.mounted
-    ? 'Camera: generic smartphone front-camera selfie on a securely supported timer mount, activated by the subject; natural phone optics and no external photographer.'
+    ? reflection
+      ? 'Camera: generic smartphone rear-camera reflection selfie from a physically supported cabin mount; timer started by the subject with the rear lens aimed at the mirror, screen toward the subject.'
+      : 'Camera: generic smartphone front-camera selfie from a physically supported cabin mount; timer started by the subject, no external photographer.'
     : reflection
-      ? 'Camera: generic smartphone rear-camera reflection selfie, phone held by the subject toward a real mirror or glass; single consistent reflection.'
-      : 'Camera: generic smartphone front-camera selfie held by the subject at comfortable arm length, natural slight tilt, ordinary phone noise and no beauty processing.';
+      ? 'Camera: generic smartphone rear-camera reflection selfie, phone held by the subject toward real mirror or glass; screen faces the subject, single consistent reflection.'
+      : 'Camera: generic smartphone front-camera selfie held by the subject at comfortable arm length, phone outside its direct field of view, natural tilt and ordinary phone noise.';
   const lighting = deriveSceneLighting(choices);
   const physical = physicsStatement(choices, lighting, inside);
   const surface = inside ? '' : condition === 1
