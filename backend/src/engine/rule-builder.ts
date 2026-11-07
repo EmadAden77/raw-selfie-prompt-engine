@@ -1,3 +1,4 @@
+import { getPlaceProfile } from '../data/place-profiles/index.js';
 import { identityRules } from '../rules/identity.rules.js';
 import { hairRules } from '../rules/hair.rules.js';
 import { carRules } from '../rules/car.rules.js';
@@ -50,8 +51,8 @@ export function deriveSceneLighting(s:ResolvedSelections):SceneLighting {
   const weather=condition===5?'rain-damp air and wet reflective surfaces':
     condition===6||desert?'light suspended desert dust and dry muted air':
     light===5?'overcast diffuse air':condition===3?'light road dust': 'ordinary clear Saudi air';
-  const surface=ground.groundMaterial;
-  const parking=ground.parkingGeometry==='marked-bay'||covered
+  let surface=ground.groundMaterial;
+  let parking=ground.parkingGeometry==='marked-bay'||covered
     ? 'properly within a legal marked parking or service bay, never blocking a pump or access lane'
     : desert?'safely parallel to the true road edge on a firm shoulder; no invented curb'
     : 'parked parallel to a 15 cm beige-gray concrete curb, straight wheels 20–30 cm from it in a legal roadside space';
@@ -93,6 +94,17 @@ export function deriveSceneLighting(s:ResolvedSelections):SceneLighting {
       time=night?'covered area at night':'covered area during '+time;
     }
   }
+  // The physical place profile owns all location-specific lighting and parking.
+  // The UI exposes day/night only; legacy ten light IDs are accepted but normalized.
+  const profile=getPlaceProfile(s.locations.id);
+  const period=light>=7?'night':'day';
+  const selected=profile[period];
+  time=period;
+  kelvin=selected.kelvin;
+  source=selected.source;
+  shadows=selected.shadows;
+  surface=profile.ground;
+  parking=profile.parking;
   return {time,kelvin,source,shadows,weather,surface,parking,cameraSide:side,covered};
 }
 
@@ -106,9 +118,10 @@ export function sceneLightingStatement(s:ResolvedSelections):string {
 }
 export function sceneParkingStatement(s:ResolvedSelections):string {
   const d=deriveSceneLighting(s);
+  const profile=getPlaceProfile(s.locations.id);
   return 'Scene-specific parking and road surface: '+d.parking+
     '; selected ground='+d.surface+
-    '; keep the scene authentic, mildly worn and naturally framed without inventing visible roadway.';
+    '; background='+profile.background+'; keep the scene authentic, mildly worn and naturally framed without inventing visible roadway.';
 }
 export function buildRulePrompt(selections:ResolvedSelections):string{
   const selected=[

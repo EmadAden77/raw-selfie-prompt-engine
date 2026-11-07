@@ -1,0 +1,7 @@
+{
+  "id": "clothing-22",
+  "material": "denim (jacket)",
+  "gravity": "structured drape",
+  "contact": "standing: sleeve and shoulder folds; seated: elbow articulation creases",
+  "motion": "walking: minimal panel flutter; no wind unless explicitly selected in the scene"
+}

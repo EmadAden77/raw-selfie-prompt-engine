@@ -1,0 +1,7 @@
+{
+  "id": "hair-23",
+  "material": "the existing reference hair only, unchanged density and hairline",
+  "gravity": "existing strands follow gravity and original curl pattern",
+  "contact": "cap contact only because this hairstyle explicitly selects it",
+  "motion": "under cap within original length, no extra breeze, rain or density"
+}

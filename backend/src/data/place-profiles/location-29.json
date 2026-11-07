@@ -1,0 +1,24 @@
+{
+  "id": "location-29",
+  "label": "مواقف تحت الأرض",
+  "setting": "in an underground parking lot",
+  "parking": "Park straight inside an existing marked bay, leaving access clear; no curb distance unless a real curb adjoins.",
+  "ground": "Scuffed covered concrete floor with faded bay paint, low surface reflectance.",
+  "background": "Ordinary an underground parking lot details, everyday pedestrians, parked vehicles and surfaces only if naturally visible inside the unchanged selfie framing; no named landmarks.",
+  "automaticAngle": "exterior",
+  "angleReason": "Standing at reachable arm length alongside the stationary vehicle keeps the face prominent; do not widen for the background.",
+  "preferredTime": "night",
+  "goldenPeriod": "after dusk under a real parking fixture",
+  "day": {
+    "source": "Filtered 5500K daylight only at the parking opening, no direct sun under solid roof.",
+    "kelvin": 5500,
+    "shadows": "One coherent direction away from actual daylight, with realistic contact shade.",
+    "reflections": "Soft restrained natural reflections in glass and pearl-white paint."
+  },
+  "night": {
+    "source": "One real ceiling parking fixture above the subject; downward 4000K light and unified overhead shadows.",
+    "kelvin": 4000,
+    "shadows": "One shadow direction away from the actual installed fixture.",
+    "reflections": "Localized muted highlights on paint and side windows, no fill."
+  }
+}

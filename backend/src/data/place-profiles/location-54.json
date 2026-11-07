@@ -1,0 +1,24 @@
+{
+  "id": "location-54",
+  "label": "دوار",
+  "setting": "in a legal parking space near a roundabout",
+  "parking": "Park in a legal marked layby near but never inside the roundabout or travel lane.",
+  "ground": "Old patched asphalt, faded lane markings, dusty concrete islands where actually present.",
+  "background": "The roundabout approach and faded road markings only if the safe selfie view includes them.",
+  "automaticAngle": "exterior",
+  "angleReason": "Use a physically reachable front-camera selfie, placing the reference face first and keeping the real vehicle parking arrangement intact.",
+  "preferredTime": "day",
+  "goldenPeriod": "soft morning or late-afternoon daylight",
+  "day": {
+    "source": "Natural 5500K daylight from single sun/sky, with real dust and shade from actual structures only.",
+    "kelvin": 5500,
+    "shadows": "Away from actual daylight with small consistent contact shadows.",
+    "reflections": "Natural subdued glass and bodywork reflection."
+  },
+  "night": {
+    "source": "One already present road, kiosk or shelter light, warm 3000K, with shadows away from the actual fixture.",
+    "kelvin": 3000,
+    "shadows": "Only source-aligned shadows or weak dim sky contrast.",
+    "reflections": "Weak real reflections without studio fill."
+  }
+}

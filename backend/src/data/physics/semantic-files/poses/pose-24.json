@@ -1,0 +1,7 @@
+{
+  "id": "pose-24",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by planted feet, not unsupported sheet metal",
+  "contact": "feet and hose held in free hand",
+  "motion": "small natural pose adjustments; no vehicle movement"
+}

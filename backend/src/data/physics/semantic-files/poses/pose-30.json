@@ -1,0 +1,7 @@
+{
+  "id": "pose-30",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by planted feet, not unsupported sheet metal",
+  "contact": "grounded feet and one hand at roof edge",
+  "motion": "small natural pose adjustments; no vehicle movement"
+}

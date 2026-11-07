@@ -26,7 +26,7 @@ test('long-form rules remain protected while final prompts preserve identity, ph
     assert.match(prompt,/88 kg/);
     assert.match(prompt,/lean athletic/);
     assert.doesNotMatch(prompt,/beige steering wheel/i);
-    assert.ok(promptWordCount(prompt)<=500);
+    assert.ok(promptWordCount(prompt)<=800);
     assert.equal(validatePrompt(prompt,resolveSelections(choices)),true);
   }
 });

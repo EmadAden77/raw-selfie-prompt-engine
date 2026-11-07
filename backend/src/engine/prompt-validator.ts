@@ -1,3 +1,4 @@
+import { getPlaceProfile } from '../data/place-profiles/index.js';
 import { physicsStatement } from '../data/physics/index.js';
 import { promptWordCount, MAX_PROMPT_WORDS, LHD_GEOMETRY, FACTORY_DASHBOARD, IDENTITY_CORE, BODY_CORE, SUBJECT_CORE } from './concise-prompt.js';
 import { resolveCapture } from './scene-geometry.js';
@@ -17,6 +18,7 @@ function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   if(/(?:192|193|194|196|197)\s*cm|\b(?:83|84|85|86|87|89|90)\s*kg/i.test(prompt))return false;
   if(/\b(?:beige|cream|tan)\s+(?:leather\s+)?steering wheel\b/i.test(prompt))return false;
   if(choices){
+    if(!prompt.includes('Parking: '+getPlaceProfile(choices.locations.id).parking)) return false;
     const cabin=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
     const light=deriveSceneLighting(choices);
     const fixedPhysics=physicsStatement(choices,light,cabin);
@@ -97,6 +99,32 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(typeof prompt!=='string'||prompt.length<450||prompt.length>16000) return false;
   if(!prompt.startsWith(REQUIRED_PREFIX)) return false;
   if(/[\u0600-\u06ff]/.test(prompt)||/[`<>]/.test(prompt)) return false;
+  // Validate global facts before the legacy/concise branch split.
+  if (/\b(?:Xiaomi|iPhone|Samsung|Pixel|OnePlus|Huawei|Oppo|Vivo)\b/i.test(prompt)) return false;
+  if (/\d{2,4}\s*gsm\b|\bFOV\d+|(?:phone|camera)\s+\d+\s*cm\b/i.test(prompt)) return false;
+  if (/\b(?:brow|mouth|eyes|elbow|knee|hip|pitch|roll|intensity|dust|water|seat|feet)\d+(?:\.\d+)?(?:°|%)\b/i.test(prompt)) return false;
+  if (/\b(?:RHD|right-hand drive|right-side steering wheel|steering wheel on the right|wheel to his right|driver front-right)\b/i.test(prompt)) return false;
+  if (/\b(?:portrait|vertical)\s+(?:infotainment\s+)?(?:screen|display)\b/i.test(prompt)) return false;
+  if (choices && ['location-10','location-11'].includes(choices.locations.id) && !prompt.includes("pump on the DRIVER'S LEFT")) return false;
+  // Reject asserted weather that was never selected. An environment being
+  // Saudi, dusty or outdoors never grants permission to add wind or rain.
+  if (choices) {
+    const weatherSelections=[
+      choices.hairstyles.text,choices.carConditions.text,choices.poses.text
+    ].join(' ');
+    const windSelected=/\b(?:wind|blown|breeze|air from open window|air conditioning)\b/i.test(weatherSelections);
+    const rainSelected=/\b(?:rain|raindrops|drizzle)\b/i.test(weatherSelections);
+    if(!windSelected && /\b(?:wind|breeze|gusts?|windblown|windswept)\b/i.test(prompt)) return false;
+    if(!rainSelected && /\b(?:rain|raining|rainfall|raindrops|downpour|drizzle)\b/i.test(prompt)) return false;
+  }
+  if (/\b(?:elbow|knee|hip|brow|mouth|eyes|pitch|roll|FOV|arm|wrist)\s*[:=]?\s*-?\d+(?:\.\d+)?\s*(?:°|%|deg(?:rees)?|cm)/i.test(prompt)) return false;
+  if (/\b(?:phone|camera)\s+(?:at|from|held at|distance of|is)\s+\d+\s*cm\b/i.test(prompt)) return false;
+  if (/\b(?:light|lighting)\s+intensity\s*[:=]?\s*(?:0?\.)?\d+(?:\.\d+)?/i.test(prompt)) return false;
+  // Unchosen additional illumination can never be created by an editor.
+  for (const match of prompt.matchAll(/\b(?:second|another|additional|extra|new)\s+(?:\w+\s+){0,2}(?:lamp|streetlight|light source|spotlight|flash)\b/gi)) {
+    const preceding=prompt.slice(Math.max(0,match.index-45),match.index);
+    if (!/\b(?:no|never|without|avoid)\b[^.!?;]{0,35}$/i.test(preceding)) return false;
+  }
   // Shared guards apply to both historical exhaustive templates and the
   // modern concise format. Never let the early concise branch bypass them.
   if(/\b(?:burj khalifa|kingdom cent(?:re|er)|al faisaliah|dubai mall|riyadh park|red sea mall)\b/i.test(prompt))return false;

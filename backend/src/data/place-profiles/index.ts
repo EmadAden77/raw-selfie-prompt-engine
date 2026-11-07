@@ -1,0 +1,87 @@
+import p1 from './location-01.json' with { type: 'json' };
+import p2 from './location-02.json' with { type: 'json' };
+import p3 from './location-03.json' with { type: 'json' };
+import p4 from './location-04.json' with { type: 'json' };
+import p5 from './location-05.json' with { type: 'json' };
+import p6 from './location-06.json' with { type: 'json' };
+import p7 from './location-07.json' with { type: 'json' };
+import p8 from './location-08.json' with { type: 'json' };
+import p9 from './location-09.json' with { type: 'json' };
+import p10 from './location-10.json' with { type: 'json' };
+import p11 from './location-11.json' with { type: 'json' };
+import p12 from './location-12.json' with { type: 'json' };
+import p13 from './location-13.json' with { type: 'json' };
+import p14 from './location-14.json' with { type: 'json' };
+import p15 from './location-15.json' with { type: 'json' };
+import p16 from './location-16.json' with { type: 'json' };
+import p17 from './location-17.json' with { type: 'json' };
+import p18 from './location-18.json' with { type: 'json' };
+import p19 from './location-19.json' with { type: 'json' };
+import p20 from './location-20.json' with { type: 'json' };
+import p21 from './location-21.json' with { type: 'json' };
+import p22 from './location-22.json' with { type: 'json' };
+import p23 from './location-23.json' with { type: 'json' };
+import p24 from './location-24.json' with { type: 'json' };
+import p25 from './location-25.json' with { type: 'json' };
+import p26 from './location-26.json' with { type: 'json' };
+import p27 from './location-27.json' with { type: 'json' };
+import p28 from './location-28.json' with { type: 'json' };
+import p29 from './location-29.json' with { type: 'json' };
+import p30 from './location-30.json' with { type: 'json' };
+import p31 from './location-31.json' with { type: 'json' };
+import p32 from './location-32.json' with { type: 'json' };
+import p33 from './location-33.json' with { type: 'json' };
+import p34 from './location-34.json' with { type: 'json' };
+import p35 from './location-35.json' with { type: 'json' };
+import p36 from './location-36.json' with { type: 'json' };
+import p37 from './location-37.json' with { type: 'json' };
+import p38 from './location-38.json' with { type: 'json' };
+import p39 from './location-39.json' with { type: 'json' };
+import p40 from './location-40.json' with { type: 'json' };
+import p41 from './location-41.json' with { type: 'json' };
+import p42 from './location-42.json' with { type: 'json' };
+import p43 from './location-43.json' with { type: 'json' };
+import p44 from './location-44.json' with { type: 'json' };
+import p45 from './location-45.json' with { type: 'json' };
+import p46 from './location-46.json' with { type: 'json' };
+import p47 from './location-47.json' with { type: 'json' };
+import p48 from './location-48.json' with { type: 'json' };
+import p49 from './location-49.json' with { type: 'json' };
+import p50 from './location-50.json' with { type: 'json' };
+import p51 from './location-51.json' with { type: 'json' };
+import p52 from './location-52.json' with { type: 'json' };
+import p53 from './location-53.json' with { type: 'json' };
+import p54 from './location-54.json' with { type: 'json' };
+import p55 from './location-55.json' with { type: 'json' };
+import p56 from './location-56.json' with { type: 'json' };
+import p57 from './location-57.json' with { type: 'json' };
+import p58 from './location-58.json' with { type: 'json' };
+
+export type AutoAngle = 'driver' | 'exterior' | 'passenger';
+export type DayPart = 'day' | 'night';
+export interface PlaceProfile {
+  id: string;
+  label: string;
+  setting: string;
+  parking: string;
+  ground: string;
+  background: string;
+  automaticAngle: AutoAngle;
+  angleReason: string;
+  preferredTime: DayPart;
+  goldenPeriod: string;
+  day: { source: string; kelvin: number; shadows: string; reflections: string };
+  night: { source: string; kelvin: number; shadows: string; reflections: string };
+}
+export const placeProfiles: ReadonlyArray<Readonly<PlaceProfile>> = Object.freeze([p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,p24,p25,p26,p27,p28,p29,p30,p31,p32,p33,p34,p35,p36,p37,p38,p39,p40,p41,p42,p43,p44,p45,p46,p47,p48,p49,p50,p51,p52,p53,p54,p55,p56,p57,p58] as unknown as PlaceProfile[]);
+if(placeProfiles.length !== 58) throw new Error('Expected all 58 places');
+for (const [i, p] of placeProfiles.entries()) {
+  if(p.id !== 'location-' + (i+1)) throw new Error('Place mismatch: '+p.id);
+  if(!p.parking || !p.ground || !p.background || !p.angleReason || !p.day.source || !p.night.source) throw new Error('Incomplete place physics: '+p.id);
+  if(!['driver','exterior','passenger'].includes(p.automaticAngle) || !Number.isFinite(p.day.kelvin) || !Number.isFinite(p.night.kelvin)) throw new Error('Invalid place physics: '+p.id);
+}
+export function getPlaceProfile(id:string):Readonly<PlaceProfile>{
+  const found=placeProfiles.find(x=>x.id===id);
+  if(!found)throw new Error('Unknown place profile: '+id);
+  return found;
+}

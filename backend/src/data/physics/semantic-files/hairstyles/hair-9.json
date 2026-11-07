@@ -1,0 +1,7 @@
+{
+  "id": "hair-9",
+  "material": "the existing reference hair only, unchanged density and hairline",
+  "gravity": "existing strands follow gravity and original curl pattern",
+  "contact": "open-window air only because this hairstyle explicitly selects it",
+  "motion": "toward open window within original length, no extra breeze, rain or density"
+}

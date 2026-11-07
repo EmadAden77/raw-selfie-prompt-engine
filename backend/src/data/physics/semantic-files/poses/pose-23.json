@@ -1,0 +1,7 @@
+{
+  "id": "pose-23",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by planted feet, not unsupported sheet metal",
+  "contact": "feet and free hand against fixed roof edge",
+  "motion": "small natural pose adjustments; no vehicle movement"
+}

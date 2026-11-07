@@ -1,0 +1,24 @@
+{
+  "id": "location-21",
+  "label": "سوبر ماركت",
+  "setting": "outside a supermarket",
+  "parking": "Park stationary parallel to an existing sidewalk curb with straight wheels 20–30 cm from the edge, not blocking the entrance.",
+  "ground": "Weathered faded Saudi asphalt, irregular repair patches, dust and worn beige-gray interlocking sidewalk with approximately 15 cm concrete curb.",
+  "background": "Ordinary a supermarket details, everyday pedestrians, parked vehicles and surfaces only if naturally visible inside the unchanged selfie framing; no named landmarks.",
+  "automaticAngle": "driver",
+  "angleReason": "Face-dominant handheld front-left driver-seat selfie preserves actual left-side steering geometry.",
+  "preferredTime": "night",
+  "goldenPeriod": "after dusk under a real entrance fixture",
+  "day": {
+    "source": "Natural single-source 5500K daylight; shade only from actual walls, trees or roof present in frame.",
+    "kelvin": 5500,
+    "shadows": "One coherent direction away from actual daylight, with realistic contact shade.",
+    "reflections": "Soft restrained natural reflections in glass and pearl-white paint."
+  },
+  "night": {
+    "source": "One existing local building or street fixture, warm 3000K, shadows facing away from it.",
+    "kelvin": 3000,
+    "shadows": "One shadow direction away from the actual installed fixture.",
+    "reflections": "Localized muted highlights on paint and side windows, no fill."
+  }
+}

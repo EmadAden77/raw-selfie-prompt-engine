@@ -1,0 +1,24 @@
+{
+  "id": "location-39",
+  "label": "مقهى",
+  "setting": "outside a local cafe",
+  "parking": "Park parallel to the real curb, straight tires 20–30 cm from beige-gray concrete curb, clear of doors and driveways.",
+  "ground": "Weathered Saudi asphalt with faded painted lines and repair patches; concrete curb about 15 cm, dusty beige-gray interlocking pedestrian tiles.",
+  "background": "Generic cafe frontage, customers and quiet local passing traffic at natural frame edge.",
+  "automaticAngle": "exterior",
+  "angleReason": "Natural standing selfie by the legally parked car, with no pullback to display the place.",
+  "preferredTime": "day",
+  "goldenPeriod": "soft morning or late-afternoon daylight",
+  "day": {
+    "source": "Single natural 5500K sun with shading only from real existing structures; grounded opposite shadows.",
+    "kelvin": 5500,
+    "shadows": "One direction away from available sun, softer where physically shaded.",
+    "reflections": "Restraint in pearl-white bodywork and glass reflections."
+  },
+  "night": {
+    "source": "A single real nearby entrance/path/street fixture, 3000K; no extra artificial fill.",
+    "kelvin": 3000,
+    "shadows": "Away from the existing dominant source; dim without strong fixture.",
+    "reflections": "Weak localized reflections from the established scene lighting."
+  }
+}

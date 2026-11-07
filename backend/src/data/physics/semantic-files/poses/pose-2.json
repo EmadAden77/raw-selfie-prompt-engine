@@ -1,0 +1,7 @@
+{
+  "id": "pose-2",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by a real seat",
+  "contact": "seat cushion and bent knee",
+  "motion": "small natural pose adjustments; no vehicle movement"
+}

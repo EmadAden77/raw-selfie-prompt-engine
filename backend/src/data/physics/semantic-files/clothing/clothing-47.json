@@ -1,0 +1,7 @@
+{
+  "id": "clothing-47",
+  "material": "cotton poplin (shirt)",
+  "gravity": "light structured drape",
+  "contact": "standing: collar and sleeve creases; seated: elbow and waist creases",
+  "motion": "walking: natural moving sleeve creases; no wind unless explicitly selected in the scene"
+}

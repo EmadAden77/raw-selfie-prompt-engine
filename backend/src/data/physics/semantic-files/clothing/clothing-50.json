@@ -1,0 +1,7 @@
+{
+  "id": "clothing-50",
+  "material": "cotton (thobe)",
+  "gravity": "vertical hem drop",
+  "contact": "standing: long vertical folds; seated: waist and knee compression",
+  "motion": "walking: alternating lower hem folds; no wind unless explicitly selected in the scene"
+}

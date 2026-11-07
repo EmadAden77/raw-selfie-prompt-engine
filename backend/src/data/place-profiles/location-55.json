@@ -1,0 +1,24 @@
+{
+  "id": "location-55",
+  "label": "مزرعة",
+  "setting": "outside a farm",
+  "parking": "Stationary on firm compacted soil beside the farm access track, clear of the farm gate.",
+  "ground": "Compacted farm soil and gravel, matte with light contact dust.",
+  "background": "Ordinary farm gate, access track and sparse real planting only at visible frame edge.",
+  "automaticAngle": "exterior",
+  "angleReason": "Use a physically reachable front-camera selfie, placing the reference face first and keeping the real vehicle parking arrangement intact.",
+  "preferredTime": "day",
+  "goldenPeriod": "soft morning or late-afternoon daylight",
+  "day": {
+    "source": "Natural 5500K daylight from single sun/sky, with real dust and shade from actual structures only.",
+    "kelvin": 5500,
+    "shadows": "Away from actual daylight with small consistent contact shadows.",
+    "reflections": "Natural subdued glass and bodywork reflection."
+  },
+  "night": {
+    "source": "Only an actually present farm-entry fixture, warm 3000K, otherwise dark ambient sky.",
+    "kelvin": 3000,
+    "shadows": "Only source-aligned shadows or weak dim sky contrast.",
+    "reflections": "Weak real reflections without studio fill."
+  }
+}

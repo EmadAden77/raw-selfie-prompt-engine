@@ -1,0 +1,7 @@
+{
+  "id": "clothing-39",
+  "material": "wool knit (sweater)",
+  "gravity": "knit body drape",
+  "contact": "standing: knit elbow and waist folds; seated: waist and elbow compression",
+  "motion": "walking: limited knit hem movement; no wind unless explicitly selected in the scene"
+}

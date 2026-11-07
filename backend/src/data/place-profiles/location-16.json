@@ -1,0 +1,24 @@
+{
+  "id": "location-16",
+  "label": "فيلا بسور",
+  "setting": "near a walled villa",
+  "parking": "Stationary parallel to the existing beige-gray concrete curb, straight wheels 20–30 cm away from the curb's edge; never obstruct a gate, sidewalk or driveway.",
+  "ground": "Worn Saudi asphalt with repaired patches and faded markings, dusty interlocking sidewalk and a beige-gray concrete curb about 15 cm tall; mostly diffuse reflections.",
+  "background": "Local everyday storefront, access path or wall matching the selected location, naturally passing people or parked cars only if visible; no landmark.",
+  "automaticAngle": "driver",
+  "angleReason": "A reachable front-left driver-seat selfie keeps facial identity dominant and correct LHD layout.",
+  "preferredTime": "night",
+  "goldenPeriod": "after dusk when an existing local fixture is on",
+  "day": {
+    "source": "Single natural sun or diffuse sky, 5500K, shadows oriented consistently away from its actual position; natural muted paint and glass reflections.",
+    "kelvin": 5500,
+    "shadows": "Away from the physically present daylight source; natural contact shade.",
+    "reflections": "Limited realistic daylight reflections on pearl-white paint and automotive glass."
+  },
+  "night": {
+    "source": "One existing wall or neighborhood street fixture, warm 3000K with shadows away from the fixture and soft car-window highlights.",
+    "kelvin": 3000,
+    "shadows": "Away from the one established dominant night source, or subdued when only sky is present.",
+    "reflections": "Localized weak highlights on pearl-white paint and glass, no studio fill."
+  }
+}

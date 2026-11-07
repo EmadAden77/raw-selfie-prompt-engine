@@ -1,0 +1,7 @@
+{
+  "id": "clothing-11",
+  "material": "cotton jersey (tee)",
+  "gravity": "soft torso drape",
+  "contact": "standing: loose underarm folds; seated: waist and elbow bunching",
+  "motion": "walking: small side-seam folds; no wind unless explicitly selected in the scene"
+}

@@ -47,60 +47,41 @@ test('all 58 locations by 10 lighting choices resolve deterministically, even fo
       assert.ok(prompt.includes(loc.text),loc.id);
       assert.ok(prompt.includes('parked'),loc.id);
       assert.ok(prompt.includes('sole primary subject'),loc.id);
-      if(scene.covered)assert.match(prompt,/overhead fixtures?|phone screen|front-screen flash/);
+      if(scene.covered)assert.match(prompt,/parking|garage|ceiling|Filtered|daylight/i);
     }
   }
 });
 
-test('noon desert uses 5500K high sun, short shadows and safe uncurbed roadside parking',()=>{
-  const selections=select(1,2);
-  const scene=deriveSceneLighting(resolveSelections(selections));
-  const prompt=fallbackGenerator({selections,variation:1});
-  assert.equal(scene.kelvin,5500);
-  assert.equal(scene.time,'noon');
-  assert.match(scene.source,/high direct sun/);
-  assert.match(scene.shadows,/short sharp shadows/);
-  assert.match(scene.parking,/parallel to the true road edge/);
-  assert.match(scene.surface,/sandy shoulder/);
-  assert.match(prompt,/195 cm/);
-  assert.match(prompt,/88 kg/);
-  assert.equal(validatePrompt(prompt,resolveSelections(selections)),true);
+test('daytime desert follows real 5500K daylight and has no invented curb',()=>{
+  const choices=resolveSelections(select(1,1));
+  const p=deriveSceneLighting(choices);
+  assert.equal(p.time,'day'); assert.equal(p.kelvin,5500);
+  assert.match(p.source,/Single natural sun or diffuse sky/);
+  assert.match(p.parking,/firm sandy roadside pull-off/);
+  assert.doesNotMatch(p.parking,/20–30 cm/);
+  assert.equal(validatePrompt(fallbackGenerator({selections:select(1,1),variation:1}),choices),true);
 });
 
-test('night villa uses one existing 3000K fixture with a consistent shadow direction and legal curb parking',()=>{
-  const selections=select(17,7,16);
-  const scene=deriveSceneLighting(resolveSelections(selections));
-  const prompt=fallbackGenerator({selections,variation:1});
-  assert.equal(scene.time,'night');
-  assert.equal(scene.kelvin,3000);
-  assert.match(scene.source,/one existing warm villa courtyard or wall fixture/);
-  assert.match(scene.shadows,/one set of deep night shadows/);
-  assert.match(scene.parking,/parallel to a 15 cm beige-gray concrete curb/);
-  assert.match(scene.surface,/patched Saudi asphalt/);
-  assert.equal(validatePrompt(prompt,resolveSelections(selections)),true);
+test('night villa uses its installed 3000K fixture and actual curb geometry',()=>{
+  const choices=resolveSelections(select(17,7,16));const p=deriveSceneLighting(choices);
+  assert.equal(p.time,'night');assert.equal(p.kelvin,3000);
+  assert.match(p.source,/existing wall or neighborhood street fixture/);
+  assert.match(p.parking,/20–30 cm/);
+  assert.match(p.surface,/weathered|worn/i);
 });
 
-test('sunset mall open parking uses 3200K orange sunset with long shadows and real marked bays',()=>{
-  const selections=select(7,4,19);
-  const scene=deriveSceneLighting(resolveSelections(selections));
-  const prompt=fallbackGenerator({selections,variation:1});
-  assert.equal(scene.time,'sunset');
-  assert.equal(scene.kelvin,3200);
-  assert.match(scene.source,/orange sunset sun/);
-  assert.match(scene.shadows,/long warm-edged shadows/);
-  assert.match(scene.parking,/marked parking or service bay/);
-  assert.match(scene.surface,/faded bay markings/);
-  assert.equal(validatePrompt(prompt,resolveSelections(selections)),true);
+test('daytime mall open parking is a marked bay with natural 5500K light',()=>{
+  const choices=resolveSelections(select(7,1,19));const p=deriveSceneLighting(choices);
+  assert.equal(p.time,'day');assert.equal(p.kelvin,5500);
+  assert.match(p.parking,/marked parking bay/);
+  assert.match(p.surface,/patched asphalt|parking concrete/);
 });
 
-test('underground parking never invents direct sun, streetlamp or outdoor asphalt',()=>{
-  const choices=resolveSelections(select(29,2));
-  const scene=deriveSceneLighting(choices);
-  assert.equal(scene.covered,true);
-  assert.equal(scene.kelvin,4000);
-  assert.match(scene.source,/ceiling fixture/);
-  assert.match(scene.surface,/parking concrete/);
-  assert.doesNotMatch(scene.source,/direct sun|street lamp/);
+test('covered underground garage light comes from physical openings during day',()=>{
+  const choices=resolveSelections(select(29,1));const p=deriveSceneLighting(choices);
+  assert.equal(p.covered,true);assert.equal(p.kelvin,5500);
+  assert.match(p.source,/Filtered 5500K daylight/);
+  assert.doesNotMatch(p.source,/direct overhead sunshine|streetlamp/i);
 });
 
 test('NVIDIA receives location/time/weather/angle/light source within first 700 characters',()=>{

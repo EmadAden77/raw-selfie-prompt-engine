@@ -1,0 +1,7 @@
+{
+  "id": "pose-16",
+  "material": "ordinary human joints and natural clothing, never altered body proportions",
+  "gravity": "weight supported by planted feet, not unsupported sheet metal",
+  "contact": "both feet on ground, hand on door",
+  "motion": "small natural pose adjustments; no vehicle movement"
+}
