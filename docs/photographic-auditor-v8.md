@@ -1,5 +1,7 @@
 # Image Prompt Auditor & Photographic Realism Engine · v8
 
+> **ملاحظة v10:** هذا الملف يوثق بنية v8 التاريخية. مسار NVIDIA الذي يخطط المشهد لم يعد مستخدمًا؛ NVIDIA الآن محرر للنص الكامل فقط، وRule Builder وحده يحدد الفيزياء والقياسات الحالية 195 cm / 88 kg. راجع [دليل v10](nvidia-editor-only-v10.md).
+
 This module audits **textual scene instructions**, not the identity image itself. It does not transmit user-uploaded photos to NVIDIA, inspect pixels, generate images or guarantee that an image will reproduce identity exactly.
 
 ## Runtime path
