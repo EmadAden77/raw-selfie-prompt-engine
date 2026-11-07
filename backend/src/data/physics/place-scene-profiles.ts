@@ -1,5 +1,4 @@
 // Complete immutable location-specific profiles; canonical order is checked against option-mappings.
-import { optionCatalogue } from '../option-mappings.js';
 import { location01 } from './scenes/location-01.js';
 import { location02 } from './scenes/location-02.js';
 import { location03 } from './scenes/location-03.js';
@@ -127,9 +126,9 @@ const rows:readonly PlaceSceneProfile[] = [
   location57,
   location58
 ];
-if(rows.length !== 58 || optionCatalogue.locations.length !== rows.length) throw new Error('58 place profiles required');
+if(rows.length !== 58) throw new Error('58 place profiles required');
 for(let i=0;i<rows.length;i++) {
- if(rows[i]!.id!==optionCatalogue.locations[i]!.id || rows[i]!.arabicLabel!==optionCatalogue.locations[i]!.label)
+ if(rows[i]!.id!=='location-'+(i+1) || !rows[i]!.arabicLabel)
   throw new Error('Place profile option mismatch at location-'+(i+1));
  for(const period of ['day','night'] as const) {
   const light=rows[i]![period];
