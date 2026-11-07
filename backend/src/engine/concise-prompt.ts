@@ -8,7 +8,7 @@ import { isReflectionSelfie } from './photographic-auditor-v8.js';
 import { resolveCapture } from './scene-geometry.js';
 import { physicsStatement } from '../data/physics/index.js';
 
-export const LHD_GEOMETRY = 'Saudi LHD: driver front-left directly behind the left steering wheel, passenger front-right; wheel directly in front of driver and center console to the right of the driver; no mirroring or right-hand drive.';
+export const LHD_GEOMETRY = 'Saudi LHD: driver front-left directly behind the left steering wheel, passenger front-right; wheel directly in front of driver and center console to the right of the driver; no mirroring of the fixed Saudi LHD layout.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, asymmetry, age, skin tone, pores, eyes, brows, nose, lips, jaw, original hairline, density, curls and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique and proportions.';
@@ -107,10 +107,10 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
     ? LHD_GEOMETRY + ' Visible: beige leather seats/dashboard, black leather three-spoke wheel, glossy wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. No off-frame details.'
     : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = capture.mounted
-    ? 'Camera: generic smartphone front camera on a securely supported selfie timer mount, activated by the subject; natural phone optics and no external photographer.'
+    ? 'Camera: generic smartphone front-camera selfie on a securely supported timer mount, activated by the subject; natural phone optics and no external photographer.'
     : reflection
       ? 'Camera: generic smartphone rear-camera reflection selfie, phone held by the subject toward a real mirror or glass; single consistent reflection.'
-      : 'Camera: generic smartphone front camera held by the subject at comfortable arm length, natural slight tilt, ordinary phone noise and no beauty processing.';
+      : 'Camera: generic smartphone front-camera selfie held by the subject at comfortable arm length, natural slight tilt, ordinary phone noise and no beauty processing.';
   const lighting = deriveSceneLighting(choices);
   const physical = physicsStatement(choices, lighting, inside);
   const surface = inside ? '' : condition === 1
