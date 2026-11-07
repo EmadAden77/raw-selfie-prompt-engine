@@ -3,6 +3,7 @@ import type { FallbackReason, PromptResponse } from '../../types/prompt';
 import CopyButton from './CopyButton';
 
 const reasons:Record<FallbackReason,string>={
+  owner_only:'NVIDIA متاحة للمالك فقط؛ استخدمنا Rule Builder المحلي دون أي اتصال مدفوع.',
   no_key:'لم يُضبط مفتاح NVIDIA في إعدادات الخادم؛ استُخدم المولّد المحلي.',
   invalid_key:'صيغة مفتاح NVIDIA غير صالحة. تأكد أنه يبدأ بـ nvapi-.',
   unauthorized:'رفضت NVIDIA المفتاح (رمز 401). تأكد من صلاحية المفتاح أو أنشئ مفتاحًا جديدًا.',
