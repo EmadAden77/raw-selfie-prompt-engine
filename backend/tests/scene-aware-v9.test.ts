@@ -40,7 +40,7 @@ test('v9: exterior variation is localized and does not widen the selfie', () => 
   const b=buildConcisePrompt(choices,undefined,1);
   assert.notEqual(a,b);
   assert.match(a,/face and upper torso dominate 9:16/);
-  assert.match(a,/Only at the existing frame edge, if visible/);
+  assert.match(a,/At the visible frame edge only/);
   assert.equal(validatePrompt(a,choices),true);
   assert.ok(promptWordCount(a)<=260,'exterior words: '+promptWordCount(a));
 });
