@@ -64,6 +64,7 @@ test('unselected rain, wind, phone brand and new light are not permitted NVIDIA 
  ]){
   const altered=canonical+addition;
   assert.equal(validateEditorialRewrite(canonical,altered),false,addition);
+  assert.equal(validatePrompt(altered,selections),false,addition);
  }
 });
 
