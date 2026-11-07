@@ -90,7 +90,7 @@ function parkingProse(choices: ResolvedSelections, inside: boolean): string {
   if (d.parking.includes('concrete curb'))
     return 'Visible roadside geometry only: straight wheels, parked parallel 20–30 cm from a 15 cm beige-gray concrete curb; worn dusty patched Saudi asphalt.';
   if (d.parking.includes('shoulder'))
-    return 'If framed: straight wheels on a firm dusty shoulder parallel to the road, never an invented curb.';
+    return 'If framed: straight wheels on dusty shoulder; no invented curb.';
   return 'If framed: straight wheels in a legal marked bay, authentic worn ground, no obstruction.';
 }
 
