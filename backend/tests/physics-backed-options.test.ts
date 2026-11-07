@@ -130,7 +130,7 @@ test('Rule Builder and offline fallback include the exact eight-category physics
   assert.match(a,/black leather three-spoke wheel/);
   assert.match(a,/20–30 cm/);
   assert.match(a,/generic smartphone front-camera selfie/);
-  assert.match(a,/fabric cotton ~175gsm\/0.4mm/);
+  assert.doesNotMatch(a,/\d+gsm|FOV\d+/);
   assert.match(a,/body supported by the correct seat/);
   assert.match(a,/gravity-consistent drape/);
   assert.equal(validatePrompt(a,choices),true);
