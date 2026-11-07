@@ -1,8 +1,9 @@
-import { promptWordCount, LHD_GEOMETRY, FACTORY_DASHBOARD, IDENTITY_CORE, BODY_CORE, SUBJECT_CORE } from './concise-prompt.js';
+import { physicsStatement } from '../data/physics/index.js';
+import { promptWordCount, MAX_PROMPT_WORDS, LHD_GEOMETRY, FACTORY_DASHBOARD, IDENTITY_CORE, BODY_CORE, SUBJECT_CORE } from './concise-prompt.js';
 import { resolveCapture } from './scene-geometry.js';
 function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   const count=promptWordCount(prompt);
-  if(count<105||count>300) return false;
+  if(count<105||count>MAX_PROMPT_WORDS) return false;
   if(!prompt.includes(IDENTITY_CORE)||!prompt.includes(BODY_CORE)||!prompt.includes(SUBJECT_CORE))return false;
   if(!/\b195 cm\b/.test(prompt)||!/\b88 kg\b/.test(prompt)||!/lean athletic/.test(prompt))return false;
   if(!prompt.includes('Scene:')||!prompt.includes('Camera:')||!prompt.includes('Lighting:')||
@@ -17,6 +18,15 @@ function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   if(/\b(?:beige|cream|tan)\s+(?:leather\s+)?steering wheel\b/i.test(prompt))return false;
   if(choices){
     const cabin=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
+    const light=deriveSceneLighting(choices);
+    const fixedPhysics=physicsStatement(choices,light,cabin);
+    // Exact immutable facts for every one of the eight selected categories.
+    // A model may polish surrounding English, but not any physical parameter.
+    if(!prompt.includes(fixedPhysics))return false;
+    const outside=prompt.replace(fixedPhysics,'');
+    if(/\b(?:camera|phone)\s+(?:(?:is|at|distance|held|from|away|approximately?)\s+){0,3}\d{2,3}\s*cm\b|\b\d{2,4}\s*gsm\b|\b(?:curb|kerb|gap|clearance)\s+(?:(?:is|height|from|of)\s+){0,2}\d{1,3}\s*cm\b/i.test(outside))return false;
+    if(/\b(?:FOV|brow|mouth|pitch|roll)\s*[:=]?\s*[-+]?\d+(?:\.\d+)?\s*°/i.test(outside))return false;
+    if([...prompt.matchAll(/\b(\d{4})K\b/g)].some(m=>Number(m[1])!==light.kelvin))return false;
     const reflection=[4,29].includes(Number(choices.selfieAngles.id.split('-').at(-1)));
     if(reflection&&!/rear-camera reflection selfie/i.test(prompt))return false;
     if(!reflection&&!/front-camera selfie/i.test(prompt))return false;
@@ -125,6 +135,7 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
     if(!choices.locations||!choices.clothing||!choices.selfieAngles||!choices.poses)return false;
     if(cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id) && !prompt.includes(INTERIOR_RULE))return false;
     if(!prompt.includes(sceneParkingStatement(choices))||!prompt.includes(sceneLightingStatement(choices)))return false;
+    if(!prompt.includes('Selected physics: '+physicsStatement(choices,deriveSceneLighting(choices),cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id))))return false;
     // Only the scene's resolved temperature is permitted in free-model additions;
     // the fixed lighting policy contains conditional temperatures for all times.
     const creativeText=prompt.split('Lighting selection:').slice(1).join('Lighting selection:');

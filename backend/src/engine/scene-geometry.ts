@@ -1,5 +1,6 @@
 import type { ResolvedSelections } from '../types/engine.types.js';
 import { cabinMayBeVisible } from '../rules/cabin.rules.js';
+import { resolvePhysicalOptions } from '../data/physics/index.js';
 
 const numeric = (id: string): number => Number(id.split('-').at(-1));
 const driverAngles = new Set([1, 4, 5, 8, 12, 13, 14, 15]);
@@ -23,6 +24,8 @@ export interface ResolvedCapture {
 export function resolveCapture(choices: ResolvedSelections): ResolvedCapture {
   const angle = numeric(choices.selfieAngles.id);
   const poseNumber = numeric(choices.poses.id);
+  const physics = resolvePhysicalOptions(choices);
+  const poseSafe = physics.poses.physics.mechanicallySafe;
   const inside = cabinMayBeVisible(choices.selfieAngles.id, choices.poses.id);
   const close = [2, 9].includes(angle);
   const seat: ResolvedCapture['seat'] = !inside ? 'outside' :
@@ -36,10 +39,12 @@ export function resolveCapture(choices: ResolvedSelections): ResolvedCapture {
     (!inside && seated) ||
     (seat === 'passenger' && poseNumber <= 9) ||
     (seat === 'rear' && (poseNumber <= 10)) ||
-    (seat === 'driver' && poseNumber === 10);
+    (seat === 'driver' && poseNumber === 10) || !poseSafe;
   let pose = choices.poses.text;
   if (mismatch) {
-    pose = seat === 'outside'
+    pose = !poseSafe && seat==='outside'
+      ? 'standing on grounded feet with only light hand contact on the hood, never seated on its sheet metal'
+      : seat === 'outside'
       ? 'naturally posed at the selected exterior spot, with supported balance'
       : seat === 'passenger'
         ? 'seated in front-right passenger seat with reachable phone hand'
@@ -47,7 +52,7 @@ export function resolveCapture(choices: ResolvedSelections): ResolvedCapture {
           ? 'seated in rear seat with reachable phone grip'
           : 'seated in front-left driver seat with phone within reach';
   }
-  const mounted = !mismatch && poseNumber === 8;
+  const mounted = !mismatch && physics.poses.physics.requiresFixedPhoneMount;
   const steeringHand = !mismatch && seat === 'driver' && [1, 5, 8].includes(poseNumber);
   const angleText = mounted
     ? angle === 4 ? 'rear-camera timer reflection from a supported cabin phone mount'

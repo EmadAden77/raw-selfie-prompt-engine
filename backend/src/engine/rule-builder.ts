@@ -11,6 +11,7 @@ import { INTERIOR_RULE, INTERIOR_VISIBILITY_RULE, cabinMayBeVisible } from '../r
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 import type { ResolvedSelections } from '../types/engine.types.js';
 import { isReflectionSelfie } from './photographic-auditor-v8.js';
+import { resolvePhysicalOptions, physicsStatement } from '../data/physics/index.js';
 
 // Mandatory composition-independent constraints. These describe the physical
 // world; the subject remains the sole primary subject and nothing is widened
@@ -22,9 +23,6 @@ export const LIGHTING_POLICY = 'Use only scene-supported light sources. Derive d
 
 // Location/time overrides must win when an otherwise valid selectable light
 // contradicts a physical enclosure or explicitly night/sunset location.
-const undergroundAndCovered = new Set([8, 10, 11, 12, 13, 29, 46]);
-const desertLocations = new Set([1, 2, 3, 4, 5, 53, 55, 56]);
-const parkingAreas = new Set([7, 8, 10, 11, 12, 13, 14, 28, 29, 30, 31, 32, 33, 35, 36]);
 const locationNumber = (value:string):number => Number(value.split('-').at(-1));
 export interface SceneLighting {
   time: string;
@@ -43,20 +41,21 @@ export function deriveSceneLighting(s:ResolvedSelections):SceneLighting {
   const light=locationNumber(s.lighting.id);
   const angle=locationNumber(s.selfieAngles.id);
   const condition=locationNumber(s.carConditions.id);
-  const covered=undergroundAndCovered.has(location);
-  const desert=desertLocations.has(location);
+  const physics=resolvePhysicalOptions(s);
+  const ground=physics.locations.physics;
+  const lightPhysics=physics.lighting.physics;
+  const covered=ground.parkingGeometry==='covered-bay';
+  const desert=ground.parkingGeometry==='road-shoulder'||ground.parkingGeometry==='farm-edge';
   const side=angle%2===0?'camera-right':'camera-left';
   const weather=condition===5?'rain-damp air and wet reflective surfaces':
     condition===6||desert?'light suspended desert dust and dry muted air':
     light===5?'overcast diffuse air':condition===3?'light road dust': 'ordinary clear Saudi air';
-  const surface=covered?'worn parking concrete, faint lines and tire scuffs':
-    desert?'weathered sandy shoulder and cracked or dusty roadside margins':
-    parkingAreas.has(location)?'patched access-lane asphalt, dusty edges and faded bay markings':
-    'worn patched Saudi asphalt with faded curbstone, dusty gutters and imperfect paint';
-  const parking=covered||parkingAreas.has(location)?'properly within a legal marked parking or service bay, never blocking a pump or access lane':
-    desert?'safely parallel to the true road edge on a firm shoulder; no invented curb':
-    'parked parallel to a 15 cm beige-gray concrete curb, straight wheels 20–30 cm from it in a legal roadside space';
-  let time='morning',kelvin=5000,source='the one available low morning sun from the '+side+' sky',
+  const surface=ground.groundMaterial;
+  const parking=ground.parkingGeometry==='marked-bay'||covered
+    ? 'properly within a legal marked parking or service bay, never blocking a pump or access lane'
+    : desert?'safely parallel to the true road edge on a firm shoulder; no invented curb'
+    : 'parked parallel to a 15 cm beige-gray concrete curb, straight wheels 20–30 cm from it in a legal roadside space';
+  let time='morning',kelvin=lightPhysics.nominalKelvin,source='the one available low morning sun from the '+side+' sky',
     shadows='moderate soft-edged shadows away from the low sun';
   if(light===2){time='noon';kelvin=5500;source='one high direct sun toward '+side;
     shadows='short sharp shadows cast away from the high sun';}
@@ -127,7 +126,8 @@ export function buildRulePrompt(selections:ResolvedSelections):string{
   const fixed=[
     ...identityRules,BODY_RULE,BODY_FRAMING_RULE,COMPOSITION_RULE,...hairRules,
     ...carRules,...interior,...selfieRules,...realismRules,...physicsRules,...locationRules,
-    PARKING_RULE,STREET_RULE,LIGHTING_POLICY,sceneParkingStatement(selections),sceneLightingStatement(selections)
+    PARKING_RULE,STREET_RULE,LIGHTING_POLICY,sceneParkingStatement(selections),sceneLightingStatement(selections),
+    'Selected physics: '+physicsStatement(selections,deriveSceneLighting(selections),cabinMayBeVisible(selections.selfieAngles.id,selections.poses.id))
   ];
   return [REQUIRED_PREFIX+'.',...fixed,...selected].join(' ').replace(/\s+/g,' ').trim();
 }

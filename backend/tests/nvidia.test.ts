@@ -73,7 +73,7 @@ test('no new fact is accepted, including plausible added light, curb, road or fa
     canonical.replace('Lighting:', 'Lighting: An additional street lamp creates a second source.'),
     canonical.replace('Framing:', 'Framing: The subject is shown full-body from a remote camera.'),
     canonical + ' Natural new dust accumulates on the dashboard.',
-    canonical.replace('No wax or plastic skin', 'Wax or plastic skin')
+    canonical.replace('no beauty filters, wax, plastic skin', 'beautified porcelain skin')
   ];
   try {
     for (const text of forbidden) {
@@ -91,7 +91,7 @@ test('editor cannot remove any canonical fact or add a new object even if existi
   assert.equal(validateEditorialRewrite(canonical, canonical.replace('2022', '2023')), false);
   assert.equal(validateEditorialRewrite(canonical, canonical.replace('Range Rover Sport', 'Range Rover')), false);
   assert.equal(validateEditorialRewrite(canonical, canonical + ' There is a new road sign.'), false);
-  assert.equal(validateEditorialRewrite(canonical, canonical.replace('No invented cabin grime.', '')), false);
+  assert.equal(validateEditorialRewrite(canonical, canonical.replace('No off-frame details.', '')), false);
 });
 
 test('NVIDIA down gracefully: no env key, invalid JSON-like text, 401, and 404 retry', async () => {
