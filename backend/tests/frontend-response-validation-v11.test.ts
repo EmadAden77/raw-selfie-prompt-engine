@@ -28,7 +28,7 @@ test('client accepts NVIDIA safe article refinement but rejects changed physical
     canonical.replace('195 cm','193 cm'),
     canonical.replace('88 kg','83 kg'),
     canonical.replace('black leather three-spoke wheel','beige leather three-spoke wheel'),
-    canonical.replace(/phone \d+cm/,'phone 98cm'),
+    canonical+' Phone 98cm, invented.',
     canonical+' A second light adds a new shadow.'
   ]){
     assert.notEqual(wrong,canonical);
