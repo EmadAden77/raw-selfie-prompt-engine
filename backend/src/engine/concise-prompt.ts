@@ -69,48 +69,32 @@ function framingProse(inside: boolean, close: boolean, steeringHand: boolean): s
   return 'Framing: face and upper torso dominate 9:16; no pullback.';
 }
 
-const unsafeAddition = /\b(?:show|reveal|widen|entire|whole|full.body|landmark|tower|skyline|famous|new face|different person|studio|cinematic|beauty|retouch|CGI|8K|perfect skin|second sun|extra light|two suns|recolor|replace|redesign|zoom out|pull back|crane|drone|selfie stick)\b/i;
-function safeDetail(raw: string | undefined, maxCharacters: number): string {
-  if (!raw) return '';
-  const text = raw.trim().replace(/[.!?]+$/, '').trim();
-  if (text.length < 15 || text.length > maxCharacters ||
-      /[<>{}\u0600-\u06ff`]|[\n\r]/.test(text) || unsafeAddition.test(text)) return '';
-  return text;
-}
-
-// NVIDIA descriptions are context checked even after the consistency critic.
-// In particular, a desert shoulder is not an urban sidewalk, and a clean car
-// must not receive invented grime simply to make the image look photographic.
-function backgroundProse(choices: ResolvedSelections, variation: number, plan?: ScenePlan): string {
+// Deterministic Rule Builder selection. NVIDIA never contributes new objects,
+// surface wear, light, material or scene geometry to these descriptions.
+function backgroundProse(choices: ResolvedSelections, variation: number): string {
   const location = numberOf(choices.locations.id);
   const desert = [1, 2, 3, 4, 5, 53, 55, 56].includes(location);
   const covered = deriveSceneLighting(choices).covered;
-  const option = Math.abs(variation) % 3;
-  const contextual = desert
-    ? ['a distant passing vehicle', 'a patch of irregular dusty shoulder', 'faint roadside tire wear'][option]
+  const index = Math.abs(variation) % 3;
+  const detail = desert
+    ? ['distant traffic', 'an irregular dusty shoulder', 'faint tire wear'][index]
     : covered
-      ? ['a partial parked-car edge', 'faint scuffs on visible concrete', 'one distant pedestrian'][option]
-      : ['a passing pedestrian at the far edge', 'a partly visible parked car', 'subtle worn road markings'][option];
-  const proposal = safeDetail(plan?.environmentalRealism.background, 110);
-  const condition = numberOf(choices.carConditions.id);
-  const conflicting = desert && /\b(?:sidewalk|curb|traffic lights|shopping|storefront|urban|pavement slabs)\b/i.test(proposal)
-    || covered && /\b(?:sunbeam|direct sun|roadside|open sky|desert shoulder)\b/i.test(proposal)
-    || condition === 1 && /\b(?:dirty vehicle|dusty car|mud on (?:paint|doors)|grimy paint)\b/i.test(proposal)
-    || condition !== 5 && /\b(?:rainfall|wet asphalt|wet pavement|puddles)\b/i.test(proposal);
-  return 'Only at the existing frame edge, if visible: ' + (proposal && !conflicting ? proposal : contextual) + '.';
+      ? ['a parked-car edge', 'faint concrete scuffs', 'one distant pedestrian'][index]
+      : ['a pedestrian at the edge', 'a partly visible parked car', 'worn road markings'][index];
+  return 'At the visible frame edge only: ' + detail + '.';
 }
 
-function nvidiaMaterialDetail(choices: ResolvedSelections, plan?: ScenePlan): string {
-  const candidate = safeDetail(plan?.clothingAndMaterialPhysics.fabricBehavior, 115);
-  if (!candidate || !/\b(?:fabric|folds?|creases?|drapes?|sleeves?|garment|cloth|seams?)\b/i.test(candidate) ||
-      /\b(?:face|smile|hair|skin|wheel|dashboard|camera|flash|lighting|windows?|road|car)\b/i.test(candidate) ||
-      /^gravity-consistent folds in\b/i.test(candidate) ||
-      /\bcotton\b/i.test(candidate) && !/\b(?:cotton|thobe)\b/i.test(choices.clothing.text))
-    return '';
-  return 'Cloth detail: ' + candidate + '.';
+function parkingProse(choices: ResolvedSelections, inside: boolean): string {
+  if (inside) return '';
+  const d = deriveSceneLighting(choices);
+  if (d.parking.includes('parallel to the curb'))
+    return 'Visible roadside geometry only: straight wheels, parked parallel 20–30 cm from a 15 cm beige-gray concrete curb; worn dusty patched Saudi asphalt.';
+  if (d.parking.includes('shoulder'))
+    return 'If framed: straight wheels on a firm dusty shoulder parallel to the road, never an invented curb.';
+  return 'If framed: straight wheels in a legal marked bay, authentic worn ground, no obstruction.';
 }
 
-export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan, variation = 0): string {
+export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePlan, variation = 0): string {
   const angle = numberOf(choices.selfieAngles.id);
   const capture = resolveCapture(choices);
   const { inside, close } = capture;
@@ -120,9 +104,10 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
   const identity = [REQUIRED_PREFIX + '.', IDENTITY_CORE, BODY_CORE, SUBJECT_CORE].join(' ');
   const expressionGuard = expression === 1 ? ' No smile or posed grin.'
     : expression === 5 ? ' Do not turn this serious look into a smile.' : '';
-  const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting. ' +
-    'Clothing: ' + choices.clothing.text + '. Expression: ' + choices.expressions.text + '.' +
-    expressionGuard + ' Hair: ' + choices.hairstyles.text + ' within existing density. ' +
+  const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting.';
+  const clothing = 'Clothing: ' + choices.clothing.text + '.';
+  const personalDetails = 'Expression: ' + choices.expressions.text + '.' + expressionGuard +
+    ' Hair: ' + choices.hairstyles.text + ' within existing density. ' +
     'Pose: ' + capture.pose + '. Angle: ' + capture.angleText + '.';
   const vehicle = inside
     ? 'The parked pearl-white 2022 Range Rover Sport has black rims; exterior off-frame.'
@@ -149,16 +134,16 @@ export function buildConcisePrompt(choices: ResolvedSelections, plan?: ScenePlan
     : condition === 1 ? 'Freshly washed surfaces stay clean.'
       : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
         : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
-  const surroundings = !inside && !close ? backgroundProse(choices, variation, plan) : '';
-  const material = nvidiaMaterialDetail(choices, plan);
+  const surroundings = !inside && !close ? backgroundProse(choices, variation) : '';
   const realism = 'Photographic realism: shared phone exposure, reference pores, real folds, coherent shadows and highlights. ' +
-    support + ' ' + surface + ' ' + surroundings + ' ' + material +
+    support + ' ' + surface + ' ' + surroundings +
     ' No wax or plastic skin, beauty filters, CGI, invented marks, extra fingers, false reflections or exaggerated HDR.';
-  let result = [identity, scene, vehicle, cabin, camera, framingProse(inside, close, capture.steeringHand),
-    'Lighting: ' + lightingProse(choices, inside), realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
-  // Optional NVIDIA prose must never force a longer-than-allowed production prompt.
-  if (promptWordCount(result) > 300 && material) result = result.replace(' ' + material, '');
-  if (promptWordCount(result) > 300 && plan && surroundings)
-    result = result.replace(surroundings, backgroundProse(choices, variation));
-  return result.replace(/\s+/g, ' ').trim();
+  const lighting = deriveSceneLighting(choices);
+  // Rule Builder alone owns source, Kelvin, shadow logic and physical dimensions.
+  const result = [identity, vehicle, cabin, scene, clothing,
+    'Lighting: ' + lightingProse(choices, inside) + ' ' + lighting.kelvin + 'K.',
+    personalDetails, camera, framingProse(inside, close, capture.steeringHand),
+    parkingProse(choices, inside), realism
+  ].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+  return result;
 }
