@@ -22,8 +22,8 @@ test('long-form rules remain protected while final prompts preserve identity, ph
     const prompt=fallbackGenerator({selections:choices,variation:7});
     assert.ok(prompt.includes(IDENTITY_CORE));
     assert.ok(prompt.includes(SUBJECT_CORE));
-    assert.match(prompt,/193 cm/);
-    assert.match(prompt,/83 kg/);
+    assert.match(prompt,/195 cm/);
+    assert.match(prompt,/88 kg/);
     assert.match(prompt,/lean athletic/);
     assert.doesNotMatch(prompt,/beige steering wheel/i);
     assert.ok(promptWordCount(prompt)<=500);
@@ -46,8 +46,8 @@ test('validator rejects missing protected terms and contradictory geometry or ma
   const base=fallbackGenerator({selections,variation:2});
   const choices=resolveSelections(selections);
   assert.equal(validatePrompt(base,choices),true);
-  assert.equal(validatePrompt(base.replace('193 cm','195 cm'),choices),false);
-  assert.equal(validatePrompt(base.replace('83 kg','88 kg'),choices),false);
+  assert.equal(validatePrompt(base.replace('195 cm','195 cm'),choices),false);
+  assert.equal(validatePrompt(base.replace('88 kg','88 kg'),choices),false);
   assert.equal(validatePrompt(base.replace(IDENTITY_CORE,''),choices),false);
   assert.equal(validatePrompt(base.replace(SUBJECT_CORE,''),choices),false);
   assert.equal(validatePrompt(base.replace(LHD_GEOMETRY,''),choices),false);
