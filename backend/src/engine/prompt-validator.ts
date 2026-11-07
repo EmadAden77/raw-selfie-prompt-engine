@@ -1,9 +1,9 @@
 import { physicsStatement } from '../data/physics/index.js';
-import { promptWordCount, LHD_GEOMETRY, FACTORY_DASHBOARD, IDENTITY_CORE, BODY_CORE, SUBJECT_CORE } from './concise-prompt.js';
+import { promptWordCount, MAX_PROMPT_WORDS, LHD_GEOMETRY, FACTORY_DASHBOARD, IDENTITY_CORE, BODY_CORE, SUBJECT_CORE } from './concise-prompt.js';
 import { resolveCapture } from './scene-geometry.js';
 function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   const count=promptWordCount(prompt);
-  if(count<105||count>300) return false;
+  if(count<105||count>MAX_PROMPT_WORDS) return false;
   if(!prompt.includes(IDENTITY_CORE)||!prompt.includes(BODY_CORE)||!prompt.includes(SUBJECT_CORE))return false;
   if(!/\b195 cm\b/.test(prompt)||!/\b88 kg\b/.test(prompt)||!/lean athletic/.test(prompt))return false;
   if(!prompt.includes('Scene:')||!prompt.includes('Camera:')||!prompt.includes('Lighting:')||
