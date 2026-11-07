@@ -50,10 +50,7 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
   const ground=place.curbHeightCm===15
     ? 'curb 15 cm gap 20–30 cm, wheels straight'
     : place.parkingGeometry+', no fabricated curb';
-  const surface=place.parkingGeometry==='parallel-curb'?'worn Saudi asphalt':
-    place.parkingGeometry==='road-shoulder'?'sandy shoulder':
-    place.parkingGeometry==='farm-edge'?'firm soil/gravel':
-    place.parkingGeometry==='covered-bay'?'scuffed concrete':'faded parking asphalt';
+  const surface=place.groundMaterial;
   const wall=place.nearestWallClearanceMinCm===null?'':', wall ≥100cm if adjacent';
   const intensity=scene.covered?Math.min(light.relativeIntensity,0.35):light.relativeIntensity;
   const lens=angle.lensDistortion==='close-range perspective stretch'?'close lens stretch':'mild edge stretch';
