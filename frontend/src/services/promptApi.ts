@@ -1,12 +1,8 @@
 import type { PromptRequest, PromptResponse } from '../types/prompt';
-import { cabinMayBeVisible } from '../data/fixedRules';
 import { buildLocalPrompt } from './localConcisePrompt';
 import { buildLocalAudit } from './localAudit';
-import { resolveSelections } from '../../../backend/src/data/option-mappings.js';
-import { deriveSceneLighting } from '../../../backend/src/engine/rule-builder.js';
-import { physicsStatement } from '../../../backend/src/data/physics/index.js';
+import { validateClientPromptResponse } from '../../../backend/src/engine/client-response-validator.js';
 export { buildLocalPrompt } from './localConcisePrompt';
-const PREFIX = 'ChatGPT, using the reference image I uploaded, generate an image of the exact same person';
 
 const validReasons = new Set([
   'no_key','invalid_key','unauthorized','forbidden','quota','rate_limited',
@@ -36,24 +32,11 @@ export async function generatePrompt(request:PromptRequest):Promise<PromptRespon
     const data:unknown=await response.json();
     if (!data||typeof data!=='object'||!('prompt' in data)||typeof data.prompt!=='string')
       return fallback('invalid_response');
-    // A v10 backend can return valid identity and car facts while omitting all
-    // v11 physical option metadata. Never display that stale output as v11.
-    const choices = resolveSelections(request.selections);
-    const expectedPhysics = physicsStatement(
-      choices,deriveSceneLighting(choices),
-      cabinMayBeVisible(request.selections.selfieAngles,request.selections.poses)
-    );
-    if (!data.prompt.includes(expectedPhysics)) return fallback('invalid_response');
-    if (!data.prompt.startsWith(PREFIX)||/[\u0600-\u06ff]/.test(data.prompt)||data.prompt.length<400||
-        !/sole primary subject|sole primary/i.test(data.prompt)||
-        !/195 cm/.test(data.prompt)||!/88 kg/.test(data.prompt)||!/lean athletic/.test(data.prompt)||
-        (cabinMayBeVisible(request.selections.selfieAngles,request.selections.poses)&&(!/black leather/i.test(data.prompt)||!/glossy dark wood/i.test(data.prompt)||!/Touch Pro Duo/i.test(data.prompt)||!/left.hand drive|\bLHD\b/i.test(data.prompt)))||
-        
-        !/2022\s+Range Rover Sport/i.test(data.prompt)||!/pearl.white/i.test(data.prompt)||
-        !/parked|stationary/i.test(data.prompt)||
-        !/no wax|no beauty filters|no waxy skin/i.test(data.prompt))
-      return fallback('invalid_response');
+    // The same canonical Rule Builder, physics verifier and editorial validator
+    // run in browser and backend. Never hardcode parallel wording assumptions.
     const source='source' in data && data.source==='server'?'server':'local';
+    if (!validateClientPromptResponse(request,data.prompt,source))
+      return fallback('invalid_response');
     const reason='reason' in data&&typeof data.reason==='string'&&validReasons.has(data.reason)
       ?data.reason as PromptResponse['reason']:undefined;
     const auditValue='audit' in data?data.audit:undefined;
