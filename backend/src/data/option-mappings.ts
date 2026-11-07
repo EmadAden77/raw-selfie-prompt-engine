@@ -58,7 +58,16 @@ export const optionCatalogue:OptionCatalogue={
 export function resolveSelections(selections:Selections):ResolvedSelections {
   const result={} as ResolvedSelections;
   for(const key of Object.keys(optionCatalogue) as CategoryKey[]){
-    const entry=optionCatalogue[key].find(x=>x.id===selections[key]);
+    // Automatic angle is resolved deterministically from actual scene and pose.
+    // NVIDIA remains a language editor and cannot invent the physical viewpoint.
+    const isAuto=key==='selfieAngles' && selections.selfieAngles==='angle-auto';
+    const pose=Number(selections.poses.split('-').at(-1));
+    const location=Number(selections.locations.split('-').at(-1));
+    const autoAngle=pose===10?'angle-6':pose<=15?'angle-1':
+      [1,2,3,4,5,55,56].includes(location)?'angle-18':
+      [7,8,28,29,30,31,32,33,35].includes(location)?'angle-16':'angle-16';
+    const id=isAuto?autoAngle:selections[key];
+    const entry=optionCatalogue[key].find(x=>x.id===id);
     if(!entry) throw new Error('Invalid option: '+key);
     result[key]=entry;
   }
