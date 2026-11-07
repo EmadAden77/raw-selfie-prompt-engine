@@ -73,7 +73,7 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
     'generic smartphone at natural selfie reach; selected camera angle '+selections.selfieAngles.text+
       '; normal handheld edge distortion, actual visible framing '+p.selfieAngles.physics.visibleBody+';',
     'anatomy: '+supportedPose+', '+movement+';',
-    'ground when visible: '+place.material+', '+ground+';',
+    'ground when visible at '+selections.locations.text+': '+place.material+', '+ground+';',
     'vehicle finish '+selections.carConditions.text+', '+finish.contact+', '+p.carConditions.physics.contamination+
       ', '+p.carConditions.physics.opticalReflection+'; no invented weather;',
     'scene illumination '+scene.kelvin+'K from '+scene.source+', shadows '+scene.shadows+'.'
