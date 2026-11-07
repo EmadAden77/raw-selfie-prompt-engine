@@ -33,7 +33,7 @@ jobs:
           assert 'access-control-allow-origin: https://emadaden77.github.io' in headers
           assert any(line.startswith('access-control-allow-methods:') and 'post' in line for line in headers)
           PY
-      - name: Probe NVIDIA connectivity without a real API key
+      - name: Reject browser-supplied NVIDIA API keys
         run: |
           node --input-type=module <<'JS'
           const ids = {locations:'location-1',clothing:'clothing-1',
@@ -50,7 +50,7 @@ jobs:
             });
             const body = await response.json();
             console.log(JSON.stringify({status:response.status,source:body.source,reason:body.reason}));
-            if (response.status !== 200 || !['unauthorized','forbidden'].includes(body.reason)) process.exitCode=1;
-          } catch (e) { console.error('NVIDIA connectivity probe failed:',e.name); process.exitCode=1; }
+            if (response.status !== 400) process.exitCode=1;
+          } catch (e) { console.error('Server-only NVIDIA credential security probe failed:',e.name); process.exitCode=1; }
           finally { clearTimeout(timer); }
           JS
