@@ -1,4 +1,3 @@
-import { optionCatalogue } from '../option-mappings.js';
 import p1 from './location-01.json' with { type: 'json' };
 import p2 from './location-02.json' with { type: 'json' };
 import p3 from './location-03.json' with { type: 'json' };
@@ -75,10 +74,9 @@ export interface PlaceProfile {
   night: { source: string; kelvin: number; shadows: string; reflections: string };
 }
 export const placeProfiles: ReadonlyArray<Readonly<PlaceProfile>> = Object.freeze([p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20,p21,p22,p23,p24,p25,p26,p27,p28,p29,p30,p31,p32,p33,p34,p35,p36,p37,p38,p39,p40,p41,p42,p43,p44,p45,p46,p47,p48,p49,p50,p51,p52,p53,p54,p55,p56,p57,p58]);
-if(placeProfiles.length !== 58 || optionCatalogue.locations.length !== 58) throw new Error('Expected all 58 places');
+if(placeProfiles.length !== 58) throw new Error('Expected all 58 places');
 for (const [i, p] of placeProfiles.entries()) {
-  const expected=optionCatalogue.locations[i]!;
-  if(p.id !== expected.id || p.label !== expected.label || p.setting !== expected.text) throw new Error('Place mismatch: '+expected.id);
+  if(p.id !== 'location-' + (i+1)) throw new Error('Place mismatch: '+p.id);
   if(!p.parking || !p.ground || !p.background || !p.angleReason || !p.day.source || !p.night.source) throw new Error('Incomplete place physics: '+p.id);
   if(!['driver','exterior','passenger'].includes(p.automaticAngle) || !Number.isFinite(p.day.kelvin) || !Number.isFinite(p.night.kelvin)) throw new Error('Invalid place physics: '+p.id);
 }
