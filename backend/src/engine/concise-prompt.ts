@@ -5,10 +5,11 @@ import { cabinMayBeVisible } from '../rules/cabin.rules.js';
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
 import { isReflectionSelfie } from './photographic-auditor-v8.js';
 import { resolveCapture } from './scene-geometry.js';
+import { physicsStatement } from '../data/physics/index.js';
 
 export const LHD_GEOMETRY = 'Saudi LHD: driver front-left, passenger front-right, wheel left, console right; no mirroring.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
-export const IDENTITY_CORE = 'Preserve reference facial geometry, natural asymmetry, apparent age, skin tone and texture, eyes, brows, nose, lips, jaw, hairline, thinning, hair density, curl pattern and facial-hair gaps; no reshaping, beautification or invented marks.';
+export const IDENTITY_CORE = 'Preserve reference facial geometry, asymmetry, age, skin tone, pores, eyes, brows, nose, lips, jaw, original hairline, density, curls and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique and proportions.';
 export const SUBJECT_CORE = 'Reference person remains the sole primary subject; no scenery-driven pullback.';
 export const promptWordCount = (text: string): number => text.trim().split(/\s+/).filter(Boolean).length;
@@ -84,16 +85,6 @@ function backgroundProse(choices: ResolvedSelections, variation: number): string
   return 'At the visible frame edge only: ' + detail + '.';
 }
 
-function parkingProse(choices: ResolvedSelections, inside: boolean): string {
-  if (inside) return '';
-  const d = deriveSceneLighting(choices);
-  if (d.parking.includes('concrete curb'))
-    return 'Visible roadside geometry only: straight wheels, parked parallel 20–30 cm from a 15 cm beige-gray concrete curb; worn dusty patched Saudi asphalt.';
-  if (d.parking.includes('shoulder'))
-    return 'If framed: straight wheels on dusty shoulder; no invented curb.';
-  return 'If framed: straight wheels in a legal marked bay, authentic worn ground, no obstruction.';
-}
-
 export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePlan, variation = 0): string {
   const angle = numberOf(choices.selfieAngles.id);
   const capture = resolveCapture(choices);
@@ -107,7 +98,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
   const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting.';
   const clothing = 'Clothing: ' + choices.clothing.text + '.';
   const personalDetails = 'Expression: ' + choices.expressions.text + '.' + expressionGuard +
-    ' Hair: ' + choices.hairstyles.text + ' within existing density. ' +
+    ' Hair: ' + choices.hairstyles.text + '. ' +
     'Pose: ' + capture.pose + '. Angle: ' + capture.angleText + '.';
   const vehicle = inside
     ? 'The parked pearl-white 2022 Range Rover Sport has black rims; exterior off-frame.'
@@ -115,7 +106,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
       ? 'The parked pearl-white 2022 Range Rover Sport retains sport package, black rims and grille, LED headlights; ' + choices.carConditions.text + ' only where visible.'
       : 'Pearl-white 2022 Range Rover Sport with sport package and black rims stays parked off-frame.';
   const cabin = inside
-    ? LHD_GEOMETRY + ' Visible: light beige leather seats/dashboard, black leather three-spoke wheel, glossy dark wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. No off-frame details.'
+    ? LHD_GEOMETRY + ' Visible only: beige leather seats/dashboard, black leather three-spoke wheel, dark glossy wood, chrome, piano-black trim, panoramic roof; ' + FACTORY_DASHBOARD + '. No off-frame details.'
     : 'Saudi LHD unchanged; no off-frame cabin details.';
   const camera = capture.mounted
     ? reflection
@@ -123,27 +114,22 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
       : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie on a physically supported cabin mount, timer started by the subject; no invented hand-held photographer.'
     : reflection
       ? 'Camera: Xiaomi 15 Ultra 23 mm-equivalent f/1.63 rear-camera reflection selfie; one reflected phone and grip, screen faces the subject, lens aimed at mirror/glass; real scale and occlusion.'
-      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at arm reach; phone is outside its own direct view; slight tilt, no photographer, portrait mode or beauty processing.';
-  const support = capture.mounted
-    ? 'Hands grip wheel; fixed mount and seat contact obey physics.'
-    : inside
-      ? 'Seat contact and hands obey gravity; selfie and free hands remain distinct.'
-      : 'Real grip, support and garment folds.';
-  const surface = inside
-    ? 'No invented cabin grime.'
-    : condition === 1 ? 'Freshly washed surfaces stay clean.'
-      : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
-        : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
-  const surroundings = !inside && !close ? backgroundProse(choices, variation) : '';
-  const realism = 'Photographic realism: shared phone exposure, reference pores, real folds, coherent shadows and highlights. ' +
-    support + ' ' + surface + ' ' + surroundings +
-    ' No wax or plastic skin, beauty filters, CGI, invented marks, extra fingers, false reflections or exaggerated HDR.';
+      : 'Camera: Xiaomi 15 Ultra 21 mm-equivalent f/2.0 front-camera selfie at reachable arm length; phone stays outside its own view; natural tilt, no portrait mode or beauty processing.';
   const lighting = deriveSceneLighting(choices);
-  // Rule Builder alone owns source, Kelvin, shadow logic and physical dimensions.
-  const result = [identity, vehicle, cabin, scene, clothing,
+  const physical = physicsStatement(choices, lighting, inside);
+  const surface = inside ? '' : condition === 1
+    ? 'Freshly washed surfaces remain clean.' : condition === 5
+      ? 'Visible droplets follow gravity.' : '';
+  // Physical attributes for every selected option are mandatory. Only optional
+  // atmosphere at a naturally visible frame edge can be omitted for brevity.
+  const surroundings = !inside && !close ? backgroundProse(choices,variation) : '';
+  const realism = 'Photographic realism: one shared phone exposure, natural pores and folds; no beauty filters, wax, plastic skin, CGI, extra fingers, false reflections or exaggerated HDR.';
+  const mandatory = [identity, vehicle, cabin, scene, clothing,
     'Lighting: ' + lightingProse(choices, inside) + ' ' + lighting.kelvin + 'K.',
     personalDetails, camera, framingProse(inside, close, capture.steeringHand),
-    parkingProse(choices, inside), realism
-  ].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+    physical, realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+  const result = (promptWordCount(mandatory+' '+surface+' '+surroundings)<=300
+    ? [mandatory,surface,surroundings].filter(Boolean).join(' ') : mandatory);
+
   return result;
 }
