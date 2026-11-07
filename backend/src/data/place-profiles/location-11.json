@@ -1,0 +1,24 @@
+{
+  "id": "location-11",
+  "label": "مضخة البنزين",
+  "setting": "next to a gas pump",
+  "parking": "Stationary in a lawful service bay with the pump on the DRIVER'S LEFT beside the driver-side door; left-hand drive remains unchanged; pump clearance follows marked station safety spacing, never an invented number.",
+  "ground": "Worn Saudi asphalt with repaired patches and faded markings, dusty interlocking sidewalk and a beige-gray concrete curb about 15 cm tall; mostly diffuse reflections.",
+  "background": "Existing fuel canopy, the driver-side pump, forecourt ground and ordinary station activity only where visible.",
+  "automaticAngle": "driver",
+  "angleReason": "A reachable front-left driver-seat selfie keeps facial identity dominant and correct LHD layout.",
+  "preferredTime": "night",
+  "goldenPeriod": "after dusk when an existing local fixture is on",
+  "day": {
+    "source": "Sunlight moderated by the actual pump canopy, 5500K daylight with soft shadow from the canopy edge; no fictional second lamp.",
+    "kelvin": 5500,
+    "shadows": "Away from the physically present daylight source; natural contact shade.",
+    "reflections": "Limited realistic daylight reflections on pearl-white paint and automotive glass."
+  },
+  "night": {
+    "source": "The single existing overhead fuel-canopy fixture, broad downward 4000K illumination, one overhead shadow direction, soft reflections on white paint and windows.",
+    "kelvin": 4000,
+    "shadows": "Away from the one established dominant night source, or subdued when only sky is present.",
+    "reflections": "Localized weak highlights on pearl-white paint and glass, no studio fill."
+  }
+}
