@@ -1,3 +1,4 @@
+import { getPlaceProfile } from '../data/place-profiles/index.js';
 import { physicsStatement } from '../data/physics/index.js';
 import { promptWordCount, MAX_PROMPT_WORDS, LHD_GEOMETRY, FACTORY_DASHBOARD, IDENTITY_CORE, BODY_CORE, SUBJECT_CORE } from './concise-prompt.js';
 import { resolveCapture } from './scene-geometry.js';
@@ -17,6 +18,7 @@ function validateConcise(prompt:string,choices?:ResolvedSelections):boolean {
   if(/(?:192|193|194|196|197)\s*cm|\b(?:83|84|85|86|87|89|90)\s*kg/i.test(prompt))return false;
   if(/\b(?:beige|cream|tan)\s+(?:leather\s+)?steering wheel\b/i.test(prompt))return false;
   if(choices){
+    if(!prompt.includes('Parking: '+getPlaceProfile(choices.locations.id).parking)) return false;
     const cabin=cabinMayBeVisible(choices.selfieAngles.id,choices.poses.id);
     const light=deriveSceneLighting(choices);
     const fixedPhysics=physicsStatement(choices,light,cabin);
