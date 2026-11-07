@@ -1,5 +1,5 @@
 import { REQUIRED_PREFIX } from '../rules/language.rules.js';
-import { promptWordCount } from './concise-prompt.js';
+import { promptWordCount, MAX_PROMPT_WORDS } from './concise-prompt.js';
 
 // NLP similarity cannot establish factual equivalence. Fail closed:
 // every source sentence keeps its ordered content-bearing tokens.
@@ -20,7 +20,7 @@ export function protectedFactSignatures(prompt: string): string[] {
 export function validateEditorialRewrite(canonical: string, edited: unknown): edited is string {
   if (typeof edited !== 'string' || edited.length > 13000 || edited.length < 450) return false;
   if (!edited.startsWith(REQUIRED_PREFIX) || /[\u0600-\u06ff<>{}\x00-\x08\u0060]/.test(edited)) return false;
-  if (promptWordCount(edited) > 300) return false;
+  if (promptWordCount(edited) > MAX_PROMPT_WORDS) return false;
   const before = protectedFactSignatures(canonical);
   const after = protectedFactSignatures(edited);
   if (before.length !== after.length) return false;
