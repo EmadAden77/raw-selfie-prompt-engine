@@ -41,7 +41,7 @@
 }
 ```
 
-`source` يساوي `server` إذا استُخدمت نتيجة NVIDIA المقبولة، أو `local` إذا استُخدم المولّد الاحتياطي داخل Backend. محتوى `prompt` الحقيقي أطول ويضم القواعد الثابتة. الأخطاء: 400 للمدخلات غير الصالحة، 404 لمسار غير موجود، 429 لتجاوز المعدل، و500 للأخطاء غير المتوقعة.
+`source` يساوي `server` إذا استُخدمت نسخة تحرير NVIDIA المطابقة لحقائق Rule Builder، أو `local` إذا استُخدم المولّد الاحتياطي داخل Backend. محتوى `prompt` الحقيقي أطول ويضم القواعد الثابتة. الأخطاء: 400 للمدخلات غير الصالحة، 404 لمسار غير موجود، 429 لتجاوز المعدل، و500 للأخطاء غير المتوقعة.
 
 ## طلب تجريبي دون أي مفتاح
 
@@ -58,7 +58,7 @@ Frontend (React + TypeScript + Vite, Arabic RTL)
   → JSON: { selections, variation }
   → POST /api/prompt
 Backend (Node.js + TypeScript + Express)
-  → Validation → Rule Builder → Creative Expander
+  → Validation → Rule Builder (complete prompt) → NVIDIA editor-only → factual comparison
   → NVIDIA API (deepseek-ai/deepseek-v4.1-flash)
   → Prompt Validator → English ChatGPT prompt
   ↳ NVIDIA missing/unavailable/invalid → Backend Fallback Generator
