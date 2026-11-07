@@ -75,7 +75,7 @@ test('gas pump remains on the driver left; covered parking has no invented direc
 test('locked physics is deterministic, editor may not add, remove or replace measurements',()=>{
  const choices=resolveSelections(sample());
  const original=prompt();
- assert.ok(original.includes(physicsStatement(choices,deriveSceneLighting(choices),false)));
+ assert.ok(original.includes(physicsStatement(choices,deriveSceneLighting(choices),true)));
  assert.equal(validateEditorialRewrite(original,original),true);
  for(const wrong of [
   original.replace('195 cm','193 cm'),
