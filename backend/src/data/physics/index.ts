@@ -56,12 +56,12 @@ export function physicsStatement(selections: ResolvedSelections, scene: Resolved
   return [
     'Physics:',
     'fabric '+clothing.material+' ~'+clothing.modelArealMassGsm+'gsm/'+clothing.modelThicknessMm+'mm, '+fold+';',
-    'face brow '+face.browAngleDeg+'°, mouth '+face.mouthCornerAngleDeg+'°, eyes '+face.leftEyeOpeningPct+'/'+face.rightEyeOpeningPct+'%, identity locked;',
-    'hair '+hair.strandDirection+' '+hair.strandLiftDeg+'° lift, unchanged density;',
-    'camera '+angle.cameraDistanceCm+'cm/'+angle.effectiveHorizontalFovDeg+'° FOV, pitch '+angle.pitchDeg+'°, roll '+angle.rollDeg+'°, '+angle.visibleBody+'/'+angle.visibleVehicle+', '+lens+';',
-    'joints elbow '+(pose.mechanicallySafe?pose.elbowAngleDeg:110)+'°, knee '+(pose.mechanicallySafe?pose.kneeAngleDeg:170)+'°, support '+support+';',
-    'ground '+place.groundMaterial+', '+ground+wall+';',
-    'finish dust '+finish.modeledDustCoveragePct+'%, water '+finish.modeledWaterCoveragePct+'%, '+(finish.glassAffected?'glass affected':'glass preserved')+';',
-    'light '+scene.kelvin+'K '+scene.cameraSide+', relative intensity '+intensity+'.'
+    'face brow'+face.browAngleDeg+'° mouth'+face.mouthCornerAngleDeg+'° eyes'+face.leftEyeOpeningPct+'/'+face.rightEyeOpeningPct+'%, identity fixed;',
+    'hair '+hair.strandDirection+' lift'+hair.strandLiftDeg+'°, original density;',
+    'phone '+angle.cameraDistanceCm+'cm FOV'+angle.effectiveHorizontalFovDeg+'° pitch'+angle.pitchDeg+'° roll'+angle.rollDeg+'°, '+angle.visibleBody+'/'+angle.visibleVehicle+', '+lens+';',
+    'joints elbow'+(pose.mechanicallySafe?pose.elbowAngleDeg:110)+'° knee'+(pose.mechanicallySafe?pose.kneeAngleDeg:170)+'° '+support+'-supported;',
+    'ground if visible: '+place.groundMaterial+', '+ground+wall+';',
+    'finish if visible: dust'+finish.modeledDustCoveragePct+'% water'+finish.modeledWaterCoveragePct+'%, '+(finish.glassAffected?'glass affected':'glass clear')+';',
+    'light '+scene.kelvin+'K '+scene.cameraSide+' relative-intensity'+intensity+'.'
   ].join(' ').replace(/\s+/g,' ').trim();
 }
