@@ -8,7 +8,7 @@ import { isReflectionSelfie } from './photographic-auditor-v8.js';
 import { resolveCapture } from './scene-geometry.js';
 import { physicsStatement } from '../data/physics/index.js';
 
-export const LHD_GEOMETRY = 'Saudi LHD: driver front-left directly behind the left steering wheel, passenger front-right; wheel directly in front of driver and center console to driver's right; no mirroring or right-hand drive.';
+export const LHD_GEOMETRY = 'Saudi LHD: driver front-left directly behind the left steering wheel, passenger front-right; wheel directly in front of driver and center console to the right of the driver; no mirroring or right-hand drive.';
 export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked landscape screens, infotainment above climate controls with rotary dials';
 export const IDENTITY_CORE = 'Preserve reference facial geometry, asymmetry, age, skin tone, pores, eyes, brows, nose, lips, jaw, original hairline, density, curls and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique and proportions.';
