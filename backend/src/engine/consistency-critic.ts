@@ -2,7 +2,7 @@ import type { ScenePlan } from './scene-planner.js';
 import { scenePlanSchema } from './scene-planner.js';
 
 export interface CriticResult { plan:ScenePlan; repairs:string[]; accepted:number }
-const unsafe=/\b(?:different|replace|alter|rebuild|reshape|new person|other subject|face swap|beige steering|blue car|red car|moving car|drive away|full.body|full interior|wide shot|zoom out|pull back|additional light|extra light|second sun|beauty light|cinematic|studio lighting|masterpiece|8k|hyperreal|flawless|perfect skin|invent scars|new wrinkles|opposing shadows|multiple shadows|famous landmark|burj khalifa|193 cm|83 kg|\d{4}k)\b/i;
+const unsafe=/\b(?:different|replace|alter|rebuild|reshape|new person|other subject|face swap|beige steering|blue car|red car|moving car|drive away|full.body|full interior|wide shot|zoom out|pull back|additional light|extra light|second sun|beauty light|cinematic|studio lighting|masterpiece|8k|hyperreal|flawless|perfect skin|invent scars|new wrinkles|opposing shadows|multiple shadows|famous landmark|burj khalifa|195 cm|88 kg|\d{4}k)\b/i;
 const unsafeCharacters=/[<>{}\u0600-\u06ff`]/;
 function acceptable(text:string):boolean {
   return text.length>=15&&text.length<=190&&!unsafe.test(text)&&!unsafeCharacters.test(text)
