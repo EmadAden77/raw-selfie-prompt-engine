@@ -18,7 +18,9 @@ export const placePhysics = fixedPhysicsOptions('locations',locations.map(
   (kind,index):PlacePhysical=>{
     const curb = kind === 'curb';
     return {
-      groundMaterial:kind==='desert'?'weathered sandy shoulder and cracked or dusty roadside margins':
+      groundMaterial:kind==='desert'
+        ? index===1?'loose fine dust on sandy shoulder beside cracked desert road':
+          'weathered sandy shoulder and cracked or dusty roadside margins':
         kind==='farm'?'firm compacted farm soil and gravel':
         kind==='covered'?'worn parking concrete, faint lines and tire scuffs':
         kind==='lot'?'patched access-lane asphalt, dusty edges and faded bay markings':
