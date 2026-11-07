@@ -3,7 +3,7 @@ import { optionCatalogue } from '../data/option-mappings.js';
 import { categoryKeys, type PromptRequest } from '../types/engine.types.js';
 
 const shape=Object.fromEntries(categoryKeys.map(key=>[
-  key,z.string().refine(value=>optionCatalogue[key].some(entry=>entry.id===value),
+  key,z.string().refine(value=>(key==='selfieAngles' && value==='angle-auto') || optionCatalogue[key].some(entry=>entry.id===value),
     {message:'Unknown selection'})
 ])) as unknown as Record<(typeof categoryKeys)[number],z.ZodType<string>>;
 
