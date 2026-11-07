@@ -80,7 +80,8 @@ function backgroundProse(choices: ResolvedSelections, variation: number): string
   const covered = deriveSceneLighting(choices).covered;
   const index = Math.abs(variation) % 3;
   const detail=getPlaceProfile(choices.locations.id).background;
-  return 'At the visible frame edge only: ' + detail + '.';
+  const leads=['At the visible frame edge only: ','At the natural frame edge only: ','Only at the frame edge where visible: '];
+  return leads[index] + detail + '.';
 }
 
 export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePlan, variation = 0): string {
