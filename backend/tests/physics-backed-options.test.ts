@@ -143,9 +143,9 @@ test('validator rejects changed physics and NVIDIA fails closed on new measureme
     original.replace('195 cm','193 cm'),
     original.replace('88 kg','83 kg'),
     original.replace('20–30 cm','5–10 cm'),
-    original.replace('light 5500K','light 3200K'),
+    original.replace('scene 5500K','scene 3200K'),
     original.replace('generic smartphone front-camera selfie','Xiaomi camera selfie'),
-    original+' The camera is 90 cm away.',
+    original+' The phone is 90 cm away.',
     original+' Brow 35° and fabric 600gsm.',
   ]){
     assert.notEqual(altered,original);
