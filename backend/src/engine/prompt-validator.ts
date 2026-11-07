@@ -97,6 +97,13 @@ export function validatePrompt(prompt:string,choices?:ResolvedSelections):boolea
   if(typeof prompt!=='string'||prompt.length<450||prompt.length>16000) return false;
   if(!prompt.startsWith(REQUIRED_PREFIX)) return false;
   if(/[\u0600-\u06ff]/.test(prompt)||/[`<>]/.test(prompt)) return false;
+  // Global invariants must run BEFORE the concise early-return path.
+  if(/\\b(?:Xiaomi|iPhone|Samsung|Pixel|OnePlus|Huawei|Oppo|Vivo)\\b/i.test(prompt)) return false;
+  if(/\\b(?:\\d{2,4}\\s*gsm|\\d+(?:\\.\\d+)?\\s*mm-equivalent|\\d+(?:\\.\\d+)?\\s*f\\/\\d+|FOV\\s*\\d+|(?:phone|camera)\\s+\\d+\\s*cm|\\b(?:brow|mouth|eyes|elbow|knee|hip|pitch|roll|intensity|dust|water|seat|feet)\\s*\\d+(?:\\.\\d+)?\\s*(?:°|%))\\b/i.test(prompt)) return false;
+  if(/\\b(?:right.hand.drive|RHD|right.side steering wheel|steering wheel on the right|wheel to (?:his|the driver's) right|driver front.right|driver seated (?:on|at) (?:the )?right|driver sits in (?:the )?passenger seat)\\b/i.test(prompt)) return false;
+  if(/\\b(?:portrait|vertical)\\s+(?:infotainment\\s+)?(?:screen|display|tablet)\\b/i.test(prompt) && !/\\b(?:no|never)\\s+(?:portrait|vertical)\\b/i.test(prompt)) return false;
+  if(/\\b(?:direct|full|bright)\\s+sunlight\\b[\\s\\S]{0,75}\\b(?:covered|underground)\\s+(?:parking|garage)\\b/i.test(prompt)) return false;
+  if(choices && ['location-10','location-11'].includes(choices.locations.id) && !/pump on the DRIVER'S LEFT/i.test(prompt)) return false;
   // Shared guards apply to both historical exhaustive templates and the
   // modern concise format. Never let the early concise branch bypass them.
   if(/\b(?:burj khalifa|kingdom cent(?:re|er)|al faisaliah|dubai mall|riyadh park|red sea mall)\b/i.test(prompt))return false;
