@@ -17,7 +17,7 @@ export const location56: PlaceSceneProfile = {
     "reflections": "consistent restrained daylight highlights on pearl-white paint and real window angles"
   },
   "night": {
-    "source": "dim natural night sky alone, without an invented streetlamp",
+    "source": "dim natural night sky alone, with no artificial fixture or fill",
     "kelvin": 4000,
     "shadows": "deep low-contrast darkness, only faint grounded contact shadowing",
     "reflections": "very faint sky reflections on paint and glass, no illuminated empty background"
