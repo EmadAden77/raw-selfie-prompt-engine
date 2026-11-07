@@ -93,7 +93,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
   const identity = [REQUIRED_PREFIX + '.', IDENTITY_CORE, BODY_CORE, SUBJECT_CORE].join(' ');
   const expressionGuard = expression === 1 ? ' No smile or posed grin.'
     : expression === 5 ? ' Do not turn this serious look into a smile.' : '';
-  const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting.';
+  const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting. Parking: ' + getPlaceProfile(choices.locations.id).parking;
   const clothing = 'Clothing: ' + choices.clothing.text + '.';
   const personalDetails = 'Expression: ' + choices.expressions.text + '.' + expressionGuard +
     ' Hair: ' + choices.hairstyles.text + '. ' +
