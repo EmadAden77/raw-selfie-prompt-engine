@@ -85,7 +85,7 @@ function backgroundProse(choices: ResolvedSelections, variation: number): string
 }
 
 function parkingProse(choices: ResolvedSelections, inside: boolean): string {
-  if (inside) return ';
+  if (inside) return '';
   const d = deriveSceneLighting(choices);
   if (d.parking.includes('concrete curb'))
     return 'Visible roadside geometry only: straight wheels, parked parallel 20–30 cm from a 15 cm beige-gray concrete curb; worn dusty patched Saudi asphalt.';
@@ -103,7 +103,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
   const condition = numberOf(choices.carConditions.id);
   const identity = [REQUIRED_PREFIX + '.', IDENTITY_CORE, BODY_CORE, SUBJECT_CORE].join(' ');
   const expressionGuard = expression === 1 ? ' No smile or posed grin.'
-    : expression === 5 ? ' Do not turn this serious look into a smile.' : ';
+    : expression === 5 ? ' Do not turn this serious look into a smile.' : '';
   const scene = 'Scene: ' + choices.locations.text + ', unnamed Saudi setting.';
   const clothing = 'Clothing: ' + choices.clothing.text + '.';
   const personalDetails = 'Expression: ' + choices.expressions.text + '.' + expressionGuard +
@@ -133,8 +133,8 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
     ? 'No invented cabin grime.'
     : condition === 1 ? 'Freshly washed surfaces stay clean.'
       : condition === 5 ? 'Visible rain droplets and runoff follow gravity.'
-        : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : ';
-  const surroundings = !inside && !close ? backgroundProse(choices, variation) : ';
+        : vehicleVisible(choices, false) ? 'Road dirt stays local to plausible contact surfaces.' : '';
+  const surroundings = !inside && !close ? backgroundProse(choices, variation) : '';
   const realism = 'Photographic realism: shared phone exposure, reference pores, real folds, coherent shadows and highlights. ' +
     support + ' ' + surface + ' ' + surroundings +
     ' No wax or plastic skin, beauty filters, CGI, invented marks, extra fingers, false reflections or exaggerated HDR.';
