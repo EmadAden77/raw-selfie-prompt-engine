@@ -12,6 +12,7 @@ export const FACTORY_DASHBOARD = 'original 2022 Touch Pro Duo dual stacked lands
 export const IDENTITY_CORE = 'Preserve reference facial geometry, asymmetry, age, skin tone, pores, eyes, brows, nose, lips, jaw, original hairline, density, curls and facial-hair gaps; no reshaping, beautification or invented marks.';
 export const BODY_CORE = 'Height 195 cm, weight 88 kg; natural lean athletic physique and proportions.';
 export const SUBJECT_CORE = 'Reference person remains the sole primary subject; no scenery-driven pullback.';
+export const MAX_PROMPT_WORDS = 800;
 export const promptWordCount = (text: string): number => text.trim().split(/\s+/).filter(Boolean).length;
 const numberOf = (id: string): number => Number(id.split('-').at(-1));
 
@@ -128,8 +129,7 @@ export function buildConcisePrompt(choices: ResolvedSelections, _plan?: ScenePla
     'Lighting: ' + lightingProse(choices, inside) + ' ' + lighting.kelvin + 'K.',
     personalDetails, camera, framingProse(inside, close, capture.steeringHand),
     physical, realism].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
-  const result = (promptWordCount(mandatory+' '+surface+' '+surroundings)<=300
-    ? [mandatory,surface,surroundings].filter(Boolean).join(' ') : mandatory);
+  const result = [mandatory,surface,surroundings].filter(Boolean).join(' ');
 
   return result;
 }
