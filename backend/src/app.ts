@@ -26,7 +26,7 @@ app.use(cors({
     return callback(new Error('Origin is not allowed'));
   },
   methods:['GET','POST'],
-  allowedHeaders:['Content-Type']
+  allowedHeaders:['Content-Type','X-Nvidia-Owner-Token']
 }));
 app.use(express.json({limit:'32kb',strict:true}));
 app.get('/health',(_req,res)=>res.json({status:'ok'}));
