@@ -14,14 +14,16 @@ export default function App(){
   useEffect(()=>{try{window.localStorage.removeItem('raw-selfie-nvidia-key');}catch{/* unavailable storage */}},[]);
   const [step,setStep]=useState(0);
   const [image,setImage]=useState<File|null>(null);
+  // Kept in React memory only; never written to localStorage or the prompt.
+  const [ownerToken,setOwnerToken]=useState('');
   const {selections,select}=useSelections();
   const {result,loading,error,generate}=usePromptGenerator();
-  async function submit(){await generate(selections);setStep(2);}
+  async function submit(){await generate(selections,ownerToken);setStep(2);}
   return <div className="app-shell"><Header/><main className="main">
     <section className="hero"><div className="hero-icon"><WandSparkles size={25}/></div><span className="eyebrow">واقعية الصورة تبدأ بتفاصيل صحيحة</span><h1>سيلفي يشبهك، لا يشبه الفلاتر</h1><p>اصنع تعليمات صورة عفوية تحفظ ملامحك وسيارتك كما هي، ثم انسخ البرومبت إلى محادثة توليد الصور.</p></section>
     <StepNavigation step={step}/>
     {step===0&&<UploadPage file={image} onChange={setImage}/>}
-    {step===1&&<OptionsPage selections={selections} onSelect={select}/>}
+    {step===1&&<OptionsPage selections={selections} onSelect={select} ownerToken={ownerToken} onOwnerTokenChange={setOwnerToken}/>}
     {step===2&&(result?<ResultPage result={result}/>:<p className="form-error">{error||'تعذّر إنشاء البرومبت.'}</p>)}
     {error&&step!==2&&<p role="alert" className="form-error">{error}</p>}
     <div className="navigation-bar">
